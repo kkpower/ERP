@@ -1,0 +1,352 @@
+<script>
+	$('#21').parents('li').addClass('nav-active')
+	$('#21').parents('li').addClass('nav-expanded')
+</script>
+<script src="__PUBLIC__/FirstEdition/assets/shu/boot/bootstrap-treeview.js"></script>
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<input type="hidden" id="getplatformurl" value="{:U('System/getInfomj','','')}">
+<div class="row">
+	<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+
+				<h2 class="panel-title">{$Think.lang.Role}</h2>
+			</header>
+			<div class="panel-body">
+				<button class="btn btn-primary" onclick="platformurl(1)">{$Think.lang.Addroles}</button>
+				<input type="hidden" name='getRoleAuthority' value="{:U('System/getRoleAuthority','','')}">
+				<input type="hidden" name='delRole' value="{:U('System/delRole','','')}">
+				<div>
+					<table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+						<thead>
+							<tr>
+								<th>{$Think.lang.Id}</th>
+								<th>{$Think.lang.Role}</th>
+								<th>{$Think.lang.Operation}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<foreach name="info" item="rolelist">
+								<tr>
+									<!-- 遍历用户信息-->
+									<td>{$key+1}</td>
+									<td>
+										<eq name="LANG_SET" value="en-us">
+											{$rolelist.role_nameus}
+											<else/> {$rolelist.role_name}
+										</eq>
+									</td>
+									<td>
+										<button type="button" title="{$Think.lang.Allocation}" class="btn btn-primary btn-xs" onclick="platformurl(2,'{$rolelist.id}')" /><span class="glyphicon glyphicon-th-list"></span></button>
+										<button type="button" title="{$Think.lang.Delete}" class="btn btn-danger btn-xs" onclick="delRole('{$rolelist.id}')"><span class="glyphicon glyphicon-trash"></span></button>
+									</td>
+								</tr>
+							</foreach>
+						</tbody>
+
+					</table>
+				</div>
+			</div>
+
+		</section>
+	</div>
+</div>
+<div class="modal fade" id="roleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="roleModalLabel">
+					分配权限：
+				</h4>
+			</div>
+			<!--<form id="saveRole" action="{:U('System/saverole','','')}" method="post" class="form-horizontal">-->
+			<input type="hidden" id="roleId" name="roleId" value="">
+			<input type="hidden" name="role_auth_ids" value="">
+			<div class="form-group" style="padding-top: 15px;">
+				<span class="col-sm-2 control-label" style="padding-right: 0;line-height: 34px;">{$Think.lang.rolename}:</span>
+				<div class="col-sm-8">
+					<input type="text" class="form-control" name="role_name" id="roleName">
+
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-4 control-label" style="margin-bottom: 12px;">{$Think.lang.role_permissions}:</label>
+				<br style="clear: both;" />
+				<!--<div class="col-sm-8">
+						<div id="authorityTree"></div>
+						<table class="table table-hover mb-none table-striped">
+							<thead>
+							<tr>
+								<th>权限名称</th>
+								<th>添加</th>
+							</tr>
+							</thead>
+							<tbody>
+							<foreach name="pinfo" item="showlist">
+								<tr>-->
+				<!-- 从零开始所以加一来做序列号-->
+				<!--<td>{$showlist.auth_name}</td>
+									<td><input type="checkbox" name="role_auth_ids[]" value="{$showlist.id}" /></td>
+								</tr>
+							</foreach>
+							</tbody>
+
+						</table>
+
+					</div>-->
+				<div id="treeview1" class="" style="width:80%;margin: 0 auto;"></div>
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" onclick="sub_save()">{$Think.lang.Save}</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cancel}</button>
+			</div>
+			<!--</form>-->
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal -->
+</div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script>
+	$(document).ready(function() {
+		$('#table1').DataTable({
+			"paging": false,
+			"lengthChange": false,
+			"info": false,
+			"searching": false
+		});
+	});
+	//树状图数据
+	function platformurl(type, roleId) {
+		var getRoleAuthorityUrl = $("[name='getRoleAuthority']").val();
+		$('#roleId').val(roleId);
+		$('#roleName').val('');
+		if(type == 1) {
+			$("#roleModalLabel").text("{$Think.lang.addrole}");
+		};
+		var platformurl = $("#getplatformurl").val();
+		$.ajax({
+			url: platformurl, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			dataType: "JSON",
+			success: function(data) {
+				var arr_first = JSON.parse(data.first);
+				console.log(arr_first);
+				console.log(data);
+				$('#treeview1').treeview({
+					data: data.tree,
+					enableLinks: true,
+					showCheckbox: true,
+					onNodeChecked: function(event, node) { //选中节点
+						var selectNodes = getChildNodeIdArr(node); //获取所有子节点
+						console.log(node)
+						if(selectNodes) { //子节点不为空，则选中所有子节点
+							$('#treeview1').treeview('checkNode', [selectNodes, {
+								silent: true
+							}]);
+						}
+						//						var parentNode = $("#treeview1").treeview("getNode", node.parentId);
+						var selectNodes1 = setParentNodeCheck(node);
+						if(selectNodes1) { //子节点不为空，则选中所有子节点
+							$('#treeview1').treeview('checkNode', [selectNodes1, {
+								silent: true
+							}]);
+						}
+					},
+					onNodeUnchecked: function(event, node) { //取消选中节点
+						var selectNodes = getChildNodeIdArr(node); //获取所有子节点
+						if(selectNodes) { //子节点不为空，则取消选中所有子节点
+							$('#treeview1').treeview('uncheckNode', [selectNodes, {
+								silent: true
+							}]);
+						}
+					}
+				});
+				//				$('#treeview1').treeview('getCollapsed', 0);
+				//				$('#treeview1').treeview('checkNode', [1, {
+				//					silent: true
+				//				}]);
+				if(type == 2) {
+					$("#roleModalLabel").text("{$Think.lang.modify_role}");
+					for(var i = 0; i < arr_first.length; i++) {
+						arr_first[i].nodeId = $('#' + arr_first[i].id + '_id').attr('data-nodeid') - 0
+					}
+					$.ajax({
+						url: getRoleAuthorityUrl, //通过JQ获取URL获得路径
+						data: {
+							type: type,
+							role_id: roleId
+						}, //通过页面元素的ID来获取设备ID
+						type: "post", //选择传值方式
+						dataType: "JSON",
+						success: function(data) {
+							console.log(data)
+							$('#roleName').val(data.roleName);
+							var all_child = $('#treeview1').treeview('getCollapsed');
+							var all_child1 = all_child.concat(arr_first);
+							console.log(all_child1)
+							var arr_checked = [];
+							for(var i = 0; i < data.nodeList.length; i++) {
+								console.log(data.nodeList[i])
+								for(var j = 0; j < all_child1.length; j++) {
+									if(data.nodeList[i] == all_child1[j].id) {
+
+										arr_checked.push(all_child1[j].nodeId)
+									}
+								}
+
+							}
+							$('#treeview1').treeview('checkNode', [arr_checked, {
+								silent: true
+							}]);
+							console.log(arr_checked);
+
+						}
+					})
+				}
+				//          console.log(all_child);
+				$('#roleModal').modal('toggle');
+			},
+			error: function(data) {
+				if(t) {
+					clearTimeout(t)
+				};
+				$('#node_message').html('{$Think.lang.Creationfailed}');
+				node_message.style.display = 'block';
+				var t = setTimeout("node_message.style.display='none'", 2000);
+			}
+		})
+	}
+	//选中子节点
+	function getChildNodeIdArr(node) {
+		var ts = [];
+		if(node.nodes) {
+			for(x in node.nodes) {
+				ts.push(node.nodes[x].nodeId);
+				if(node.nodes[x].nodes) {
+					var getNodeDieDai = getChildNodeIdArr(node.nodes[x]);
+					for(j in getNodeDieDai) {
+						ts.push(getNodeDieDai[j]);
+					}
+				}
+			}
+		} else {
+			ts.push(node.nodeId);
+		}
+		return ts;
+	}
+	//选中父节点
+	function setParentNodeCheck(node) {
+		var ts = [];
+		var parentNode = $("#treeview1").treeview("getNode", node.parentId);
+		console.log(parentNode)
+		if(parentNode.nodeId != undefined) {
+			ts.push(parentNode.nodeId);
+			var getNodeDieDai = setParentNodeCheck(parentNode);
+			for(j in getNodeDieDai) {
+				ts.push(getNodeDieDai[j]);
+			}
+		}
+		return ts;
+	}
+
+	function itemli(target) {
+		//找到当前节点id
+		var nodeid = $(target).attr('data-nodeid');
+		console.log(nodeid)
+		$("[data-nodeid=" + nodeid + "]").addClass('expand-icon');
+		//				console.log($("[data-nodeid=" + nodeid + "]").children('span').eq(3))
+		//		$('#treeview1').treeview('checkNode', [ Number(nodeid), { silent:true } ]);
+		//		$('#treeview1').treeview('toggleNodeExpanded', [ nodeid, { silent:true } ]);
+	}
+
+	function itemOnclick(target) {
+		console.log(1111);
+	}
+
+	function sub_save() {
+		console.log($('#treeview1').treeview('getChecked'))
+		var arr_ck = $('#treeview1').treeview('getChecked');
+		var arr_sub = [];
+		for(var i = 0; i < arr_ck.length; i++) {
+			arr_sub.push(arr_ck[i].id);
+		}
+		$.ajax({
+			url: "{:U('System/saverole','','')}", //通过JQ获取URL获得路径
+			data: {
+				roleId: $('#roleId').val(),
+				role_auth_ids: JSON.stringify(arr_sub),
+				role_name: $('#roleName').val()
+			}, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data)
+				if(data.status == 0) {
+					$('#node_message').html('{$Think.lang.Operationauthority}');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				} else if(data > 0) {
+					$('#node_message').html('{$Think.lang.Savesuccessfully}');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+				} else if(data == 'NO') {
+					$('#node_message').html('{$Think.lang.rolenamecannotbeempty}');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				} else if(data == 'KO') {
+					$('#node_message').html('{$Think.lang.rolenameduplication}');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				} else if(data == 0) {
+					$('#node_message').html('{$Think.lang.Savesuccessfully}');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+				}
+
+			}
+		})
+	}
+	//删除
+	function delRole(rid) {
+		var delRoleUrl = $("[name='delRole']").val();
+		//console.log(delRoleUrl);
+		var r = confirm("{$Think.lang.Confirmdelete}");
+		if(r) {
+			$.ajax({
+				url: delRoleUrl, //通过JQ获取URL获得路径
+				data: {
+					role_id: rid
+				}, //通过页面元素的ID来获取设备ID
+				type: "post", //选择传值方式
+				dataType: "JSON",
+				success: function(data) {
+					if(data) {
+						console.log(data);
+						if(data.info) {
+							alert('{$Think.lang.Operationauthority}')
+							return false;
+						}
+						setTimeout(function() {
+							$('#node_message').html('{$Think.lang.Successfullydeleted}');
+							node_message.style.display = 'block';
+							location.reload();
+						}, 3);
+
+					}
+
+				}
+			});
+		}
+	}
+</script>

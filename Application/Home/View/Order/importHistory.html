@@ -1,0 +1,242 @@
+<script src="__ROOT__/Public/js/zen.js"></script>
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<style>
+	select {
+		padding: 5px;
+		height: auto;
+	}
+</style>
+<script>
+	$('#401').parents('li').addClass('nav-active')
+	$('#401').parents('li').addClass('nav-expanded')
+</script>
+<!--保持选择的平台-->
+<input type="hidden" id="platform_val" value="{$platform_val}">
+<!--保持选择的账号-->
+<input type="hidden" id="platform_id_val" value="{$platform_id_val}">
+<!--ajax获取平台下账号的地址-->
+<input type="hidden" id="getplatformurl" value="{:U('Order/getplatformAjax','','')}">
+<!--ajax获取平台或区域-->
+<input type="hidden" id="getarea" value="{:U('Order/getarea','','')}">
+
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+
+				<h2 class="panel-title">{$Think.lang.order_history}</h2>
+			</header>
+			<div class="panel-body">
+				<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+				<form id="form" action="{:U('Order/importHistory')}" method="GET" enctype="multipart/form-data">
+					<div class="input-group" style="float: left;width: 240px;margin-right: 10px;">
+						<span class="input-group-addon">{$Think.lang.Platform}</span>
+						<select class="form-control" id="platform" name="platform" onchange="getplatform()">
+						</select>
+					</div>
+					<div class="input-group" style="float: left;width: 240px;">
+						<span class="input-group-addon">{$Think.lang.select_account}</span>
+						<select class="form-control" id="AccountNumber" name="platform_id">
+						</select>
+					</div>
+					<br />
+				</form>
+				<table id="table1" class="table table-hover table-bordered" style="border-collapse: collapse;">
+					<thead>
+						<tr>
+							<!--<td><input type="checkbox" class="check-all">全选</td>-->
+							<td>{$Think.lang.Id}</td>
+							<!--<td>导入数量</td>-->
+							<td>{$Think.lang.batch}</td>
+							<!--<td>文件名</td>-->
+							<td>{$Think.lang.filename}</td>
+                            <!--<td>导入时间</td>-->
+							<td>{$Think.lang.import_time}</td>
+                            <!--<td>操作</td>-->
+							<td>{$Think.lang.Operation}</td>
+						</tr>
+					</thead>
+					<tbody>
+						<volist name="list" id="vo">
+							<tr>
+								<!--<td><input id="{$key}_ck" type="checkbox" name="checkboxed" class="row_check" value="{$vo.id}"> {$key+1}</td>-->
+								<td id="{$key}_1">{$key+1}</td>
+								<td>{$vo.id}</td>
+								<td>{$vo.file_name}</td>
+								<td id="{$key}_2">{$vo.ctime}</td>
+								<td id="{$key}_11">
+									<a style="color: #fff;" title="{$Think.lang.view_details}" type="button" target="_blank" href="{:U('Order/importlist',array('id'=>$vo['id'],'acid'=>$vo['ac_id']))}" class="btn btn-info btn-xs"><span class="glyphicon glyphicon-search"></span></a>
+									<!--<a style="color: #fff;" type="button" target="_blank" href="{:U('Order/details',array('id'=>$vo['id']))}" class="btn btn-info btn-xs">订单详情</a>-->
+									<if condition="($vo.status_id lt 3) OR ($vo.status_id eq 9)">
+										<button onclick='historydel("{$vo.id}")' title="{$Think.lang.Delete}" style="background: #EE0000; border: 0px;" type="button"data-toggle="modal" class="btn btn-primary btn-xs" onclick="adclass(2,'{$vo.id}')" >
+											<span class="glyphicon glyphicon-trash"></span>
+										</button>
+									</if>
+								</td>
+							</tr>
+						</volist>
+					</tbody>
+				</table>
+			</div>
+		</section>
+	</div>
+</div>
+<!--防止未选择提交-->
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#table1').DataTable({
+			"paging": false,
+			"lengthChange": false,
+			"info": false,
+			"searching": false
+		});
+		getarea();
+	});
+	//初始进入状态
+	function get_two() {
+		$.ajax({
+			type: 'POST',
+			url: $("#getplatformurl").val(),
+			data: {
+				platform: $('#platform').val()
+			},
+			dataType: 'JSON',
+			success: function(data) {
+				console.log(data)
+				//将获取到的数据赋值
+				var p = "<option value=''>{$Think.lang.pselect_account}</option>"
+				$("#AccountNumber").append(p);
+				for(var i = 0; i < data.length; i++) {
+					//拼接option标签的 name value 等属性
+					var print = "<option value='" +
+						data[i]['id'] +
+						"'" +
+						">" +
+						data[i]['name'] +
+						"</option>";
+					$("#AccountNumber").append(print);
+				}
+				$('#AccountNumber').val($('#platform_id_val').val());
+			}
+		});
+	}
+
+	//选择账号
+	$('#AccountNumber').on('change',function(){
+		$('#form').submit();
+	});
+	
+	
+	function getarea() //一级编码
+	{
+		var getarea = $("#getarea").val();
+		$.ajax({
+			url: getarea, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				var p = "<option id='first_op' value=''>{$Think.lang.Pplatform}</option>"
+				$("#platform").html(p);
+				//将获取到的数据赋值
+				for(var i = 0; i < data.length; i++) {
+					//拼接option标签的 name value 等属性
+					var p = "<option value='" +
+						data[i]['id'] +
+						"'" +
+						">" +
+						data[i].name +
+						"</option>";
+					$("#first_op").after(p);
+				}
+				$('#platform').val($('#platform_val').val());
+				get_two();
+			}
+		})
+
+	}
+	//获取选择的平台下的账号
+	function getplatform() {
+		var url = $("#getplatformurl").val(); //提交的地址
+		var platform = {
+			platform: $("#platform").val()
+		}; //提交平台
+		console.log(url);
+		console.log(platform);
+		$.ajax({
+			type: 'POST',
+			url: url,
+			data: platform,
+			dataType: 'JSON',
+			success: function(data) {
+				console.log(data)
+				//初始化
+				$("#AccountNumber").html("");
+				if(data.length == 0) {
+					if(t) {
+						clearTimeout(t)
+					};
+					$('#node_message').html('{$Think.lang.Noaccountavailable}');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+					return false;
+				}
+
+				//将获取到的数据赋值
+				var p = "<option value=''>{$Think.lang.pselect_account}</option>"
+				$("#AccountNumber").append(p);
+				for(var i = 0; i < data.length; i++) {
+					//拼接option标签的 name value 等属性
+					var print = "<option value='" +
+						data[i]['id'] +
+						"'" +
+						">" +
+						data[i]['name'] +
+						"</option>";
+					$("#AccountNumber").append(print);
+				}
+			}
+
+		});
+	}
+	//按照导入次序删除订单
+	function historydel(id){
+		var r = confirm("{$Think.lang.delete_historical_order}");
+		if (r){
+			$.ajax({
+				url:"{:U('Order/delImportorder')}",
+				type:'post',
+				dataType:"json",
+				data:{
+					id:id
+				},
+				success:function(data){
+					console.log(data);
+					if (data==null){
+						$('#node_message').html('{$Think.lang.Failedtodelete}');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';", 2000);
+					}else if (data.branch==0){
+						$('#node_message').html('{$Think.lang.order_not_deleted}');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';", 2000);
+					}else if (data.status==0){
+						$('#node_message').html('{$Think.lang.Operationauthority}');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';", 2000);
+					}else if (data.branch>0) {
+						$('#node_message').html("{$Think.lang.Delete}"+data.branch+"{$Think.lang.orders}"+" , "+"{$Think.lang.residue}"+data.surplus+"{$Think.lang.orders}");
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';location.reload()", 3000);
+					}
+				}
+			});
+		}
+	}
+</script>

@@ -1,0 +1,293 @@
+<script>
+	$('#33').parents('li').addClass('nav-active')
+	$('#33').parents('li').addClass('nav-expanded')
+</script>
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<style type="text/css">
+	.bootstrap-select.btn-group .dropdown-toggle .filter-option {
+		padding-left: 5px;
+		padding-top: 3px;
+		color: #666;
+	}
+	
+	.bootstrap-select {
+		/*width: 50% !important;*/
+	}
+	
+	.bootstrap-select>button {
+		height: 100%;
+		line-height: 100%;
+	}
+	
+	.bootstrap-select>button:active {
+		background: #fff !important;
+	}
+	
+	.bootstrap-select>button:hover {
+		background: #fff !important;
+	}
+	
+	.bootstrap-select>button:focus {
+		background: #fff !important;
+	}
+	
+	#details_body .col-md-6 {
+		padding-left: 0;
+	}
+	
+	#details_body .col-md-12 {
+		padding-left: 0;
+	}
+	
+	#details_img {
+		text-align: center;
+	}
+	
+	#details_img>div {
+		display: inline-block;
+		width: 45%;
+		position: relative;
+		margin: 0 2% 2%;
+	}
+	
+	#details_img img {
+		width: 100%;
+	}
+	
+	#details_img p {
+		color: #333;
+		line-height: 18px;
+	}
+	
+	#details_img span {
+		position: absolute;
+		top: 0;
+		right: 0;
+		line-height: 16px;
+		text-align: center;
+		font-size: 16px;
+		color: red;
+		font-weight: bold;
+	}
+	#details_tbody input {
+		border: 0;
+	}
+	#details_tbody tr td:nth-child(3) {
+		width: 100px;
+	}
+	#details_tbody tr td:nth-child(4) {
+		width: 80px;
+	}
+	#details_tbody td {
+		line-height: 34px;
+		padding: 0;
+	}
+</style>
+
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<!--<a style="display: inline-block;float: left;font-size: 18px;line-height: 20px;margin-right: 15px;" href="{:U('Order/mySales')}">
+					<i class="fa fa-home"></i>
+				</a>-->
+				<h2 class="panel-title">{$Think.lang.Modify} {$Think.lang.Order}</h2>
+			</header>
+			<div class="panel-body">
+				<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+				<p id="status_id" style="display: none;">{$info.status_id}</p>
+				<input type="hidden" id="order_id" value="{$info.id}" />
+				<div class="col-md-6">
+					<div class="input-group">
+						<span class="input-group-addon">{$Think.lang.ordernumber}</span>
+						<input id="input2" type="text" name="id" class="form-control" value="{$info.id}" placeholder="" readonly="readonly">
+					</div>
+				</div>
+				<!--<div class="col-md-6">
+					<div class="input-group">
+						<span class="input-group-addon">外部订单号</span>
+						<input id="input3" type="text" name="external_sn" class="form-control" value="{$info.external_sn}" placeholder="" readonly="readonly">
+					</div>
+				</div>-->
+				<div class="col-md-6">
+					<div class="input-group">
+						<span class="input-group-addon">{$Think.lang.recipient}</span>
+						<input id="input4" type="text" name="recipient_first_name" class="form-control" value="{$info.recipient_first_name}" placeholder="">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">{$Think.lang.recipient_phone}</span>
+						<input id="input6" name="buyer_phone" type="text" class="form-control" value="{$info.buyer_phone}" placeholder="">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">{$Think.lang.Email}</span>
+						<input id="input7" name="buyer_email" type="text" class="form-control" value="{$info.buyer_email}" placeholder="">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">{$Think.lang.Country}</span>
+						<input id="input5" type="text" name="country" class="form-control" value="{$info.country}" placeholder="">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">{$Think.lang.state_p}</span>
+						<input id="input8" name="state" type="text" class="form-control" value="{$info.state}" placeholder="">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">{$Think.lang.city}</span>
+						<input id="input9" name="city" type="text" class="form-control" value="{$info.city}" placeholder="">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">{$Think.lang.zip}</span>
+						<input id="input13" name="zip" type="text" class="form-control" value="{$info.zip}" placeholder="">
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">{$Think.lang.street}1</span>
+						<input id="input10" name="street_1" type="text" class="form-control" value="{$info.street_1}" placeholder="">
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">{$Think.lang.street}2</span>
+						<input id="input11" name="street_2" type="text" class="form-control" value="{$info.street_2}" placeholder="">
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">{$Think.lang.street}3</span>
+						<input id="input12" name="street_3" type="text" class="form-control" value="{$info.street_3}" placeholder="">
+					</div>
+				</div>
+				<div class="col-md-12" style="padding: 0;" id="order_products">
+					<table class="table table-hover table-bordered table-striped" style="margin-top: 20px;border-collapse: collapse;text-align: center;">
+						<thead>
+							<tr>
+								<th style="text-align: center;">{$Think.lang.title}</th>
+								<th style="text-align: center;">SKU</th>
+								<th style="text-align: center;">{$Think.lang.Number}</th>
+								<th style="text-align: center;">{$Think.lang.Operation}</th>
+							</tr>
+						</thead>
+						<tbody id="details_tbody">
+							<volist name="list" id="vo">
+								<tr class="tr" id="tr_{$vo.ebay_id}">
+									<td>
+										<a target="_blank" href="{:U('Product/homeProduct','','')}/pid/{$vo.pid}">{$vo.external_title}</a>
+									</td>
+									<td>{$vo.item_number}{$vo.var}</td>
+									<td><input class="form-control num1" id="input_{$vo.ebay_id}" name="num[]" type="text" value="{$vo.sku_number}"></td>
+									<td>
+										<if condition="($vo.sku_status eq 0) AND ($vo.sku_id neq null)">
+											<button title="{$Think.lang.view}" class="btn btn-primary btn-xs" onclick="change_view('{$vo.ebay_id}')"><span class="glyphicon glyphicon-search"></span></button>
+										</if>
+										<if condition="($vo.sku_status eq 1) OR ($vo.sku_id eq null)">
+											<a title="{$Think.lang.add_links}" style="color: #fff;" type="button" target="_blank" href="{:U('Order/link',array('ebay_id'=>$vo['ebay_id']))}" class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-plus"></span></a>
+										</if>
+										<button title="{$Think.lang.Delete}" class="btn btn-danger btn-xs" onclick="delete_pr('{$vo.ebay_id}')"><span class="glyphicon glyphicon-trash"></span></button>
+									</td>
+								</tr>
+							</volist>
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td><button class="btn btn-primary btn-xs" onclick="hand_scan(this)">{$Think.lang.Add}</button></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<br style="clear: both;" />
+				<button id="Packaging" class="btn btn-primary" onclick="save_order()">{$Think.lang.Save}</button>
+			</div>
+		</section>
+	</div>
+</div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script>
+	//修改
+	function change_view(id) {
+		window.open("{:U('Order/link')}?ebay_id=" + id);
+	}
+	//删除产品
+	function delete_pr(pid) {
+		var r = confirm('{$Think.lang.Confirmdelete}');
+		if(r == true) {
+			$.ajax({
+				url: "{:U('Order/delLink')}", //通过页面元素的ID来获取设备ID
+				type: "post", //选择传值方式
+				data: {
+					ebay_id: pid,
+				},
+				dataType: "JSON",
+				success: function(data) {
+					console.log(data)
+					if(t) {
+						clearTimeout(t)
+					};
+					$('#node_message').html('{$Think.lang.Successfullydeleted}');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+				}
+			})
+		} else {
+			return false;
+		}
+
+	}
+	//保存
+	function save_order() {
+		var tr = $('#details_tbody .tr');
+		var num  = $('#details_tbody .num1');
+		console.log(num);
+		var arr1 = [];
+		var arr2 = [];
+		for(var i = 0,l;l = tr[i++]; ){
+			arr1.push(l.id.split('_')[1]);
+		}
+		for(var i = 0,l;l = num[i++]; ){
+			arr2.push(l.value);
+		}
+		console.log(arr1);
+		console.log(arr2);
+		$.ajax({
+			url: "{:U('Order/saveOrder')}", //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				id: $('#input2').val(),
+				recipient_first_name: $('#input4').val(),
+				buyer_phone: $('#input6').val(),
+				buyer_email: $('#input7').val(),
+				country: $('#input5').val(),
+				state: $('#input8').val(),
+				city: $('#input9').val(),
+				zip: $('#input13').val(),
+				street_1: $('#input10').val(),
+				street_2: $('#input11').val(),
+				street_3: $('#input12').val(),
+				number: arr2,
+				ebay_id:arr1
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data)
+				if(t) {
+					clearTimeout(t)
+				};
+				$('#node_message').html('{$Think.lang.Savesuccessfully}');
+				node_message.style.display = 'block';
+				var t = setTimeout("node_message.style.display='none';location.reload()", 1500);
+			}
+		})
+	}
+</script>

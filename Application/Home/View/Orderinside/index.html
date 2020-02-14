@@ -1,0 +1,824 @@
+<style>
+	.bootstrap-select.btn-group .dropdown-toggle .filter-option {
+		padding-left: 5px;
+		padding-top: 3px;
+		color: #666;
+	}
+	
+	.bootstrap-select {
+		/*width: 50% !important;*/
+	}
+	
+	.bootstrap-select>button {
+		height: 100%;
+		line-height: 100%;
+	}
+	
+	.bootstrap-select>button:active {
+		background: #fff !important;
+	}
+	
+	.bootstrap-select>button:hover {
+		background: #fff !important;
+	}
+	
+	.bootstrap-select>button:focus {
+		background: #fff !important;
+	}
+	
+	select::-ms-expand {
+		display: none;
+	}
+	
+	.caret {
+		color: #333 !important;
+	}
+	
+	#binning .form-control {
+		border: 0;
+	}
+	
+	#binning_td td {
+		padding: 0;
+		line-height: 34px;
+	}
+</style>
+<script>
+	$('#344').parents('li').addClass('nav-active')
+	$('#344').parents('li').addClass('nav-expanded')
+</script>
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<input type="hidden" id="getAjaxdata" value="{:U('PurchaseOrder/getAjaxdata','','')}">
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+
+				<h2 class="panel-title">我的内部订单</h2>
+			</header>
+			<div class="panel-body">
+				<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+				<form class="" action="{:U('PurchaseOrder/purchaseOrder')}" method="get" style="display: inline-block;float: left;margin-right:15px ;">
+					<div class="input-group" style="width: 500px;">
+						<span class="input-group-addon">
+                    		订单
+                		</span>
+						<input type="hidden" value="{$purchsearch}" id="purchsearch">
+						<input id="ord" name="search" type="text" value="" class="form-control" placeholder="请输入订单号">
+						<span class="input-group-addon">
+                    		状态
+                		</span>
+						<input type="hidden" value="{$status}" id="status">
+						<select class="form-control" name="status" id="orderall">
+							<option value="">--全部--</option>
+							<foreach name="status_ex" item="or">
+								<option value="{$or.id}">{$or.namezh}</option>
+							</foreach>
+						</select>
+						<span class="input-group-btn">
+								<button type="submit" class="btn btn-success" style="white-space: nowrap;">搜索</button>
+							</span>
+
+					</div>
+					<input type="hidden" id="" name='' value="">
+					<input type="hidden" name='' value="">
+				</form>
+				<button class="btn btn-primary" onclick="onm()" style="float: left;margin-left: 20px;">申请</button>
+				<br style="clear: both;" />
+				<table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+					<thead>
+						<tr>
+							<th>序号</th>
+							<th>订单号</th>
+							<th>发货公司</th>
+							<th>收货公司</th>
+							<th>物流追踪号</th>
+							<th>运输商</th>
+							<th>运输方式</th>
+							<th>运费</th>
+							<th>状态</th>
+							<th>审核人</th>
+							<th>审核时间</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody id="tbody-resdult">
+						<volist name="purchaselist" id="vo" key="k">
+							<tr>
+								<td>{$k}</td>
+								<td>
+									<if condition="$vo.order_number neq '00000000000' ">
+										PO{$vo.order_number}
+									</if>
+								</td>
+								<td></td>
+								<td>{$vo.tracking_number}</td>
+								<td>{$vo.name}</td>
+								<td>{$vo.transporters}</td>
+								<td>
+									{$vo.mode}
+								</td>
+								<td>{$vo.freight}</td>
+								<td>
+									{$vo.lcname}
+								</td>
+								<td>{$vo.lastname}{$vo.namezhs}</td>
+								<td>{$vo.examine_time}</td>
+								<td>
+									<!--<a href="{:U('PurchaseOrder/boxPacking',array('id'=>$vo['id']))}" target="_blank" style="border: 0px;color: #fff;" class="btn btn-primary btn-xs">箱子</a>-->
+									<if condition="$vo.status eq 30 ">
+										<button onclick='mpdf("{$vo.id}")' style="border: 0px;" type="button" class="btn btn-primary btn-xs">
+										pdf
+									</button>
+									</if>
+									<if condition="$vo.status eq 30 ">
+										<button onclick='ylmpdf("{$vo.id}")' style="border: 0px;" type="button" class="btn btn-primary btn-xs">
+											预览
+										</button>
+									</if>
+									<if condition="$vo.status eq 30 ">
+										<button onclick='casempdf("{$vo.id}")' style="border: 0px;" type="button" class="btn btn-primary btn-xs">
+											包装箱
+										</button>
+									</if>
+									<a href="{:U('PurchaseOrder/productDetails',array('id'=>$vo['id']))}" target="_blank" style="border: 0px;color: #fff;" class="btn btn-primary btn-xs">详情</a>
+									<!--<if condition="$vo.status eq 4 ">-->
+									<!--<button onclick='orderPdf("{$vo.id}")' style="border: 0px;" type="button" data-toggle="modal" class="btn btn-primary btn-xs" >-->
+									<!--pdf-->
+									<!--</button>-->
+									<!--</if>-->
+									<if condition="$vo.status eq 27 ">
+										<button onclick='orderDel(this,"{$vo.id}")' style="background: #EE0000; border: 0px;" type="button" data-toggle="modal" class="btn btn-primary btn-xs">
+										删除
+									</button>
+									</if>
+								</td>
+							</tr>
+						</volist>
+					</tbody>
+				</table>
+				<ul class="pager" style="width: 100%;">
+					<!-- 分页显示 -->{$page}</ul>
+			</div>
+		</section>
+
+	</div>
+</div>
+
+<form onsubmit="return doadd(this)">
+	<div id="node_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">
+						申请内部订单
+					</h4>
+				</div>
+				<div class="modal-body" style="line-height: 34px;">
+					<div class="row" style="margin-left: 0;margin-right: 0;">
+						<input type="hidden" name="platform_id" value="{$pid}">
+						<div class="col-md-6" style="padding-left: 0;">
+							<div class="input-group">
+								<span class="input-group-addon">公司<span style="color: red;">*</span></span>
+								<select id="first" type="text" name="company_id" class="form-control" onchange="getAjaxproduct()">
+								</select>
+								<!--<input type="text" name="type" class="form-control" placeholder="" style="width: 30%;">-->
+								<input type="hidden" name="warehouse_physical" id="warehouse_physical">
+							</div>
+						</div>
+						<div class="col-md-12" style="padding-left: 0;padding-top: 15px;">
+							<div class="input-group">
+								<span class="input-group-addon">产品名称<span style="color: red;">*</span></span>
+								<select id="pid0" name="pid[]" class="selectpicker pid form-control" onchange="getAjaxprice()" data-live-search="true">
+								</select>
+							</div>
+						</div>
+						<input type="hidden" id="productioncycle0" value="" name="delivery_date[]">
+
+						<div class="col-md-6" style="padding-left: 0;padding-top: 15px;">
+							<div class="input-group">
+								<span class="input-group-addon">单价</span>
+								<input name="price[]" class="form-control" type="text" value="" id="pice0" readonly="readonly" style="width: 80%">
+								<input name="currency[]" class="form-control" type="text" value="" id="currency0" readonly="readonly" style="width: 20%">
+							</div>
+						</div>
+						<div class="col-md-6" style="padding-left: 0;padding-top: 15px;">
+							<div class="input-group">
+								<span class="input-group-addon">数量<span style="color: red;">*</span></span>
+								<input name="num[]" class="form-control" type="text" value="" id="num0">
+							</div>
+						</div>
+						<div id="add_tel">
+
+						</div>
+					</div>
+					<div onclick="add_tel()" class="addxm" style="margin-top: 10px;color: #fff;background-color: #0088cc;border-color: #0088cc;width: 80px;height: 30px;border-radius: 4px;text-align: center;line-height: 30px;cursor: pointer;float: left;">新增产品</div>
+					<div onclick="binning()" class="addxm" style="margin-top: 10px;color: #fff;background-color: #0088cc;border-color: #0088cc;width: 80px;height: 30px;border-radius: 4px;text-align: center;line-height: 30px;cursor: pointer;float: left;margin-left: 20px;">产品分箱</div>
+					<br style="clear: both;" />
+					<div id="binning" style="display: none;padding-top: 20px;">
+						<table class="table table-bordered" style="text-align: center;">
+							<tr id="binning_th">
+
+							</tr>
+							<tbody id="binning_td" style="border: 0;">
+							</tbody>
+						</table>
+						<div class="btn btn-primary" id="add_box">增加箱子</div>
+					</div>
+					<div class="col-md-4" style="padding-left: 0;padding-top: 15px;">
+						<div class='input-group date' id='datetimepicker1'>
+							<span class="input-group-addon">交货日期</span>
+							<input type='text' name="date" class="form-control" />
+							<span class="input-group-addon">  
+				                    <span class="glyphicon glyphicon-calendar"></span>
+							</span>
+						</div>
+					</div>
+					<div style="float: left;margin-top: 15px;" class="btn btn-primary" onclick="delivery_date()">计算交货日期</div>
+					<br style="clear: both;" />
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">运输商<span style="color: red;">*</span></span>
+						<select class="form-control" style="width: 44%;" id="transj" name="transporter" onchange="getAjaxshipping()">
+						</select>
+					</div>
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">运输方式<span style="color: red;">*</span></span>
+						<select name="transport" class="form-control" style="width: 44%;" id="transport">
+						</select>
+					</div>
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">物流追踪号</span>
+						<input name="trackingnumber" class="form-control" type="text" value="" >
+					</div>
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">运费</span>
+						<input name="freight" class="form-control" type="text" value="">
+					</div>
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">备注</span>
+						<input name="remarks" class="form-control" type="text" value="">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" id="add_pr" type="submit">确认</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	</div>
+</form>
+
+<div id="show_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document" style="width: 50%;">
+		<div class="modal-content">
+			<div class="modal-body" style="line-height: 34px;">
+				<div class="row" style="margin-left: 0;margin-right: 0;">
+					<table class="table table-hover table-striped" style="margin-top: 20px;">
+						<thead>
+							<tr>
+								<th>序号</th>
+								<th>用户</th>
+							</tr>
+						</thead>
+						<tbody id="tbody-result">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+</div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script type="text/javascript">
+	//日期控件
+	$(document).ready(function() {
+		$('#datetimepicker1').datetimepicker({
+			format: "yyyy-mm-dd",
+			minView: 'month',
+			language: 'zh-CN',
+			autoclose: true,
+			todayBtn: true,
+			pickerPosition: "bottom-left"
+		});
+	})
+</script>
+<script>
+
+	//获取运输商的运输方式
+	function getAjaxshipping(){
+		transj = $('#transj').val();
+		$.ajax({
+			url: "{:U('PurchaseOrder/getAjaxshipping')}", //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				tranid: transj
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				var p = "<option id='transport_mode' value=''>请选择运输方式</option>"
+				$("#transport").html(p);
+				//将获取到的数据赋值
+				for(var i = 0; i < data.length; i++) {
+					//拼接option标签的 name value 等属性
+					var p = "<option value='" +
+							data[i]['id'] +
+							"'" +
+							">" +
+							data[i]['mode'] +
+							"</option>";
+					$("#transport_mode").after(p);
+				}
+
+			}
+		})
+	}
+	var purchsearch = $('#purchsearch').val();
+	$('#ord').val(purchsearch);
+	var status = $('#status').val();
+	$('#orderall').val(status);
+	function ylmpdf(id) {
+		// window.open("/InternalSystem/index.php/Home/PurchaseOrder/mPdf?id="+id ,"_blank");
+		var form = $("<form method='post'  target='_blank'></form>");
+		var url = "{:U('PurchaseOrder/previewPdf')}";
+		form.attr({
+			"action": url
+		});
+		var input = $("<input type='hidden' name='id'>");
+		input.val(id);
+		form.append(input);
+		$("html").append(form);
+		form.submit();
+	}
+	function mpdf(id) {
+		// window.open("/InternalSystem/index.php/Home/PurchaseOrder/mPdf?id="+id ,"_blank");
+		var form = $("<form method='post'  target='_blank'></form>");
+		var url = "{:U('PurchaseOrder/purchaseOrderPdf')}";
+		form.attr({
+			"action": url
+		});
+		var input = $("<input type='hidden' name='id'>");
+		input.val(id);
+		form.append(input);
+		$("html").append(form);
+		form.submit();
+	}
+	function casempdf(id) {
+		// window.open("/InternalSystem/index.php/Home/PurchaseOrder/mPdf?id="+id ,"_blank");
+		var form = $("<form method='post'  target='_blank'></form>");
+		var url = "{:U('PurchaseOrder/boxPacking')}";
+		form.attr({
+			"action": url
+		});
+		var input = $("<input type='hidden' name='id'>");
+		input.val(id);
+		form.append(input);
+		$("html").append(form);
+		form.submit();
+	}
+	$("#pid0").selectpicker({
+		noneSelectedText: '--请选择产品--'
+	});
+	$(document).ready(function() {
+		$('#table1').DataTable({
+			"paging": false,
+			"lengthChange": false,
+			"info": false,
+			"searching": false
+		});
+	});
+	//申请采购订单弹框
+	function onm() {
+		var url = $('#getAjaxdata').val();
+		$.ajax({
+			url: url,
+			type: 'post',
+			dataType: 'JSON',
+			success: function(data) {
+				console.log(data);
+//				var p = "<option id='fulys' value=''>--请选择运输方式--</option>";
+//				$('#transport').html(p);
+//				for(i = 0; i < data['transport'].length; i++) {
+//					var p = "<option value='" + data['transport'][i]['id'] + "'>" + data['transport'][i]['namezh'] + "</option>";
+//					$('#fulys').after(p);
+//				}
+				var g = "<option id='fulck' value=''>--请选择仓库--</option>";
+				$('#warehouse_id').html(g);
+				for(i = 0; i < data['warehouse'].length; i++) {
+					var g = "<option value='" + data['warehouse'][i]['id'] + "'>" + data['warehouse'][i]['name'] + "</option>";
+					$('#fulck').after(g);
+				}
+				var y = "<option id='fulyss' value=''>--请选择运输商--</option>";
+				$('#transj').html(y);
+				for(i = 0; i < data['transporter'].length; i++) {
+					var y = "<option value='" + data['transporter'][i]['id'] + "'>" + data['transporter'][i]['transporters'] + "</option>";
+					$('#fulyss').after(y);
+				}
+
+			}
+		});
+		$('#node_modal').modal('toggle');
+		getAjaxsupplier();
+	}
+	var nn = 0;
+	var kk = 1;
+
+	function getAjaxsupplier() //公司
+	{
+		$.ajax({
+			url: "{:U('Orderinside/getajaxCompany')}", //通过页面元素的ID来获取供应商ID
+			type: "post", //选择传值方式
+			data: {},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				var p = "<option id='first_op' value=''>--请选择--</option>"
+				$("#first").html(p);
+				//将获取到的数据赋值
+				for(var i = 0; i < data.length; i++) {
+					//拼接option标签的 name value 等属性
+					var p = "<option value='" +
+						data[i]['id'] +
+						"'" +
+						">" +
+						data[i]['namezh'] +
+						"</option>";
+					$("#first_op").after(p);
+				}
+
+			}
+		})
+
+	}
+
+	function add_tel() {
+		nn++;
+		var list = '<div class="col-md-12" style="padding-left: 0;padding-top: 15px;">' +
+			'<div class="input-group"><span class="input-group-addon">产品名称</span>' +
+			'<select id="pid' + nn + '" name="pid[]" class="selectpicker pid form-control" onchange="getAjaxprice1(' + nn + ')" data-live-search="true">' +
+			'</select>' +
+			'</div>' +
+			'</div>' +
+
+			'<div class="col-md-6" style="padding-left: 0;padding-top: 15px;">' +
+			'<div class="input-group">' +
+			'<span class="input-group-addon">单价</span>' +
+			'<input name="price[]" class="form-control" style="width: 80%" type="text" value="" id="pice' + nn + '" readonly="readonly">' +
+			'<input name="currency[]" class="form-control" type="text" value="" id="currency' + nn + '" readonly="readonly" style="width: 20%">' +
+			'</div>' +
+			'<input name="delivery_date[]" class="form-control" style="width: 80%" type="hidden" value="" id="productioncycle' + nn + '" readonly="readonly">' +
+			'</div>' +
+			'<div class="col-md-6" style="padding-left: 0;padding-top: 15px;">' +
+			'<div class="input-group">' +
+			'<span class="input-group-addon">数量<span style="color: red;">*</span></span>' +
+			'<input name="num[]" class="form-control" type="text" value="" id="num' + nn + '">' +
+			'</div>' +
+			'</div>';
+		$('#add_tel').append(list);
+		getAjaxproduct1(nn);
+		getAjaxprice1(nn);
+	};
+
+	//产品分箱
+	function binning() {
+		kk = 1;
+		$('#binning_th').empty();
+		$('#binning_td').empty();
+		$('#add_box').off('click');
+		$('#binning').css('display', 'block');
+		console.log($('#pid0').val())
+		console.log($('[data-id="pid0"]').find('span').eq(0).text());
+		console.log(nn);
+		var str = '<th style="text-align:center;">箱子序号</th>';
+		var str1 = '<tr><td>1<input name="case[]" type="hidden"></td>'
+		for(var i = 0; i <= nn; i++) {
+			str += '<th style="text-align:center;">' + $('[data-id="pid' + i + '"]').find('span').eq(0).text() + '</th>';
+			str1 += '<td><input class="form-control" type="text" name="cnum[1][]" /><input class="form-control" type="hidden" name="xid[1][]"  value="' + $('#pid' + i).val() + '"/></td>';
+		}
+		str1 += '</tr>'
+		console.log(str1);
+		$('#binning_th').append(str);
+		$('#binning_td').append(str1);
+		$('#add_box').on('click', function() {
+			kk++;
+			var str2 = '<tr><td>' + kk + '<input value="" type="hidden" name="case[]"></td>';
+			for(var i = 0; i <= nn; i++) {
+				str2 += '<td><input class="form-control" type="text" name="cnum['+kk+'][]" /><input class="form-control" type="hidden" name="xid['+kk+'][]"  value="' + $('#pid' + i).val() + '"/></td>';
+			}
+			$('#binning_td').append(str2);
+		})
+	};
+
+	function getAjaxproduct() //公司下的产品
+	{
+		kk = 1;
+		$('#binning_th').empty();
+		$('#binning_td').empty();
+		$('#add_box').off('click');
+		$('#binning').css('display', 'none');
+		for(var i = 0; i <= nn; i++) {
+			$('#pice' + i).val("")
+			$('#currency' + i).val("")
+			$('#packing' + i).val("")
+			$('#purchase' + i).val("")
+			$('#num' + i).val("")
+			$('#productioncycle' + i).val("")
+		}
+		$.ajax({
+			url: "{:U('Orderinside/getAjaxproduct')}", //通过页面元素的ID来获取产品ID
+			type: "post", //选择传值方式
+			data: {
+				company: $('#first').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				if (data.length!==0){
+					$('#warehouse_physical').val(data[0]['warehouse_physical']);
+				}
+
+				var p = "<option class='second_op' value=''>--请选择产品--</option>"
+				//将获取到的数据赋值
+				for(var i = 0; i < data.length; i++) {
+					//拼接option标签的 name value 等属性
+					p += "<option value='" +
+						data[i]['pid'] +
+						"'" +
+						">" +
+						data[i]['bclassc_number'] + '.' + data[i]['sclassc_number'] + '.' + data[i]['snumber_number'] + ': ' + data[i]['namezh'] +'&nbsp&nbsp&nbsp&nbsp'+ data[i]['number']+
+						"</option>";
+				}
+				for(var i = 0; i <= nn; i++) {
+					$("#pid" + i).empty();
+					$('#pid' + i).append(p);
+					$('#pid' + i).selectpicker('refresh');
+				}
+
+			}
+		})
+	}
+
+	function getAjaxproduct1(n) //供应商下的产品
+	{
+		kk = 1;
+		$('#binning_th').empty();
+		$('#binning_td').empty();
+		$('#add_box').off('click');
+		$('#binning').css('display', 'none');
+		$.ajax({
+			url: "{:U('PurchaseOrder/getAjaxproduct')}", //通过页面元素的ID来获取产品ID
+			type: "post", //选择传值方式
+			data: {
+				superior: $('#first').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				var p = "<option id='second_op" + n + "' class='second_op' value=''>--请选择产品--</option>"
+				//              $("#pid"+n).html(p);
+				//将获取到的数据赋值
+				for(var i = 0; i < data.length; i++) {
+					//拼接option标签的 name value 等属性
+					p += "<option value='" +
+						data[i]['pid'] +
+						"'" +
+						">" +
+						data[i]['bclassc_number'] + '.' + data[i]['sclassc_number'] + '.' + data[i]['snumber_number'] + ':  ' + data[i]['namezh'] +
+						"</option>";
+					//                  $("#second_op"+n).after(p);
+				}
+				console.log(p)
+				$("#pid" + n).empty();
+				$('#pid' + n).append(p);
+				$('#pid' + n).selectpicker('refresh');
+			}
+		})
+
+	}
+
+	function getAjaxprice() //供应商下的产品单价
+	{
+		kk = 1;
+		$('#binning_th').empty();
+		$('#binning_td').empty();
+		$('#add_box').off('click');
+		$('#binning').css('display', 'none');
+		$.ajax({
+			url: "{:U('PurchaseOrder/getAjaxprice')}", //通过页面元素的ID来获取产品ID
+			type: "post", //选择传值方式
+			data: {
+				suprice: $('#pid0').val(),
+				superior: $('#first').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				if(data == '') {
+					$("#pice0").val('');
+					$('#currency0').val('');
+					$('#packing0').val('');
+					$('#purchase0').val('');
+					$('#num0').val('');
+					$('#productioncycle').val('');
+				} else {
+					//将获取到的数据赋值
+					for(var i = 0; i < data.length; i++) {
+						//拼接option标签的 name value 等属性
+						var p = data[i].price;
+						$("#pice0").val(p);
+						var n = data[i].bname;
+//						var box = data[i].minimum_purchase / data[i].minimum_packing;
+						$('#currency0').val(n);
+						$('#packing0').val(data[i].minimum_packing);
+						$('#purchase0').val(data[i].minimum_purchase);
+						$('#num0').val(data[i].minimum_purchase);
+						$('#productioncycle0').val(data[i].production_cycle);
+					}
+				}
+
+			}
+		})
+	}
+
+	function getAjaxprice1(n) //供应商下的产品单价
+	{
+		kk = 1;
+		$('#binning_th').empty();
+		$('#binning_td').empty();
+		$('#add_box').off('click');
+		$('#binning').css('display', 'none');
+		$.ajax({
+			url: "{:U('PurchaseOrder/getAjaxprice')}", //通过页面元素的ID来获取产品ID
+			type: "post", //选择传值方式
+			data: {
+				suprice: $('#pid' + n).val(),
+				superior: $('#first').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				//将获取到的数据赋值
+				if(data == '') {
+					$("#pice" + n).val('');
+					$('#currency' + n).val('');
+					$('#packing' + n).val('');
+					$('#purchase' + n).val('');
+					$('#num' + n).val('');
+					$('#productioncycle' + n).val('');
+				} else {
+					//for(var i = 0; i < data.length; i++) {
+					//拼接option标签的 name value 等属性
+					var p = data[0].price;
+					var c = data[0].bname;
+//					var box = data[0].minimum_purchase / data[0].minimum_packing;
+					$("#pice" + n).val(p);
+					$('#currency' + n).val(c);
+					$('#packing' + n).val(data[0].minimum_packing);
+					$('#purchase' + n).val(data[0].minimum_purchase);
+					$('#num' + n).val(data[0].minimum_purchase);
+					$('#productioncycle' + n).val(data[0].production_cycle);
+
+					//}
+				}
+			}
+		})
+	}
+	//日期格式化
+	Date.prototype.Format = function (fmt) {  
+    var o = {
+        "M+": this.getMonth() + 1, //月份 
+        "d+": this.getDate(), //日 
+        "h+": this.getHours(), //小时 
+        "m+": this.getMinutes(), //分 
+        "s+": this.getSeconds(), //秒 
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+        "S": this.getMilliseconds() //毫秒 
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+	}
+	//计算交货日期
+	function delivery_date() {
+		//交货日期
+			var cycle_arr = [];
+			for(var i = 0; i < $('[name="delivery_date[]"]').length; i++) {
+				cycle_arr.push($('[name="delivery_date[]"]')[i].value - 0);
+			}
+			console.log(cycle_arr);
+			var max = Math.max.apply(null,cycle_arr);
+			max = max*24*60*60*1000;
+			var today = new Date().getTime();
+			today = max+today;
+			console.log(today);
+			today = new Date(today).Format('yyyy-MM-dd');
+			$('[name="date"]').val(today);
+	}
+	//申请采购单
+	function doadd(form) {
+		var chk_value = [];
+		$('.pid form-control option:selected').each(function() {
+			chk_value.push($(this).val());
+		});
+		var num_value = [];
+		$('input[name="num[]"]').each(function() {
+			num_value.push($(this).val());
+		});
+		console.log(num_value);
+		for(var i = 0; i <= nn; i++) {
+			var str3 = $('#pid' + i).val();
+			var num_val = 0;
+			$('[name="' + str3 + '[]"]').each(function() {
+				num_val += Number($(this).val());
+				console.log(Number($(this).val()))
+			});
+			console.log(num_val);
+			// if(num_val != num_value[i]){
+			// 	$('#node_message').html('分箱数量不对或产品重复');
+			//     node_message.style.display = 'block';
+			//     var t = setTimeout("node_message.style.display='none';", 2000);
+			//     return false;
+			// }
+		}
+		$.ajax({
+			url: "{:U('Orderinside/orderAdd')}",
+			type: "post",
+			data: $(form).serialize(),
+			dataType: "json",
+			async: true,
+			success: function(data) {
+				if(data.status == 0) {
+					$('#node_message').html('您没有该操作权限');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				} else if(data == "NO") {
+					$('#node_message').html('申请失败,不能为空');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				} else if(data == "KO") {
+					$('#node_message').html('选择的产品重复或采购数量不符合要求');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				} else if(data == "OK") {
+					$('#node_message').html('申请成功');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+				} else if(data == "FO") {
+					$('#node_message').html('产品币种必须一致');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				}else if(data == "FK") {
+					$('#node_message').html('最小采购量不是最小包装数的倍数');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				}
+			}
+		});
+		return false;
+	}
+	//删除订单
+	function orderDel(obj, id) {
+		var r = confirm("你确定删除?");
+		if(r) {
+			$.ajax({
+				url: "{:U('PurchaseOrder/orderDel')}",
+				type: 'post',
+				dataType: "json",
+				data: {
+					id: id
+				},
+				success: function(data) {
+					if(data.status == 0) {
+						$('#node_message').html('您没有权限');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';", 2000);
+					} else if(data == 'NO') {
+						$('#node_message').html('删除失败');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';", 2000);
+					} else if(data > 0) {
+						$(obj).parents("tr").remove();
+						$('#node_message').html('删除成功');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+					} else {
+						$('#node_message').html('删除失败');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';", 2000);
+					}
+				}
+			});
+		}
+	}
+</script>

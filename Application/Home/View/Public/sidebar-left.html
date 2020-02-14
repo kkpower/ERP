@@ -1,0 +1,70 @@
+<!-- start: sidebar -->
+<aside id="sidebar-left" class="sidebar-left">
+
+    <div class="sidebar-header">
+        <div class="sidebar-title">
+            {$Think.lang.Menu}
+        </div>
+        <div class="sidebar-toggle hidden-xs" data-toggle-class="sidebar-left-collapsed" data-target="html" data-fire-event="sidebar-left-toggle">
+            <i class="fa fa-bars" aria-label="Toggle sidebar"></i>
+        </div>
+    </div>
+
+    <div class="nano">
+        <div class="nano-content">
+            <nav id="menu" class="nav-main" role="navigation">
+                <ul class="nav nav-main">
+                    <li class="nav-active"></li>
+                    <foreach name="Think.session.userNodeLists" item="v">
+                        <eq name="v.auth_pid" value="0">
+                            <li class="nav-parent">
+                                <a>
+                                    <i class="fa fa-columns" aria-hidden="true"></i>
+                                    <!--中英文切换-->
+                                    <eq name="Think.cookie.think_language"  value="en-us">
+                                    <span>{$v.auth_nameus}</span>
+                                        <else/>
+                                    <span>{$v.auth_name}</span>
+                                    </eq>
+                                </a>
+                                <ul class="nav nav-children">
+                                    <foreach name="Think.session.userNodeLists" item="vv">
+                                        <neq name="vv.auth_pid" value="0">
+                                            <li>
+                                                <eq name="vv.auth_pid" value="$v.id">
+                                                    <eq name="vv.auth_level" value="1">
+                                                        <?php $url=$vv['auth_c']."/".$vv['auth_a'];?>
+                                                        <!--<?php echo "<a id="."'".$vv['id']."'"." href='".U($url,'','','')."'>".$vv['auth_name']."</a>";?>   单语言-->
+                                                        <!--读取think_language cookie 来判断中英文,显示 中英文-->
+                                                        <eq name="Think.cookie.think_language" value="en-us">
+                                                            <?php echo "<a id="."'".$vv['id']."'"." href='".U($url,'','','')."'>".$vv['auth_nameus']."</a>";?>
+                                                            <else/>
+                                                            <?php echo "<a id="."'".$vv['id']."'"." href='".U($url,'','','')."'>".$vv['auth_name']."</a>";?>
+                                                        </eq>
+                                                    </eq>
+                                                </eq>
+                                            </li>
+                                        </neq>
+                                    </foreach>
+
+                                </ul>
+                            </li>
+                        </eq>
+                    </foreach>
+                </ul>
+            </nav>
+        </div>
+        <script>
+            // Preserve Scroll Position
+            if (typeof localStorage !== 'undefined') {
+                if (localStorage.getItem('sidebar-left-position') !== null) {
+                    var initialPosition = localStorage.getItem('sidebar-left-position'),
+                            sidebarLeft = document.querySelector('#sidebar-left .nano-content');
+                    sidebarLeft.scrollTop = initialPosition;
+                }
+            }
+        </script>
+    </div>
+
+</aside>
+<!-- end: sidebar -->

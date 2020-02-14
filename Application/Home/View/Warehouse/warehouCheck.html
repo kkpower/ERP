@@ -1,0 +1,177 @@
+<script src="__ROOT__/Public/js/zen.js"></script>
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-spinner.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<!--ajax获取子目录的地址-->
+<style>
+    #table2 tr td{
+        line-height: 34px;
+    }
+    #table2 tr td input{
+        vertical-align: middle;
+        margin: 0;
+    }
+</style>
+<input type="hidden" id="classaddurl" value="{:U('Product/getclassAjax','','')}">
+<!--仓库下的产品-->
+<input type="hidden" id="wproduct" value="{:U('Warehouse/warehouseProduct','','')}">
+<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+                    <a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+                </div>
+                <h2 class="panel-title">库存盘点</h2>
+            </header>
+            <div class="panel-body">
+                <form class="form-horizontal" action="{:U('Warehouse/warehouCheck','','')}" method="get">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <span class="input-group-addon">仓库</span>
+                                <select name="zk_id" id="father" class="form-control" onchange="getProduct()">
+                                    <option value="">请选择</option>
+                                    <foreach name="warehouse" item="wa">
+                                        <option value="{$wa.id}">{$wa.name}</option>
+                                    </foreach>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <span class="input-group-addon">产品</span>
+                                <select class="form-control" id="goodproduct" name="goodproduct" >
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <button type="submit" class="btn btn-primary">{$Think.lang.Search}</button>
+                        </div>
+                    </div>
+                </form>
+
+                <div>
+                    <table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+                        <thead>
+                        <tr>
+                            <th>产品名称</th>
+                            <th>产品编码</th>
+                            <th>单价</th>
+                            <th>数量</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <input type="hidden" name='getSupplier' value="{:U('Warehouse/getWarehouse','','')}">
+                        <foreach name="list" item="vo">
+                            <tr>
+                                <td>{$vo.namezh}</td>
+                                <td>{$vo.bclassc_number}.{$vo.sclassc_number}.{$vo.snumber_number}</td>
+                                <td>{$vo.number}</td>
+                                <td>{$vo.price}</td>
+                                <td>
+                                    <button onclick='collectGood("{$vo.o_id}","{$vo.warehouse_id}","{$vo.type}","{$vo.sourceortarget}","{$vo.zknames}","{$vo.zkname}","{$vo.sourceorder}")' style="border: 0px;" type="button" class="btn btn-primary btn-xs">
+                                        修改
+                                    </button>
+                                </td>
+                            </tr>
+                        </foreach>
+                        </tbody>
+                    </table>
+                    <ul class="pager" style="width: 100%;">
+                        <!-- 分页显示 -->{$page}</ul>
+                </div>
+            </div>
+
+        </section>
+    </div>
+</div>
+
+<div id="node_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog" >
+    <form onsubmit="return dogoods(this)">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">
+                        盘点数量
+                    </h4>
+                </div>
+                <div class="modal-body" style="line-height: 34px;">
+                    <div class="row" style="margin-left: 0;margin-right: 0;">
+                        <table id="table2" class="table table-hover table-striped table-bordered" style="margin-bottom: 0;border-collapse: collapse;">				<span>订单号:<span id="od" style="margin-right: 20px;"></span><span id="zknames"></span>发往<span id="zkname"></span></span>
+                            <thead>
+                            <tr>
+                                <th><input type="checkbox" class="check-all" style="vertical-align: middle;margin: 0;">全选</th>
+                                <th>产品</th>
+                                <th>数量</th>
+                                <th>实际收到数量</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tbody-result">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="add_pr" type="submit">确认</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+    </form>
+</div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/jquery.spinner.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#table1').DataTable({
+            "paging": false,
+            "lengthChange": false,
+            "info": false,
+            "searching": false
+        });
+    });
+    //获取仓库下的产品
+    function getProduct(){
+        var url = $('#wproduct').val();
+        var cid = $('#father').val();
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: {
+                id:cid
+            },
+            async:true,
+            dataType: 'JSON',
+            success: function(data) {
+                var p = "<option id='fulproduct' value=''>请选择产品</option>"
+                $("#goodproduct").html(p);
+                //将获取到的数据赋值
+                for(var i = 0; i < data.length; i++) {
+                    //拼接option标签的 name value 等属性
+                    var p = "<option value='" +
+                        data[i]['pid'] +
+                        "'" +
+                        ">" +
+                        data[i]['namezh'] +
+                        "</option>";
+                    $("#fulproduct").after(p);
+                }
+            }
+        })
+    }
+    $('.check-all').change(function() {
+        var choose = $(this).prop('checked');
+        $('.row_check').prop('checked', choose);
+    });
+    $('#82').parents('li').addClass('nav-active')
+    $('#82').parents('li').addClass('nav-expanded')
+</script>

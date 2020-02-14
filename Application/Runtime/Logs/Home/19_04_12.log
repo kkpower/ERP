@@ -1,0 +1,39 @@
+[ 2019-04-12T09:07:48+08:00 ] ::1 /InternalSystem/index.php/Home/Warehouse/ckupdate.html
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000588s ]
+INFO: Run Behavior\CheckLangBehavior [ RunTime:0.003376s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.005388s ]
+SQL: SHOW COLUMNS FROM `warehouse` [ RunTime:0.0017s ]
+SQL: SELECT `id` FROM `warehouse` WHERE `name` = '娲涢槼' AND `company` = 2 LIMIT 1   [ RunTime:0.0021s ]
+SQL: SELECT `name`,`company` FROM `warehouse` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0022s ]
+SQL: SELECT `id` FROM `warehouse` WHERE `company` = 2 AND `id` = 1 LIMIT 1   [ RunTime:0.0022s ]
+SQL: SELECT `id` FROM `warehouse` WHERE `company` = 2 AND `status` = 1 LIMIT 1   [ RunTime:0.0017s ]
+SQL: UPDATE `warehouse` SET `name`='娲涢槼',`company`='2',`status`='1',`englishname`='Luoyang' WHERE `id` = 1 [ RunTime:0.0041s ]
+SQL: SHOW COLUMNS FROM `company_configuration` [ RunTime:0.0030s ]
+SQL: UPDATE `company_configuration` SET `company`='2' WHERE `company` = 2 AND `status` = 1 AND `warehouse_physical` = 1 [ RunTime:0.0019s ]
+
+[ 2019-04-12T09:14:20+08:00 ] ::1 /InternalSystem/index.php/Home/Config/transportList
+ERR: SQLSTATE[HY000] [2002] 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+
+
+[ 2019-04-12T09:14:49+08:00 ] ::1 /InternalSystem/index.php/Home/Warehouse/warehousePhysical
+ERR: SQLSTATE[HY000] [2002] 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+
+
+[ 2019-04-12T09:15:11+08:00 ] ::1 /InternalSystem/index.php/Home/Warehouse/inventoryTotal
+ERR: SQLSTATE[HY000] [2002] 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+
+
+[ 2019-04-12T09:15:32+08:00 ] ::1 /InternalSystem/index.php/Home/Deliverycenter/deliveryList
+ERR: SQLSTATE[HY000] [2002] 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+
+
+[ 2019-04-12T09:43:22+08:00 ] ::1 /InternalSystem/index.php/Home/Order/plupdate.html
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000669s ]
+INFO: Run Behavior\CheckLangBehavior [ RunTime:0.003277s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.005420s ]
+SQL: SHOW COLUMNS FROM `platform` [ RunTime:0.0009s ]
+SQL: SELECT * FROM `platform` WHERE `name` = 'bieluangai' AND `type` = 'ebay' AND `country` = 1 AND `url` = 'www.baidu.com' AND `status` = '1' LIMIT 1   [ RunTime:0.0005s ]
+SQL: UPDATE `platform` SET `name`='bieluangai',`type`='ebay',`url`='www.baidu.com',`country`='1' WHERE `id` = 2 [ RunTime:0.3579s ]
+

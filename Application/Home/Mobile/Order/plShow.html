@@ -1,0 +1,259 @@
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+                    <a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+                </div>
+
+                <h2 class="panel-title">{$Think.lang.Externalaccountlist}</h2>
+            </header>
+            <div class="panel-body">
+                <div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+                <form class="" action="{:U('Order/plShow',array('id'=>$vo['pid']))}" method="get" style="display: inline-block;float: left;margin-right:15px ;">
+                    <div class="input-group" style="width: 500px;">
+						<span class="input-group-btn">
+                    <button type="submit" class="btn btn-success">Search</button>
+                </span>
+                        <input type="hidden" value="{$pid}" name="id">
+                        <input name="search" type="text" value="" class="form-control" placeholder="请输入你想查询的平台账号">
+                    </div>
+                    <input type="hidden" id="" name='' value="">
+                    <input type="hidden" name='' value="">
+                </form>
+                <button class="btn btn-primary" onclick="onm()" style="float: left;">{$Think.lang.Addaccount}</button>
+                <br style="clear: both;" />
+                <table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+                    <thead>
+                    <tr>
+                        <th>{$Think.lang.Id}</th>
+                        <th>{$Think.lang.Account}</th>
+                        <th>{$Think.lang.Operation}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <volist name="list" id="vo" key="k">
+                        <tr>
+                            <td>{$k}</td>
+                            <td>{$vo.account_number}</td>
+                            <td>
+                                <a href="{:U('Order/externalMe',array('id'=>$vo['id']))}" style="border: 0px;color: #fff;" class="btn btn-primary btn-xs"  target="_blank">管理</a>
+                                <button onclick="zhedit('{$vo.id}','{$vo.account_number}')" style="border: 0px;" type="button"data-toggle="modal" class="btn btn-primary btn-xs" >
+                                    {$Think.lang.Modify}
+                                </button>
+                                <button onclick='zhdel(this,"{$vo.id}")' style="background: #EE0000; border: 0px;" type="button"data-toggle="modal" class="btn btn-primary btn-xs">
+                                    {$Think.lang.Delete}
+                                </button>
+                            </td>
+                        </tr>
+                    </volist>
+                    </tbody>
+                </table>
+                <ul class="pager" style="width: 100%;">
+                    <!-- 分页显示 -->{$page}</ul>
+            </div>
+        </section>
+
+    </div>
+</div>
+<form onsubmit="return doadd(this)">
+    <div id="node_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">
+                        添加新账号
+                    </h4>
+                </div>
+                <div class="modal-body" style="line-height: 34px;">
+                    <div class="row" style="margin-left: 0;margin-right: 0;">
+                        <input type="hidden" name="platform_id" value="{$pid}">
+                        <div class="input-group" style="padding-top: 20px;">
+                            <span class="input-group-addon">{$Think.lang.Account}<span style="color: red;">*</span></span>
+                            <input type="text" name="account_number" class="form-control" placeholder="" style="width: 30%;">
+                        </div>
+                        <div class="input-group" style="padding-top: 20px;">
+                            <span class="input-group-addon">{$Think.lang.Nickname}<span style="color: red;">*</span></span>
+                            <input type="text" name="account_number_name" class="form-control" placeholder="" style="width: 30%;">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="add_pr" type="submit">{$Think.lang.Save}</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Centel}</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+    </div>
+</form>
+<div id="edit_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">
+                    修改账号
+                </h4>
+            </div>
+            <form onsubmit="return doupdate(this)">
+                <input id="pld" value="" type="hidden" name="id">
+                <input type="hidden" value="{$pid}" name="pid">
+                <div class="modal-body" style="line-height: 34px;">
+                    <div class="row" style="margin-left: 0;margin-right: 0;">
+                        <div class="input-group" style="padding-top: 20px;">
+                            <span class="input-group-addon">{$Think.lang.Account}<span style="color: red;">*</span></span>
+                            <input id="Account" type="text" name="account_number" class="form-control" placeholder="" style="width: 30%;" value="">
+                        </div>
+                        <!--<div class="input-group" style="padding-top: 20px;">-->
+                            <!--<span class="input-group-addon">名称<span style="color: red;">*</span></span>-->
+                            <!--<input id="uname" type="text" name="account_number_name" class="form-control" placeholder="" style="width: 30%;" value="">-->
+                        <!--</div>-->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="add_pr" type="submit">{$Think.lang.Save}</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cantel}</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+
+<div id="show_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document" style="width: 50%;">
+        <div class="modal-content">
+            <div class="modal-body" style="line-height: 34px;">
+                <div class="row" style="margin-left: 0;margin-right: 0;">
+                    <table class="table table-hover" style="margin-top: 20px;">
+                        <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>用户</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody-result">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#table1').DataTable({
+            "paging": false,
+            "lengthChange": false,
+            "info": false,
+            "searching": false
+        });
+    });
+    //添加新账号弹框
+    function onm() {
+        $('#node_modal').modal('toggle');
+    }
+    //修改外部账号弹框(赋值)
+    function zhedit(id,platform_account){
+        $('#pld').val(id);
+        $('#Account').val(platform_account);
+        $('#edit_modal').modal('toggle');
+    }
+    //添加新账号
+    function doadd(form){
+        $.ajax({
+            url:"{:U('Order/zhAdd')}",
+            type:"post",
+            data:$(form).serialize(),
+            dataType:"json",
+            async:true,
+            success:function(data){
+                if (data.status==0){
+                    $('#node_message').html('您没有该操作权限');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if (data=="KO"){
+                    $('#node_message').html('请填写完整的信息');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if (data=="NO"){
+                    $('#node_message').html('该账号已存在');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if(data=="OK"){
+                    $('#node_message').html('添加成功');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+                }
+            }
+        });
+        return false;
+    }
+    //修改外部账号
+    function doupdate(form){
+        $.ajax({
+            url:"{:U('Order/upAccount')}",
+            type:"post",
+            data:$(form).serialize(),
+            dataType:"json",
+            async:true,
+            success:function(data){
+                if (data.status==0){
+                    $('#node_message').html('您没有该操作权限');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if (data=="KO"){
+                    $('#node_message').html('账号不能为空');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if (data=="SO"){
+                    $('#node_message').html('该账号已存在');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if(data=="OK"){
+                    $('#node_message').html('修改成功');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+                }
+            }
+        });
+        return false;
+    }
+    //删除外部账号
+    function zhdel(obj,id){
+        var r = confirm("确认删除吗？");
+        if (r){
+            $.ajax({
+                url:"{:U('Order/zhDel')}",
+                type:'post',
+                dataType:"json",
+                async:true,
+                data:{
+                  id:id
+                },
+                success:function(data){
+                    if (data.status==0){
+                        $('#node_message').html('您没有该操作权限');
+                        node_message.style.display = 'block';
+                        var t = setTimeout("node_message.style.display='none';", 2000);
+                    }else if (data>0) {
+                        $(obj).parents("tr").remove();
+                        $('#node_message').html('删除成功');
+                        node_message.style.display = 'block';
+                        var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+                    }else{
+                        $('#node_message').html('删除失败');
+                        node_message.style.display = 'block';
+                    }
+                }
+        });
+        }
+    }
+
+</script>

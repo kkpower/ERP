@@ -1,0 +1,109 @@
+
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+                    <a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+                </div>
+
+                <h2 class="panel-title">采购订单号:<span style="color: #EE0000;font-weight: bold;">{$orderPurchase.order_number}</span></h2>
+            </header>
+            <div class="panel-body">
+                <div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+                <form class="" action="{:U('PurchaseOrder/productDetails',array('id'=>$gid))}" method="get" style="display: inline-block;float: left;margin-right:15px ;">
+                    <div class="input-group" style="width: 500px;">
+                        <input name="search" type="text" value="" class="form-control" placeholder="请输入产品名称">
+						<span class="input-group-btn">
+                             <button type="submit" class="btn btn-success">Search</button>
+                        </span>
+                    </div>
+                    <input type="hidden" id="" name='' value="">
+                    <input type="hidden" name='' value="">
+                </form>
+                <br style="clear: both;" />
+                <table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+                    <thead>
+                    <tr>
+                        <th>供应商</th>
+                        <th>收货仓库</th>
+                        <th>运输方式</th>
+                        <th>运费</th>
+                        <th>备注</th>
+                        <th>流程</th>
+                        <th>申请人</th>
+                        <th>申请时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{$orderPurchase.suppliername}</td>
+                        <td>{$orderPurchase.name}</td>
+                        <td>
+                            <eq name="orderPurchase.transport" value="land">陆运</eq>
+                            <eq name="orderPurchase.transport" value="sea">海运</eq>
+                            <eq name="orderPurchase.transport" value="aircraft">空运</eq>
+                        </td>
+                        <td>{$orderPurchase.freight}</td>
+                        <td>{$orderPurchase.remarks}</td>
+                        <td>
+                            <if condition="$orderPurchase.status eq 1 "> 待审核
+                                <elseif condition="$orderPurchase.status eq 2"/>初审通过
+                                <elseif condition="$orderPurchase.status eq 3"/>审核失败
+                                <elseif condition="$orderPurchase.status eq 4"/>审核通过
+                            </if>
+                        </td>
+                        <td>{$orderPurchase.lastnamea}{$orderPurchase.namezha}</td>
+                        <td>{$orderPurchase.creationtime}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+                    <thead>
+                    <tr>
+                        <th>产品名称</th>
+                        <th>单价</th>
+                        <th>数量</th>
+                        <th>现价</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <volist name="productlist" id="vo" key="k">
+                        <tr>
+                            <td>{$vo.namezh}</td>
+                            <td>{$vo.price}</td>
+                            <td>{$vo.num}</td>
+                            <td><span name="xj">{$vo.total}</span></td>
+                        </tr>
+                    </volist>
+                    </tbody>
+                </table>
+                <div style="float: right;">
+                    <span>合计:</span>
+                    <span id="total_price" style="color: #DC143C;font-size: 16px;font-weight: bold;"></span>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#table1').DataTable({
+            "paging": false,
+            "lengthChange": false,
+            "info": false,
+            "searching": false
+        });
+    });
+    var sum=0;
+    $("span[name='xj']").each(function(){
+        sum+=+$(this).text();
+    });
+    $("#total_price").text(sum.toFixed(1));
+</script>

@@ -1,0 +1,58 @@
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+                    <a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+                </div>
+
+                <h2 class="panel-title">仓库信息</h2>
+            </header>
+            <div class="panel-body">
+                <div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+                <form class="" action="{:U('Warehouse/warehouseDetails',array('id'=>$gid))}" method="get" style="display: inline-block;float: left;margin-right:15px ;">
+                    <div class="input-group" style="width: 500px;">						
+                        <input name="search" type="text" value="" class="form-control" placeholder="请输入产品名称">
+                   		<span class="input-group-btn">
+		                    <button type="submit" class="btn btn-success" style="white-space: nowrap;">搜索</button>
+		                </span>
+                    </div>
+                    <input type="hidden" id="" name='' value="">
+                    <input type="hidden" name='' value="">
+                </form>
+                <br style="clear: both;" />
+                <table class="table table-hover" style="margin-top: 20px;">
+                    <thead>
+                    <tr>
+                        <th>产品名称</th>
+                        <th>数量</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <volist name="productlist" id="vo" key="k">
+                        <tr>
+                            <td>{$vo.namezh}</td>
+                            <td>{$vo.num}</td>
+                            <td>
+                                <button onclick='prodel(this,"{$vo.id}")' style="background: #EE0000; border: 0px;" type="button"data-toggle="modal" class="btn btn-primary btn-xs">
+                                    {$Think.lang.Delete}
+                                </button>
+                            </td>
+                        </tr>
+                    </volist>
+                    </tbody>
+                </table>
+                <ul class="pager" style="width: 100%;">
+                    <!-- 分页显示 -->{$page}</ul>
+            </div>
+        </section>
+
+    </div>
+</div>
+
+<script>
+
+
+</script>

@@ -1,0 +1,166 @@
+<!--<volist name="list" id="vo">-->
+<!--{$vo.uid}:{$vo.pl_account_id}:  ,,,,{$vo.lastnamezh},,,,{$vo.namezh}<br/>-->
+<!--</volist>-->
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+                    <a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+                </div>
+
+                <h2 class="panel-title">{$Think.lang.Useraccountlist}</h2>
+                <span>{$Think.lang.Account} <?php echo $_SESSION['user_info']['namezh'].$_SESSION['user_info']['lastnamezh'];?> <span style="color: #CD0000;" >{$ptname}</span><span>{$Think.lang.Availableaccount}</span><span style="color: #CD0000;">{$pid}</span></span>
+            </header>
+            <div class="panel-body">
+                <div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+                <table id="table1" class="table table-hover table-striped table-bordered" style="margin-top: 20px;border-collapse: collapse;">
+                    <thead>
+                    <tr>
+                        <th>{$Think.lang.Id}</th>
+                        <th>{$Think.lang.Account}</th>
+                        <th>{$Think.lang.Plform}</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <volist name="list" id="vo" key="k">
+                        <tr>
+                            <td>{$k}</td>
+                            <input type="hidden" value="{$vo.id}" name="pao">
+                            <td>{$vo.account_number}</td>
+                            <td>{$vo.name}</td>
+
+                        </tr>
+                    </volist>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </div>
+</div>
+<form onsubmit="return doadd(this)">
+    <div id="node_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">
+                        添加内部用户
+                    </h4>
+                </div>
+                <div class="modal-body" style="line-height: 34px;">
+                    <div class="row" style="margin-left: 0;margin-right: 0;">
+                        <div class="input-group" style="padding-top: 20px;">
+                            <span class="input-group-addon">关联<span style="color: #CD0000;">{$ptname}</span><span>平台下的外部账号</span><span style="color: #CD0000;">{$pid}</span></span>
+                            <input type="hidden" value="{$sid}" name="pl_account_id">
+                        </div>
+
+                        <table class="table table-hover" style="margin-top: 20px;">
+                            <thead>
+                            <tr>
+                                <th>选择</th>
+                                <th>用户名</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tbody-result">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="add_pr" type="submit">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+    </div>
+</form>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script>
+	//表格排序插件
+	$(document).ready(function() {
+		$('#table1').DataTable({
+			"paging": false,
+			"lengthChange": false,
+			"info": false,
+			"searching": false
+		});
+	});
+    //添加外部账号弹框
+    function onm() {
+        var tbody=window.document.getElementById("tbody-result");
+        $.ajax({
+            url:"{:U('Order/externalAdd')}",
+            type:'post',
+            dataType:"json",
+            async:true,
+            success:function(data){
+                var arr1=[];
+                var arr2=[];
+                var arr3=[];
+                console.log($('[name="pao"]'));
+                for(var i=0;i<$('[name="pao"]').length;i++){
+                    arr1.push($('[name="pao"]')[i].defaultValue)
+                }
+                console.log(arr1);
+                for(var i=0;i<arr1.length;i++){
+                    arr2[arr1[i]]=true;
+                }
+                for(var i=0;i<data.length;i++){
+                    if(!arr2[data[i].id]){
+                        arr3.push(data[i])
+                    }
+                }
+                console.log(arr3);
+                console.log(data);
+                var str="";
+                for (i in arr3){
+                    str +="<tr>"+
+                            "<td>"+ "<input name='uid[]' type='checkbox' value='"+arr3[i].uid+"'/>" +"</td>" +
+                            "<td>"+ arr3[i].lastnamezh + arr3[i].namezh + "</td>" +
+                            "</tr>";
+                }
+                tbody.innerHTML = str;
+                $('#node_modal').modal('toggle');
+            }
+        });
+    }
+
+    //添加外部账号
+    function doadd(form) {
+        //捉到所有被选中的
+        var chk_value =[];
+        $('input[name="uid[]"]:checked').each(function(){
+            chk_value.push($(this).val());
+            //将单选框被选中的value值放到chk_value[]数组里
+        });
+        console.log(chk_value);
+        $.ajax({
+            url: "{:U('Order/externalInster')}",
+            type: "post",
+            data: $(form).serialize(),
+            dataType: "json",
+            async: true,
+            success: function(data) {
+                if (data>0){
+                    $('#node_message').html('添加成功');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+                }else{
+                    $('#node_message').html('添加失败');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }
+            }
+        });
+        return false;
+    }
+
+</script>

@@ -1,0 +1,741 @@
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<style>
+	.modal-dialog {
+		margin: 60px auto !important;
+	}
+	
+	.bootstrap-select.btn-group .dropdown-toggle .filter-option {
+		padding-left: 5px;
+		padding-top: 3px;
+		color: #666;
+	}
+	
+	.bootstrap-select {
+		width: 50% !important;
+	}
+	
+	.bootstrap-select>button {
+		height: 100%;
+		line-height: 100%;
+	}
+	
+	.bootstrap-select>button:active {
+		background: #fff !important;
+	}
+	
+	.bootstrap-select>button:hover {
+		background: #fff !important;
+	}
+	
+	.bootstrap-select>button:focus {
+		background: #fff !important;
+	}
+	
+	.caret {
+		color: #333 !important;
+	}
+	
+	.wrap {
+		margin: 0 auto;
+		/*padding: 20px;*/
+		width: 210mm;
+		height: 297mm;
+		/*border:1px solid #ccc;*/
+	}
+	
+	#wrap ul,
+	#wrap p {
+		padding: 0;
+		margin: 0;
+	}
+	
+	#wrap li {
+		padding: 20px;
+		list-style: none;
+		box-sizing: border-box;
+		border: 1px solid #ccc;
+	}
+	
+	.left p {
+		font-size: 12px;
+		line-height: 18px;
+		white-space: nowrap;
+	}
+	
+	.left {
+		margin-top: -4px;
+		margin-left: -26px;
+		-webkit-transform: scale(0.7, 0.7);
+		-moz-transform: scale(0.7, 0.7);
+		-o-transform: scale(0.7, 0.7);
+		transform: scale(0.7, 0.7);
+	}
+	
+	.middle {
+		padding-top: 20px;
+		position: relative;
+		width: 76%;
+	}
+	
+	.middle p {
+		font-size: 12px;
+		font-weight: bold;
+		line-height: 20px;
+	}
+	
+	.name1 {
+		-webkit-transform: scale(0.8, 0.8);
+		-moz-transform: scale(0.8, 0.8);
+		-o-transform: scale(0.8, 0.8);
+		transform: scale(0.8, 0.8);
+	}
+	
+	#details_img {
+		text-align: center;
+	}
+	
+	#details_img>div {
+		display: inline-block;
+		width: 20%;
+		position: relative;
+		margin: 0 2% 2%;
+	}
+	
+	#details_img img {
+		width: 100%;
+	}
+	
+	#details_img p {
+		position: absolute;
+		top: 0;
+		right: 0;
+		line-height: 16px;
+		text-align: center;
+		font-size: 16px;
+		color: red;
+		font-weight: bold;
+	}
+</style>
+<script>
+	$('#401').parents('li').addClass('nav-active')
+	$('#401').parents('li').addClass('nav-expanded')
+	$('html').addClass('sidebar-left-collapsed')
+</script>
+<input type="hidden" id="orderdetails" name="orderdetails" value="{:U('Deliverycenter/orderdetails')}">
+<input type="hidden" id="problem" />
+<input id="areaing" type="hidden" value="{$areaing}" />
+<p id="send_message" style="display: none;"></p>
+<p id="all_message" style="display: none;">{$orderjson}</p>
+<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+				<h2 class="panel-title">{$Think.lang.order_history_list}<span style="color: red;"> {$id} </span>{$Think.lang.batch}</h2>
+				<div style="float: left;">
+					<p style="font-size: 14px;margin-bottom: 0;color: #666;">{$Think.lang.this_time_import}<span style="font-weight: bold;color: red;"> {$count} </span>{$Think.lang.orders}</p>
+					<p style="font-size: 14px;margin-bottom: 0;color: #666;">{$Think.lang.order_status}:<span style="font-weight: bold;">
+                     <foreach name="problem" item="vo">
+						 {$key}:{$vo}
+					 </foreach>
+                    </span></p>
+					<!--<p style="font-size: 14px;margin-bottom: 0;color: #666;">合并订单:<span style="font-weight: bold;">{$merge}</span></p>-->
+				</div>
+				<div style="margin-left: 20px;float: left;">
+					<div>
+						<foreach name="countryGP" item="vo">
+							<p  style="font-size: 14px;margin-bottom: 0;color: #666;">
+								{$Think.lang.receipt_area}:<span style="font-weight: bold;">{$key}:{$vo}</span>
+							</p>
+						</foreach>
+
+					</div>
+				</div>
+				<br style="clear: both;"/>
+			</header>
+			<div class="panel-body">
+				<form id="country_form" action="{:U('Order/importlist','','')}" method="get" style="float: left;min-width: 240px;">
+					<input type="hidden" value="{$acid}" name="acid">
+					<input type="hidden" value="{$id}" name="id">
+					<div class="input-group" style="float: left;width: 320px;margin-right: 10px;">
+						<div class="input-group">
+							<span class="input-group-addon">{$Think.lang.account}</span>
+							<input readonly="readonly" class="form-control" type="text" value="{$platformaccount}:{$platform}">
+						</div>
+					</div>
+					<div id="status_div" class="input-group" style="float: left;width: 190px;margin-right: 10px;display:none;">
+						<span class="input-group-addon">
+							{$Think.lang.order_status}
+              			</span>
+						<input type="hidden" id="status" value="{$status}">
+						<select id="status_id" name="status_id" class="form-control" data-plugin-multiselect data-plugin-options='{ "maxHeight": 200}'>
+							<option name="" value="">全部</option>
+							<option name="" value="1">初始化</option>
+							<option name="" value="2">导入完成</option>
+							<option name="" value="3">待打印</option>
+							<option name="" value="5">打包中</option>
+							<option name="" value="6">待发货</option>
+							<option name="" value="7">已发货</option>
+							<option name="" value="9">问题订单</option>
+						</select>
+					</div>
+					<div class="input-group" style="float: left;width: 210px;margin-right: 10px;">
+						<span class="input-group-addon">
+							{$Think.lang.Display_quantity}
+              			</span>
+						<input type="hidden" id="pag" value="{$pagen}">
+						<select id="pagen" name="pagen" class="form-control" data-plugin-multiselect data-plugin-options='{ "maxHeight": 200}'>
+							<option value="10">10</option>
+							<option value="50">50</option>
+							<option value="100">100</option>
+							<option value="{$count}">{$Think.lang.All}</option>
+						</select>
+					</div>
+					<div class="input-group" style="float: left;width: 360px;margin-right: 10px;">
+						<span class="input-group-addon">
+							{$Think.lang.screening_condition}
+              			</span>
+						<input type="hidden" id="screen" value="{$screen}">
+						<select id="condition" name="screen" style="width: 60%;" class="form-control" data-plugin-multiselect data-plugin-options='{ "maxHeight": 200}' onchange="show_payee();">
+							<option value="0">{$Think.lang.unselected}</option>
+							<option value="external_sn">{$Think.lang.external_order_number}</option>
+							<option value="fullname">{$Think.lang.buyer}</option>
+							<option value="ship_level">{$Think.lang.transportation_requirement}</option>
+						</select>
+						<input type="text" name="rout" style="width: 40%;" class="form-control" placeholder="{$Think.lang.All}" id="search_order" value="{$screenvalue}" />
+					</div>
+					<div class="input-group" style="float: left;width: 160px;margin-right: 10px;">
+
+					</div>
+					<button type="submit" class="btn btn-primary">{$Think.lang.determine}</button>
+				</form>
+
+				<table id="table1" class="table table-hover table-bordered table-striped" style="border-collapse: collapse;">
+					<thead>
+						<tr>
+							<td><input type="checkbox" class="check-all" onclick="historyImg(this, event)" >{$Think.lang.select_all}</td>
+							<!--<td>序号</td>-->
+							<td>{$Think.lang.internal_order_number}</td>
+							<td>{$Think.lang.external_order_number}</td>
+							<td>{$Think.lang.buyer}</td>
+							<td>{$Think.lang.Country}</td>
+							<td>{$Think.lang.transportation_requirement}</td>
+							<td>{$Think.lang.order_status}</td>
+							<td>{$Think.lang.TrackingNumber}</td>
+							<td>{$Think.lang.order_date}</td>
+							<td>{$Think.lang.Operation}</td>
+						</tr>
+					</thead>
+					<tbody>
+						<volist name="list" id="vo">
+							<tr>
+								<td><input id="{$key}_ck" type="checkbox" name="checkboxed[]" class="row_check" value="{$vo.id}"> {$key+1}</td>
+								<td id="{$key}_1">{$vo.id}</td>
+								<td id="{$key}_2">{$vo.external_sn}</td>
+								<td id="{$key}_5">{$vo.recipient_first_name}</td>
+								<td id="{$key}_6">{$vo.country}</td>
+								<td id="{$key}_8">{$vo.ship_level}</td>
+								<td id="{$key}_9">{$vo.processing_status}</td>
+								<td id="{$key}_12">{$vo.logistics_number}</td>
+								<td id="{$key}_10">{$vo.creation_time}</td>
+								<td id="{$key}_11">
+									<a style="color: #fff;" type="button" title="{$Think.lang.order_details}" target="_blank" href="{:U('Order/details',array('id'=>$vo['id']))}" class="btn btn-info btn-xs"><span class="glyphicon glyphicon-search"></span></a>
+									<button onclick='cancelorder("{$vo.id}")' title="{$Think.lang.cancel_order}" style="background: #EE0000; border: 0px;" type="button" data-toggle="modal" class="btn btn-primary btn-xs">
+										<span class="glyphicon glyphicon-remove"></span>
+									</button>
+									<if condition="($vo.status_id lt 3) OR ($vo.status_id eq 9) OR ($vo.status_id eq 12)">
+										<a style="color: #fff;" title="{$Think.lang.Modify}" type="button" target="_blank" href="{:U('Order/update',array('id'=>$vo['id']))}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-pencil"></span></a>
+									</if>
+									<if condition="($vo.sku_id eq null)">
+										<a style="color: #fff;" type="button" title="{$Think.lang.add_links}" target="_blank" href="{:U('Order/update',array('id'=>$vo['id']))}" class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-plus"></span></a>
+									</if>
+								</td>
+							</tr>
+						</volist>
+					</tbody>
+				</table>
+				<button type="button" id="batch_cancelled" style="display: none;" class="btn btn-danger" onclick="batchcancel()">{$Think.lang.batch_cancellation}</button>
+				<button type="button" id="bulk_print" class="btn btn-primary" onclick="print_order()" style="display: none;">{$Think.lang.batch_print}</button>
+				<button type="button" id="print_complete" class="btn btn-primary" onclick="notship()" style="display: none;">{$Think.lang.print_complete}</button>
+				<ul class="pager" style="width: 100%;">
+					<!-- 分页显示 -->{$page}</ul>
+			</div>
+		</section>
+	</div>
+</div>
+<script>
+	//取消订单
+	function cancelorder(id) {
+		var r = confirm("{$Think.lang.are_you_cancel}");
+		if(r) {
+			$.ajax({
+				url: "{:U('Order/cancelOrder')}",
+				type: 'post',
+				dataType: "json",
+				data: {
+					type: 1,
+					id: id
+				},
+				success: function(data) {
+					if(data.status == 0) {
+						$('#node_message').html('{$Think.lang.Operationauthority}');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';", 2000);
+					} else if(data > 0) {
+						//						$(obj).parents("tr").remove();
+						$('#node_message').html('{$Think.lang.cancel_successful}');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+					}else if (data==0){
+						$('#node_message').html('{$Think.lang.cannot_cancelled}');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';", 2000);
+					}
+				}
+			});
+		}
+	}
+	//批量取消订单
+	function batchcancel() {
+		var chk_value = [];
+		$('input[name="checkboxed[]"]:checked').each(function() {
+			chk_value.push($(this).val());
+			//将单选框被选中的value值放到chk_value[]数组里
+		});
+		if(chk_value.length == 0) {
+			$('#node_message').html('{$Think.lang.select_order}');
+			node_message.style.display = 'block';
+			var t = setTimeout("node_message.style.display='none';", 2000);
+			return false;
+		}
+		var r = confirm("{$Think.lang.confirm_cancel}" + chk_value.length + "{$Think.lang.orders}");
+		if(r) {
+			$.ajax({
+				url: "{:U('Order/cancelOrder')}",
+				type: 'post',
+				dataType: "json",
+				data: {
+					type: 2,
+					id: chk_value
+				},
+				success: function(data) {
+					console.log(data);
+					var fail = chk_value.length - data;
+					console.log(fail);
+					if(data.status == 0) {
+						$('#node_message').html('{$Think.lang.Operationauthority}');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';", 2000);
+					} else if(data > 0) {
+						//						$(obj).parents("tr").remove();
+						$('#node_message').html('{$Think.lang.success_cancel}' + data + '{$Think.lang.orders}' + ',{$Think.lang.be_defeated}' + fail + '{$Think.lang.orders}');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';location.reload()", 3000);
+					}else if (data==0){
+						$('#node_message').html('{$Think.lang.cannot_cancel}'+chk_value.length+'{$Think.lang.orders}');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';", 2000);
+					}
+				}
+			});
+		}
+	}
+	//	$(window).load(function(){
+	var screen = $('#screen').val();
+	if(screen !== '') {
+		$('#condition').val(screen);
+	} else {
+		$('#condition').val('0');
+	}
+
+	//	});
+
+	var conditions = $('#condition').val();
+	switch(conditions) {
+		case '0':
+			//		$('#search_order').attr('name','whole');
+			$('#search_order').attr('placeholder', '');
+			//		$('#search_order').val();
+			break;
+		case 'external_sn':
+			//		$('#search_order').attr('name','external_sn');
+			$('#search_order').attr('placeholder', '{$Think.lang.Pleaseordernumber}');
+			//		$('#search_order').val();
+			break;
+		case 'fullname':
+
+			//		$('#search_order').attr('name','fullname');
+			$('#search_order').attr('placeholder', '{$Think.lang.enter_recipient}');
+			//		$('#search_order').val();
+			break;
+		case 'ship_level':
+			{
+				//		$('#search_order').attr('name','ship_level');
+				$('#search_order').attr('placeholder', '{$Think.lang.enter_requirement}');
+				//		$('#search_order').val();
+				break;
+			}
+	}
+
+	var platform = $('#platform').val();
+	$('#pl_form').val(platform);
+
+	var status = $('#status').val();
+	$('#status_id').val(status);
+
+	var pagen = $('#pag').val();
+	$('#pagen').val(pagen);
+
+	if($('#selector').val() != "") {
+		$('#status_div').css('display', 'table');
+	} else {
+		$('#status_div').css('display', 'none');
+	}
+	var status_id = $('#status_id').val();
+	if(status_id != "") {
+		$('#selectord').val(status_id);
+	} else {
+		$('#selectord').val("2");
+	}
+
+	if(status_id == 2 || status_id == 4) {
+		$('#bulk_print').css('display', 'inline-block');
+	} else {
+		$('#bulk_print').css('display', 'none');
+	}
+	if(status_id == 4) {
+		$('#print_complete').css('display', 'inline-block');
+	} else {
+		$('#print_complete').css('display', 'none');
+	}
+</script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/print.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<!--<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/jsbarcode.js"></script>-->
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/jquery.qrcode.min.js"></script>
+<script>
+	function show_payee() {
+		$('#search_order').val('');
+		var condition = $('#condition').val();
+		switch(condition) {
+			case '0':
+				$('#search_order').attr('placeholder', '');
+				break;
+			case 'external_sn':
+				$('#search_order').attr('placeholder', '{$Think.lang.Pleaseordernumber}');
+				break;
+			case 'fullname':
+				$('#search_order').attr('placeholder', '{$Think.lang.enter_recipient}');
+				break;
+			case 'ship_level':
+				{
+					$('#search_order').attr('placeholder', '{$Think.lang.enter_requirement}');
+					break;
+				}
+		}
+	}
+	//打印
+	var num = 0;
+	var arr1 = "";
+	var pid_arr = [],
+		pid_length = "",
+		pid_arr1 = [];
+	if($('#all_message').text() != "") {
+		arr1 = JSON.parse($('#all_message').html());
+	}
+
+	//输入框自动聚焦
+	$('#search_order').focus();
+	$('#details_modal').on('shown.bs.modal', function(e) {
+		$('#details_pid').focus();
+	})
+
+	//批量取消按钮状态
+	function button_status() {
+		if($('#pl_form').val() == '') {
+			$('#batch_cancelled').css('display', 'none');
+		} else {
+			$('#batch_cancelled').css('display', 'inline-block');
+		}
+	}
+	button_status();
+	$('#pl_form').on('change', button_status);
+
+	//下拉框选择国家
+	$('#selector').on('change', function() {
+		if($('#selector').val() != "") {
+			$('#status_div').css('display', 'table');
+		} else {
+			$('#status_div').css('display', 'none');
+		}
+	})
+	//下拉状态改变
+	$('#selectord').on('change', function() {
+		$('#country_form').submit();
+	})
+
+	console.log(arr1);
+	$('#print_btn').on('click', function() {
+		print_order1();
+		$("#wrap").print();
+	})
+
+	function onm(n) {
+		num = n;
+		var r = confirm("{$Think.lang.sure_done}")
+		if(r == true) {
+			location.href = "{:U('Deliverycenter/notship')}" + n;
+		} else {
+			return
+		}
+	}
+
+	//打印
+	function print_order() {
+		$('#ul_content').empty();
+		console.log(arr1);
+		var arr2 = [];
+		for(var i = 0; i < arr1.length; i++) {
+			if($('#' + i + '_ck').is(':checked')) {
+				arr2.push(arr1[i].id);
+			}
+		}
+		if(arr2.length == 0) {
+			if(t) {
+				clearTimeout(t)
+			};
+			$('#node_message').text('{$Think.lang.select_order}');
+			node_message.style.display = 'block';
+			var t = setTimeout("node_message.style.display='none'", 2000);
+			return false;
+		}
+		console.log(arr1.length)
+		for(var i = 0; i < arr1.length; i++) {
+			console.log($('#' + i + '_ck'))
+			if($('#' + i + '_ck').is(':checked')) {
+				var str = '<li style="height: 20%;width: 50%;float: left;position:relative;">' +
+					'<div class="left" style="width: 50%;float: left;height: 20%;">' +
+					'<p>yellow price</p>' +
+					'<p>UNIT 16 4 bacn Ave</p>' +
+					'<p>Lidaonvb NSW2141,Austrlia</p>' +
+					'</div>' +
+					'<div id="img' + i + '" style="display: block;width: 20%;height:20%;position: absolute;top:20px;right:20px;"></div>' +
+					'<br style="clear: both;" />' +
+					'<div class="middle">' +
+					'<p>' + arr1[i].recipient_last_name + ' ' + arr1[i].recipient_first_name + '</p>' +
+					'<p>' + arr1[i].street_1 + ' ' + arr1[i].street_2 + ' ' + (arr1[i].street_3 == null ? "" : arr1[i].street_3) + '</p>' +
+					'<p>' + arr1[i].state + ' ' + arr1[i].city + '</p>' +
+					'<p>' + arr1[i].zip + ' ' + arr1[i].country + '</p>' +
+					'</div>' +
+					'<p class="name1" style="float: left;font-size: 12px;line-height: 24px;margin-left: -16px;">changhaoyuan11233456789</p>' +
+					'</li>'
+				$('#ul_content').append(str)
+				$("#img" + i).qrcode({
+					render: "canvas", //也可以替换为table
+					width: 70,
+					height: 70,
+					text: arr1[i].o_number
+				});
+				var canvas = $("#img" + i).children("canvas");
+				//将canvas转换成png图片，才能被打印机识别打印
+				var img = canvas[0].toDataURL("image/png")
+				$("#img" + i).html("<img src='" + img + "'>")
+				$("#img" + i).append('<p class="name1" style="width: 100%;text-align: center;line-height: 14px;margin-left: -5px;">' + arr1[i].o_number + '</p>')
+			}
+		}
+		$('#print_modal').modal('toggle');
+	}
+
+	//转入打印中
+	function print_order1() {
+		console.log(arr1);
+		var arr2 = [];
+		var arr3 = [];
+		for(var i = 0; i < arr1.length; i++) {
+			if($('#' + i + '_ck').is(':checked')) {
+				arr2.push(arr1[i].id);
+				arr3.push(arr1[i].o_number);
+			}
+		}
+		console.log(arr2);
+		console.log(arr3);
+		$.ajax({
+			url: "{:U('Deliverycenter/printorder')}", //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				arr: arr2,
+				o_number: arr3
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				if(t) {
+					clearTimeout(t)
+				};
+				$('#node_message').text('{$Think.lang.order_print}');
+				node_message.style.display = 'block';
+				var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+			}
+		})
+	}
+
+	//表格插件
+	$(document).ready(function() {
+		$('#table1').DataTable({
+			"paging": false,
+			"lengthChange": false,
+			"info": false,
+			"searching": false
+		});
+	});
+
+	//全选、反选
+	$(function() {
+		var changetotal = function() {
+			//获取所选中的行
+			var checked_checkbox = $('.row_check:checked');
+		};
+
+		$('.check-all').change(function() {
+			var status = $(this).prop('checked');
+			$('.row_check').prop('checked', status);
+			changetotal();
+		});
+
+		$('.row_check').change(function() {
+			changetotal();
+			var checkbox_all = $('.row_check');
+			var checkbox_checked = $('.row_check:checked');
+			var status = checkbox_all.length == checkbox_checked.length;
+			$('.check-all').prop('checked', status);
+		});
+	});
+
+	function productlist(n, arr) {
+		$.ajax({
+			url: "{:U('Deliverycenter/productlist')}", //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				console.log(arr)
+				var p = "<option value=''>{$Think.lang.Pleasechoose}</option>"
+				//将获取到的数据赋值
+				for(var i = 0; i < data.length; i++) {
+					//拼接option标签的 name value 等属性
+					p += "<option value='" +
+						data[i]['id'] +
+						"'" +
+						">" +
+						data[i]['namezh'] +
+						"</option>";
+				}
+				for(var i = 0; i < n; i++) {
+
+					$('#pid' + i).append(p);
+					$('#pid' + i).selectpicker('refresh');
+					$('#pid' + i).selectpicker('val', arr[i]);
+					//					$('#pid' + i).val(arr[i])
+				}
+			}
+		})
+	}
+	//全选
+	$('.check-all').change(function() {
+		var status = $(this).prop('checked');
+		$('.row_check').prop('checked', status);
+	});
+
+	function notship() {
+		$('#ul_content').empty();
+		console.log(arr1);
+		var arr2 = [];
+		var arr3 = [];
+		for(var i = 0; i < arr1.length; i++) {
+			if($('#' + i + '_ck').is(':checked')) {
+				arr2.push(arr1[i].id);
+				arr3.push(arr1[i].o_number);
+			}
+		}
+		if(arr2.length == 0) {
+			if(t) {
+				clearTimeout(t)
+			};
+			$('#node_message').text('{$Think.lang.select_order}');
+			node_message.style.display = 'block';
+			var t = setTimeout("node_message.style.display='none'", 2000);
+			return false;
+		} else {
+			var r = confirm("{$Think.lang.sure_printing}");
+			if(r == true) {
+				$.ajax({
+					url: "{:U('Deliverycenter/notship')}", //通过页面元素的ID来获取设备ID
+					type: "post", //选择传值方式
+					data: {
+						arr: arr2,
+						o_number: arr3
+					},
+					dataType: "JSON",
+					success: function(data) {
+						console.log(data);
+						if(t) {
+							clearTimeout(t)
+						};
+						$('#node_message').html('{$Think.lang.print_success}');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+					}
+				})
+			} else {
+				return false;
+			}
+
+		}
+		//		$('#print_modal').modal('toggle');
+	}
+
+	//搜索订单
+	$('#search_order').on('keyup', function(event) {
+		if(event.keyCode == '13') {
+			search_order()
+		}
+	})
+
+	//搜索订单
+	function search_order() {
+		window.open("{:U('Order/details')}?o_number=" + $('#search_order').val());
+	}
+
+	//删除订单
+	function delorder(id) {
+		var r = confirm("{$Think.lang.Confirmdelete}")
+		if(r == true) {
+			$.ajax({
+				url: "{:U('Deliverycenter/delorder')}", //通过页面元素的ID来获取设备ID
+				type: "post", //选择传值方式
+				data: {
+					id: id
+				},
+				dataType: "JSON",
+				success: function(data) {
+					console.log(data);
+					if(t) {
+						clearTimeout(t)
+					};
+					$('#node_message').html('{$Think.lang.Successfullydeleted}');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+				}
+			})
+		} else {
+			return false;
+		}
+	}
+</script>

@@ -1,0 +1,641 @@
+<!--<script src="../../../../Public/FirstEdition/assets/shu/boot/bootstrap-treeview.js"></script>-->
+<script src="__PUBLIC__/FirstEdition/assets/shu/boot/bootstrap-treeview.js">
+</script>
+<!--高亮显示当前标签目录-->
+<script>
+	$('#92').parents('li').addClass('nav-active')
+	$('#92').parents('li').addClass('nav-expanded')
+</script>
+<style>
+	#staff span {
+		display: inline-block;
+		width: 74px;
+		padding-left: 5px;
+	}
+	
+	#staff div {
+		margin-bottom: 10px;
+	}
+</style>
+<input type="hidden" id="getplatformurl" value="{:U('Organization/getOrganizationAjax','','')}">
+<input type="hidden" id="getCompany" value="{:U('Organization/getCompany','','')}">
+<!--新建节点-->
+<input type="hidden" id="addCompany" value="{:U('Organization/addCompany','','')}">
+<!--删除节点-->
+<input type="hidden" id="dellCompany" value="{:U('Organization/dellCompany','','')}">
+<!--获取节点所有父级-->
+<input type="hidden" id="getCompanyPath" value="{:U('Organization/getCompanyPath','','')}">
+<!--修改信息-->
+<input type="hidden" id="saveEmployee" value="{:U('Organization/saveEmployee','','')}">
+<!--父节点ID-->
+<input type="hidden" id="nodeid" value="5" />
+<div class="row">
+	<div class="col-md-12">
+		<header class="">
+			<h2 class="">
+                组织架构
+            </h2>
+		</header>
+		<section class="panel">
+			<div class="panel-body" style="float: left;width: 100%;">
+				<input type="text" id="search" style="display: inline-block;width: 80%;margin-bottom: 20px;float: left;" class="form-control" placeholder="请输入查询内容">
+				<button class="btn btn-primary" onclick="search()" style="float: right;">查询</button>
+				<br style="clear: both;" />
+				<div id="treeview1" class="" style="width:100%;"></div>
+				<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+			</div>
+			<div id="org_modal" class="panel-body" style="width: 100%;float: right;display: none;">
+				<h4 style="margin-top: 0;margin-bottom: 20px;">
+				<ol id="parent_level1" class="breadcrumb" style="background: #fff;margin-bottom: 0;padding: 0;">
+					</ol>
+					</h4>
+				<div class="row" style="line-height: 34px;">
+					<div class="input-group" style="padding:0 15px;">
+						<span class="input-group-addon">中文名</span>
+						<div id="ch_name" class="form-control"></div>
+					</div>
+					<div class="input-group" style="padding:1.2rem 15px 0;">
+						<span class="input-group-addon">英文名</span>
+						<div id="en_name" class="form-control"></div>
+					</div>
+					<div id="form_choose">
+						<div class="input-group" style="padding:1.2rem 15px 0;">
+							<span class="input-group-addon">联系人</span>
+							<div id="linkman" class="form-control"></div>
+						</div>
+						<div class="input-group" style="padding:1.2rem 15px 0;">
+							<span class="input-group-addon">电话</span>
+							<div id="tel" class="form-control"></div>
+						</div>
+						<div class="input-group" style="padding:1.2rem 15px 0;">
+							<span class="input-group-addon">地址</span>
+							<div id="address" class="form-control"></div>
+						</div>
+					</div>
+				</div>
+				<table id="table_s1" class="table" style="text-align: center;">
+					<thead>
+						<tr>
+							<th style="text-align: center;width: 33%;">姓名</th>
+							<th style="text-align: center;width: 34%;">电话</th>
+							<th style="text-align: center;width: 33%;">操作</th>
+						</tr>
+					</thead>
+					<tbody id="staff">
+
+					</tbody>
+				</table>
+				<div id="underling" style="border-bottom: 1px solid #e5e5e5;margin-bottom: 16px;font-size: 16px;line-height: 30px;padding-top: 1.2rem;">下属职位：</div>
+				<div id="puisne" style="margin-left: -15px;margin-bottom: 1.2rem;">
+				</div>
+				<div style="text-align: right;">
+					<button id="create_child" class="btn btn-success" onclick="getCompanyPath()">新建下级</button>
+					<button id="table_s" class="btn btn-info">岗位职责</button>
+					<button class="btn btn-primary" onclick="getCompanyPath2()">修改</button>
+					<button class="btn btn-danger" onclick="dellCompany()">删除</button>
+					<button type="button" class="btn btn-default" onclick="$('#org_modal').css('display','none');">取消</button>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+<!--修改弹框-->
+<div id="change_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">
+					<ol id="parent_level2" class="breadcrumb" style="background: #fff;margin-bottom: 0;">
+					</ol>
+				</h4>
+			</div>
+			<div class="modal-body" style="line-height: 34px;">
+				<input type="hidden" id="" name="nodesid" value="">
+				<div class="row">
+					<div class="col-md-2 text-right" style="padding: 0;width: 100px;">中文名：</div>
+					<div class="col-md-4" style="width: 320px;"><input id="change_ch_name" class="form-control" style="margin-bottom: 10px;" /></div>
+					<div class="col-md-2 text-right" style="padding: 0;width: 100px;">英文名：</div>
+					<div class="col-md-4" style="width: 320px;"><input id="change_en_name" class="form-control" style="margin-bottom: 10px;" /></div>
+					<div id="form_choose2">
+						<div class="col-md-2 text-right" style="padding: 0;width: 100px;">联系人：</div>
+						<div class="col-md-4" style="width: 320px;"><input id="change_linkman" class="form-control" style="margin-bottom: 10px;" /></div>
+						<div class="col-md-2 text-right" style="padding: 0;width: 100px;">电话：</div>
+						<div class="col-md-4" style="width: 320px;"><input id="change_tel" class="form-control" style="margin-bottom: 10px;" /></div>
+						<div class="col-md-2 text-right" style="padding: 0;width: 100px;">地址：</div>
+						<div class="col-md-4" style="width: 320px;"><input id="change_address" class="form-control" style="margin-bottom: 10px;" /></div>
+					</div>
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" onclick="saveEmployee()">保存</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<div id="node_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">
+					<ol id="parent_level" class="breadcrumb" style="background: #fff;margin-bottom: 0;">
+					</ol>
+				</h4>
+			</div>
+			<div class="modal-body" style="line-height: 34px;">
+				<input type="hidden" id="" name="nodesid" value="">
+				<div class="row">
+					<div class="col-md-2 text-right" style="padding: 0;width: 100px;">中文名：</div>
+					<div class="col-md-4" style="width: 320px;"><input id="child_ch_name" class="form-control" style="margin-bottom: 10px;" /></div>
+					<div class="col-md-2 text-right" style="padding: 0;width: 100px;">英文名：</div>
+					<div class="col-md-4" style="width: 320px;"><input id="child_en_name" class="form-control" style="margin-bottom: 10px;" /></div>
+					<div id="form_choose1">
+						<div class="col-md-2 text-right" style="padding: 0;width: 100px;">联系人：</div>
+						<div class="col-md-4" style="width: 320px;"><input id="child_linkman" class="form-control" style="margin-bottom: 10px;" /></div>
+						<div class="col-md-2 text-right" style="padding: 0;width: 100px;">电话：</div>
+						<div class="col-md-4" style="width: 320px;"><input id="child_tel" class="form-control" style="margin-bottom: 10px;" /></div>
+						<div class="col-md-2 text-right" style="padding: 0;width: 100px;">地址：</div>
+						<div class="col-md-4" style="width: 320px;"><input id="child_address" class="form-control" style="margin-bottom: 10px;" /></div>
+					</div>
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" onclick="addCompany()">保存</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<script>
+	var all_child = [];
+	//查询子节点
+	function search() {
+		var arr = [];
+		var search = $('#search').val()
+		if(search == "") {
+			return false;
+		}
+		for(var i = 0; i < all_child.length; i++) {
+			if(all_child[i].text.indexOf(search) > -1) {
+				$('#treeview1').treeview('revealNode', [all_child[i].nodeId, {
+					silent: true
+				}]);
+				console.log($("[data-nodeid=" + all_child[i].nodeId + "]"))
+				arr.push(all_child[i].nodeId);
+				//				$('#treeview1').treeview('selectNode', [ all_child[i].nodeId, { silent:true } ]);
+				//				$("[data-nodeid="+all_child[i].nodeId+"]").css('fontSize','20px');
+			}
+		}
+		console.log(arr)
+		if(arr.length == 0) {
+			if(t) {
+				clearTimeout(t)
+			};
+			$('#node_message').text('没有找到该信息');
+			node_message.style.display = 'block';
+			var t = setTimeout("node_message.style.display='none'", 2000);
+		}
+		for(var i = 0; i < arr.length; i++) {
+			$("[data-nodeid=" + arr[i] + "]").css('color', 'red');
+		}
+
+	}
+	//树状图数据
+	function platformurl() {
+		var platformurl = $("#getplatformurl").val();
+		$.ajax({
+			url: platformurl, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				$('#treeview1').treeview({
+					data: data,
+					enableLinks: true,
+					nodeIcon: 'glyphicon glyphicon-user'
+				});
+				all_child = $('#treeview1').treeview('getCollapsed', 0);
+				console.log(all_child)
+			},
+			error: function(data) {
+				if(t) {
+					clearTimeout(t)
+				};
+				$('#node_message').html('创建失败');
+				node_message.style.display = 'block';
+				var t = setTimeout("node_message.style.display='none'", 2000);
+			}
+		})
+	}
+	platformurl();
+	//增加节点
+	function addCompany() {
+		var addCompany = $("#addCompany").val();
+		console.log(addCompany);
+		if($('#child_ch_name').val() == '') {
+			if(tt) {
+				clearTimeout(tt)
+			};
+			$('#node_message').html('中文名不能为空');
+			node_message.style.display = 'block';
+			var tt = setTimeout("node_message.style.display='none'", 2000);
+			return false;
+		}
+		$.ajax({
+			url: addCompany, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				nodesid: $('#nodeid').val(),
+				namezh: $('#child_ch_name').val(),
+				nameus: $('#child_en_name').val(),
+				address: $('#child_address').val(),
+				phone: $('#child_tel').val(),
+				personnel: $('#child_linkman').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				if(t) {
+					clearTimeout(t)
+				};
+				$('#node_message').html('创建成功');
+				$('#node_modal').modal('toggle');
+				node_message.style.display = 'block';
+				var t = setTimeout("node_message.style.display='none'", 2000);
+				platformurl();
+
+			}
+		})
+	}
+	//删除节点
+	function dellCompany() {
+		var dellCompany = $("#dellCompany").val();
+		console.log(dellCompany);
+		var r = confirm("确认删除吗？")
+		if(r == true) {
+			$.ajax({
+				url: dellCompany, //通过页面元素的ID来获取设备ID
+				type: "post", //选择传值方式
+				data: {
+					nodesid: $('#nodeid').val()
+				},
+				dataType: "JSON",
+				success: function(data) {
+					if(t) {
+						clearTimeout(t)
+					};
+					$('#node_message').html('删除成功');
+					$('#org_modal').css('display', 'none');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none'", 2000);
+					platformurl();
+					//				console.log(data)
+				}
+			})
+		} else {
+			return false;
+		}
+	}
+	//修改信息
+	function saveEmployee() {
+		var saveEmployee = $("#saveEmployee").val();
+		console.log(saveEmployee);
+		if($('#change_ch_name').val() == '') {
+			if(tt) {
+				clearTimeout(tt)
+			};
+			$('#node_message').html('中文名不能为空');
+			node_message.style.display = 'block';
+			var tt = setTimeout("node_message.style.display='none'", 2000);
+			return false;
+		}
+		$.ajax({
+			url: saveEmployee, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				nodesid: $('#nodeid').val(),
+				namezh: $('#change_ch_name').val(),
+				nameus: $('#change_en_name').val(),
+				address: $('#change_address').val(),
+				phone: $('#change_tel').val(),
+				personnel: $('#change_linkman').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				if(t) {
+					clearTimeout(t)
+				};
+				$('#node_message').html('修改成功');
+				$('#org_modal').css('display', 'none');
+				$('#change_modal').modal('toggle');
+				node_message.style.display = 'block';
+				var t = setTimeout("node_message.style.display='none'", 2000);
+				platformurl();
+				//				$('#node_modal').modal('toggle');
+			}
+		})
+	}
+	//导航条	
+	function getCompanyPath() {
+		var getCompanyPath = $("#getCompanyPath").val();
+		console.log(getCompanyPath);
+		$('#parent_level').empty();
+		$('#child_ch_name').val('');
+		$('#child_en_name').val('');
+		$('#child_address').val('');
+		$('#child_tel').val('');
+		$('#child_linkman').val('');
+		$.ajax({
+			url: getCompanyPath, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				nodesid: $('#nodeid').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data)
+				if(data.length == 1) {
+					$('#form_choose1').css('display', 'block')
+				} else {
+					$('#form_choose1').css('display', 'none')
+				}
+				for(var i = data.length - 1; i > -1; i--) {
+					var list = '<li>' + data[i].text + '</li>'
+					$('#parent_level').append(list)
+				}
+				$('#node_modal').modal('toggle');
+			}
+		})
+	}
+	//导航条	
+	function getCompanyPath2() {
+		var getCompanyPath = $("#getCompanyPath").val();
+		console.log(getCompanyPath);
+		$('#parent_level2').empty();
+		$('#change_ch_name').val($('#ch_name').text());
+		$('#change_en_name').val($('#en_name').text());
+		$('#change_address').val($('#address').text());
+		$('#change_tel').val($('#tel').text());
+		$('#change_linkman').val($('#linkman').text());
+		$.ajax({
+			url: getCompanyPath, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				nodesid: $('#nodeid').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data)
+				if(data.length < 3) {
+					$('#form_choose2').css('display', 'block')
+				} else {
+					$('#form_choose2').css('display', 'none')
+				}
+				for(var i = data.length - 1; i > -1; i--) {
+					var list = '<li>' + data[i].text + '</li>'
+					$('#parent_level2').append(list)
+				}
+				$('#change_modal').modal('toggle');
+			}
+		})
+	}
+	//展开折叠事件
+	function itemli(target) {
+		//找到当前节点id
+		var nodeid = $(target).attr('data-nodeid');
+		console.log(nodeid)
+		$("[data-nodeid=" + nodeid + "]").addClass('expand-icon');
+		//		$('#treeview1').treeview('toggleNodeExpanded', [ nodeid, { silent:true } ]);
+	}
+	//树节点弹出框
+	function itemOnclick(target) {
+		document.documentElement.scrollTop = 0;
+		var getCompany = $("#getCompany").val();
+		var getCompanyPath = $("#getCompanyPath").val();
+		//找到当前节点id
+		var nodeid = $(target).parent().attr('data-nodeid');
+		console.log(nodeid)
+		var tree = $('#treeview1');
+		//获取当前节点对象
+		var node = tree.treeview('getNode', nodeid);
+		$('#nodeid').val(node.id)
+		$('#staff').empty();
+		$('#puisne').empty();
+		console.log(node);
+		$.ajax({
+			url: getCompanyPath, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				nodesid: $('#nodeid').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data)
+				if(data[0].level == 1) {
+					$('#underling').text('下属部门：')
+				} else if(data[0].level > 1) {
+					$('#underling').text('下属职位：')
+				}
+				$('#parent_level1').empty();
+				for(var i = data.length - 1; i > -1; i--) {
+					var list = '<li style="cursor:pointer;" onclick="underling(' + data[i].id + ')">' + data[i].text + '</li>'
+					$('#parent_level1').append(list)
+				}
+			}
+		})
+		$.ajax({
+			url: getCompany, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				nodesid: node.id
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				if(data.info) {
+					alert('你没有权限')
+					return false;
+				}
+				if(data[0][0].level == 4) {
+
+				} else {
+
+				}
+				if(data[0][0].level > 3) {
+					$('#puisne').css('display', 'none')
+					$('#underling').css('display', 'none')
+					$('#create_child').css('display', 'none')
+				} else {
+					$('#create_child').css('display', 'inline-block')
+					$('#underling').css('display', 'block')
+					$('#puisne').css('display', 'block')
+				}
+				$('#ch_name').empty();
+				$('#en_name').empty();
+				$('#ch_name').text(data[0][0].namezh);
+				$('#en_name').text(data[0][0].nameus);
+				if(data[0][0].level < 2) {
+					$('#tel').empty();
+					$('#address').empty();
+					$('#linkman').empty();
+					$('#table_s').css('display', 'none')
+					$('#form_choose').css('display', 'block')
+					$('#table_s1').css('display', 'none')
+					for(var i = 0; i < data[2].length; i++) {
+						if(data[2][i].name == 'phone') {
+							$('#tel').text(data[2][i].value)
+						} else if(data[2][i].name == 'address') {
+							$('#address').text(data[2][i].value)
+						} else if(data[2][i].name == 'personnel') {
+							$('#linkman').text(data[2][i].value)
+						}
+					}
+				} else if(data[0][0].level > 1 && data[0][0].level < 3) {
+					$('#table_s').css('display', 'none')
+					$('#form_choose').css('display', 'none')
+					$('#table_s1').css('display', 'none')
+				} else {
+					$('#table_s').css('display', 'inline-block')
+					$('#table_s1').css('display', 'table')
+					$('#form_choose').css('display', 'none')
+					if(data[1].length == 0) {
+						var list = '<tr><td colspan="4">无</td></tr>';
+						$('#staff').append(list)
+					} else {
+						for(var i = 0; i < data[1].length; i++) {
+							if(data[1][i].phone == null) {
+								data[1][i].phone = '无'
+							}
+							var list = '<tr><td>' + data[1][i].name + '</td><td>' + data[1][i].phone + '</td><td><button class="btn btn-primary btn-xs">详情</button></td></tr>'
+							$('#staff').append(list)
+						}
+					}
+				}
+				if(data[3].length == 0) {
+					var list = '<p style="text-align: center;">无</p>'
+					$('#puisne').append(list)
+				} else {
+					for(var i = 0; i < data[3].length; i++) {
+						var list = '<button onclick="underling(' + data[3][i].id + ')" class="btn btn-default" style="margin-left:15px;">' + data[3][i].namezh + '</button>'
+						$('#puisne').append(list)
+					}
+				}
+				$('#org_modal').css('display', 'block');
+			}
+		})
+	}
+
+	function underling(id) {
+		$('#staff').empty();
+		$('#puisne').empty();
+		var getCompanyPath = $("#getCompanyPath").val();
+		var getCompany = $("#getCompany").val();
+		$.ajax({
+			url: getCompanyPath, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				nodesid: id
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data)
+				if(data[0].level == 1) {
+					$('#underling').text('下属部门：')
+				} else if(data[0].level == 2) {
+					$('#underling').text('下属职位：')
+				}
+				$('#parent_level1').empty();
+				for(var i = data.length - 1; i > -1; i--) {
+					var list = '<li style="cursor:pointer;" onclick="underling(' + data[i].id + ')">' + data[i].text + '</li>'
+					$('#parent_level1').append(list)
+				}
+			}
+		})
+
+		$.ajax({
+			url: getCompany, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				nodesid: id
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				if(data.info) {
+					alert('你没有权限')
+					return false;
+				}
+				if(data[0][0].level > 3) {
+					$('#create_child').css('display', 'none')
+					$('#underling').css('display', 'none')
+					$('#puisne').css('display', 'none')
+				} else {
+					$('#create_child').css('display', 'inline-block')
+					$('#underling').css('display', 'block')
+					$('#puisne').css('display', 'block')
+				}
+				$('#ch_name').empty();
+				$('#en_name').empty();
+				$('#ch_name').text(data[0][0].namezh);
+				$('#en_name').text(data[0][0].nameus);
+				if(data[0][0].level < 2) {
+					$('#tel').empty();
+					$('#address').empty();
+					$('#linkman').empty();
+					$('#table_s').css('display', 'none')
+					$('#form_choose').css('display', 'block')
+					$('#table_s1').css('display', 'none')
+					for(var i = 0; i < data[2].length; i++) {
+						if(data[2][i].name == 'phone') {
+							$('#tel').text(data[2][i].value)
+						} else if(data[2][i].name == 'address') {
+							$('#address').text(data[2][i].value)
+						} else if(data[2][i].name == 'personnel') {
+							$('#linkman').text(data[2][i].value)
+						}
+					}
+				} else if(data[0][0].level > 1 && data[0][0].level < 3) {
+					$('#table_s').css('display', 'none')
+					$('#form_choose').css('display', 'none')
+					$('#table_s1').css('display', 'none')
+				} else {
+					$('#table_s').css('display', 'inline-block')
+					$('#table_s1').css('display', 'table')
+					$('#form_choose').css('display', 'none')
+					if(data[1].length == 0) {
+						var list = '<tr><td colspan="4">无</td></tr>';
+						$('#staff').append(list)
+					} else {
+						for(var i = 0; i < data[1].length; i++) {
+							if(data[1][i].phone == null) {
+								data[1][i].phone = '无'
+							}
+							var list = '<tr><td>' + data[1][i].name + '</td><td>' + data[1][i].phone + '</td><td><button class="btn btn-primary btn-xs">详情</button></td></tr>'
+							$('#staff').append(list)
+						}
+					}
+				}
+				if(data[3].length == 0) {
+					var list = '<p style="text-align: center;">无</p>'
+					$('#puisne').append(list)
+				} else {
+					for(var i = 0; i < data[3].length; i++) {
+						var list = '<button onclick="underling(' + data[3][i].id + ')" class="btn btn-default" style="margin-left:15px;">' + data[3][i].namezh + '</button>'
+						$('#puisne').append(list)
+					}
+				}
+				$('#org_modal').css('display', 'block');
+			}
+		})
+	}
+</script>

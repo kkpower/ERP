@@ -1,0 +1,24 @@
+<!doctype html>
+<html class="fixed">
+<head>
+    <include file="Public:headerStyle" />
+</head>
+<body>
+<section class="body">
+    <include file="Public:header"  />
+
+    <div class="inner-wrapper">
+        <include file="Public:sidebar-left" />
+        <section role="main" class="content-body">
+            <include file="Public:page-header" />
+
+            <!-- start: page -->
+            {__CONTENT__}
+            <!-- end: page -->
+        </section>
+    </div>
+    <include file="Public:sidebar-right" />
+</section>
+<include file="Public:footer"  />
+</body>
+</html>

@@ -1,0 +1,334 @@
+<script>
+	$('#410').parents('li').addClass('nav-active')
+	$('#410').parents('li').addClass('nav-expanded')
+</script>
+<style>
+	input[type="radio"] {
+		width: 20px;
+		height: 20px;
+		margin-top: 2px;
+	}
+</style>
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/switch.css" />
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/switch.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/jqjianrong.js"></script>
+<div class="row">
+	<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+				<h2 class="panel-title">配送范围</h2>
+
+			</header>
+			<div class="panel-body">
+				<form id="form1" action="{:U('Config/deliveryArea')}" method="get">
+					<div class="input-group" style="width: 320px;float: left;">
+						<span class="input-group-addon">
+                    		仓库
+                		</span>
+						<input type="hidden" id="area" value="{$w_id}">
+						<select id="country" name="w_id" class="form-control" onchange="$('#form1').submit()">
+							<option value="">请选择仓库</option>
+							<volist name="warehouse" id="vo">
+								<option id="country_{$vo.id}" value="{$vo.w_id}">{$vo.englishname}</option>
+							</volist>
+						</select>
+					</div>
+				</form>
+				<div class="col-sm-1 " style="width: auto;">
+					<button class="center-block btn btn-primary" onclick="clear_content()">
+                            	添加配送区域
+                        </button>
+				</div>
+				<br style="clear: both;" />
+				<table id="table1" class="table mb-none table-hover table-striped" style="text-align: center;border-collapse: collapse;margin-top: 15px;">
+					<thead>
+						<tr>
+							<th style="text-align: center">状态</th>
+							<th style="text-align: center">序号</th>
+							<th style="text-align: center">配送地区</th>
+							<th style="text-align: center">操作</th>
+						</tr>
+					</thead>
+					<tbody id="transport">
+						<volist name="range" id="vo">
+							<tr>
+								<td style="line-height: 26px;"><input type="checkbox" id="{$vo.r_id}_ck1" name="checkboxed1" class="row_check row_check1" style="width: 20px;height: 20px;"></td>
+								<td>{$key+1}</td>
+								<td>{$vo.range}</td>
+								<td>
+									<button type="button" onclick="editTransporters1(this,'{$vo.r_id}')" class="btn btn-primary btn-xs">
+                                        	修改
+                                    </button>
+								</td>
+							</tr>
+						</volist>
+					</tbody>
+				</table>
+				<button class="btn btn-primary" style="float: left;margin-top: 15px;" onclick="updateTransporters()">保存</button>
+			</div>
+		</section>
+	</div>
+</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog" style="width: 500px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+                </button>
+				<h4 class="modal-title">
+					添加配送区域
+                </h4>
+			</div>
+			<div class="modal-body">
+				<div class="input-group">
+					<span class="input-group-addon">配送地区</span>
+					<input type="text" id="transporters" class="form-control" placeholder="请输入配送地区">
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" onclick="addTransporters()">{$Think.lang.Save}</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog" style="width: 500px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+                </button>
+				<h4 class="modal-title">
+					修改配送地区
+                </h4>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" id="transporters_id" />
+				<div class="input-group">
+					<span class="input-group-addon">配送地区</span>
+					<input type="text" id="transporters1" class="form-control" placeholder="请输入配送地区">
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" onclick="editTransporters()">{$Think.lang.Save}</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script>
+	var country = $('#area').val();
+	console.log(country);
+	$('#country').val(country);
+	console.log($('#country_' + country).attr('data-id'));
+	$('#tp_' + $('#country_' + country).attr('data-id')).attr('checked', true);
+	if(country != "") {
+		console.log(11111111111111);
+		$.ajax({
+			url: "{:U('Config/w_range')}", //通过JQ获取URL获得路径
+			data: {
+				w_id: country
+			}, //通过页面元素的ID来获取设备ID
+			type: "get", //选择传值方式(
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				for(var i = 0; i < data.length; i++) {
+					$('#' + data[i].id + '_ck1').prop('checked', true);
+					console.log($('#' + data[i].id + '_ck1').is(':checked'))
+				}
+				$(".row_check1").simpleSwitch({
+					"theme": "FlatCircular"
+				});
+			}
+		})
+	}
+
+	function clear_content() {
+		if(country == "") {
+			if(t) {
+				clearTimeout(t)
+			};
+			$('#node_message').text('请选择仓库');
+			node_message.style.display = 'block';
+			var t = setTimeout("node_message.style.display='none';", 1500);
+			return false;
+		}
+		$('#transporters').val() == '';
+		$('#addModal').modal('toggle');
+	}
+	//添加配送地区
+	function addTransporters() {
+		if($('#transporters').val() == '') {
+			if(t) {
+				clearTimeout(t)
+			};
+			$('#node_message').text('配送地区不能为空');
+			node_message.style.display = 'block';
+			var t = setTimeout("node_message.style.display='none'", 1500);
+			return false;
+		}
+		$.ajax({
+			url: "{:U('Config/add_range')}", //通过JQ获取URL获得路径
+			data: {
+				w_id: $('#area').val(),
+				range: $('#transporters').val()
+			}, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式(
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				if(t) {
+					clearTimeout(t)
+				};
+				$('#node_message').text('添加成功');
+				node_message.style.display = 'block';
+				var t = setTimeout("node_message.style.display='none';location.reload();", 2000);
+			}
+		})
+	}
+
+	function editTransporters1(that, id) {
+		$('#transporters1').val($(that).parent('td').siblings().eq(2).text());
+		$('#transporters_id').val(id)
+		$('#editModal').modal('toggle');
+	}
+	//修改配送地区名称
+	function editTransporters() {
+		$.ajax({
+			url: "{:U('Config/edit_range')}", //通过JQ获取URL获得路径
+			data: {
+				r_id: $('#transporters_id').val(),
+				range: $('#transporters1').val()
+			}, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式(
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				if(t) {
+					clearTimeout(t)
+				};
+				$('#node_message').text('修改成功');
+				node_message.style.display = 'block';
+				var t = setTimeout("node_message.style.display='none';location.reload();", 2000);
+			}
+		})
+	}
+	//修改运输方式
+	function editMode() {
+		$.ajax({
+			url: "{:U('Config/editMode')}", //通过JQ获取URL获得路径
+			data: {
+				id: $('#transporters_modeId').val(),
+				mode: $('#transporters1_mode').val()
+			}, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式(
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				if(t) {
+					clearTimeout(t)
+				};
+				$('#node_message').text('修改成功');
+				node_message.style.display = 'block';
+				var t = setTimeout("node_message.style.display='none';location.reload();", 2000);
+			}
+		})
+	}
+	//修改状态
+	function updateMode() {
+		var checkbox = $('.row_check2');
+		var arr1 = [];
+		for(var i = 0, j; j = checkbox[i++];) {
+			if(j.checked == true) {
+				arr1.push(j.value)
+			};
+		}
+		var radio = $('.mode_radio');
+		var arr2 = "";
+		for(var i = 0, j; j = radio[i++];) {
+			if(j.checked == true) {
+				arr2 = j.id.split('_')[1]
+			};
+		}
+		if($('#' + arr2 + '_ck').is(':checked') == false) {
+			if(t) {
+				clearTimeout(t)
+			};
+			$('#node_message').text('锁定状态不能设为默认');
+			node_message.style.display = 'block';
+			var t = setTimeout("node_message.style.display='none';", 2000);
+			return false;
+		}
+		console.log(arr1);
+		console.log(arr2);
+		$.ajax({
+			url: "{:U('Config/updateMode')}", //通过JQ获取URL获得路径
+			data: {
+				id: $('#transport_id').val(),
+				mode_id: arr1,
+				default_mode_id: arr2,
+				cid: $('#area').val()
+			}, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式(
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				if(t) {
+					clearTimeout(t)
+				};
+				$('#node_message').text('保存成功');
+				node_message.style.display = 'block';
+				var t = setTimeout("node_message.style.display='none';location.reload();", 2000);
+			}
+		})
+	}
+	//锁定运输商
+	function updateTransporters() {
+		var checkbox = $('.row_check1');
+		var arr1 = [];
+		var arr3 = [];
+		for(var i = 0, j; j = checkbox[i++];) {
+			if(j.checked == true) {
+				arr1.push('1')
+			} else {
+				arr1.push('2')
+			};
+			arr3.push(j.id.split('_')[0])
+		}
+		console.log(arr1);
+		console.log(arr3);
+		$.ajax({
+			url: "{:U('Config/edit_rangStatus')}", //通过JQ获取URL获得路径
+			data: {
+				id: arr3,
+				status: arr1,
+			}, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式(
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				if(t) {
+					clearTimeout(t)
+				};
+				$('#node_message').text('保存成功');
+				node_message.style.display = 'block';
+				var t = setTimeout("node_message.style.display='none';location.reload();", 1500);
+			}
+		})
+	}
+</script>

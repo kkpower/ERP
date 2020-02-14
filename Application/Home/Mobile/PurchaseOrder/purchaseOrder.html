@@ -1,0 +1,531 @@
+<style>
+	.bootstrap-select.btn-group .dropdown-toggle .filter-option {
+		padding-left: 5px;
+		padding-top: 3px;
+		color: #666;
+	}
+	
+	.bootstrap-select {
+		/*width: 50% !important;*/
+	}
+	
+	.bootstrap-select>button {
+		height: 100%;
+		line-height: 100%;
+	}
+	
+	.bootstrap-select>button:active {
+		background: #fff !important;
+	}
+	
+	.bootstrap-select>button:hover {
+		background: #fff !important;
+	}
+	
+	.bootstrap-select>button:focus {
+		background: #fff !important;
+	}
+	
+	select {
+		appearance: none;
+		-moz-appearance: none;
+		-webkit-appearance: none;
+	}
+	
+	select::-ms-expand {
+		display: none;
+	}
+	
+	.caret {
+		color: #333 !important;
+	}
+</style>
+<script>
+	$('#190').parents('li').addClass('nav-active')
+	$('#190').parents('li').addClass('nav-expanded')
+</script>
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+
+				<h2 class="panel-title">采购订单申请</h2>
+			</header>
+			<div class="panel-body">
+				<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+				<form class="" action="{:U('PurchaseOrder/purchaseOrder')}" method="get" style="display: inline-block;float: left;">
+					<div class="input-group">
+						<span class="input-group-addon">
+                    		订单
+                		</span>
+                		
+						<input name="search" type="text" value="" class="form-control" placeholder="请输入订单号" style="width: 9rem;">
+						<span class="input-group-addon">
+                    		流程
+                		</span>
+						<select class="form-control" name="status" id="orderall">
+							<option value="">全部</option>
+							<option value="1">待审核</option>
+							<option value="2">初审通过</option>
+							<option value="3">审核失败</option>
+							<option value="4">审核通过</option>
+						</select>
+							<span class="input-group-btn">
+								<button type="submit" class="btn btn-success" style="white-space: nowrap;">搜索</button>
+							</span>
+							
+					</div>
+					<input type="hidden" id="" name='' value="">
+					<input type="hidden" name='' value="">
+				</form>
+				<button class="btn btn-primary" onclick="onm()" style="float: left;margin-top: 1.2rem;">申请</button>
+				<br style="clear: both;" />
+				<table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+					<thead>
+						<tr>
+							<th>序号</th>
+							<th>订单号</th>
+							<th>供应商</th>
+							<th>收货仓库</th>
+							<th>运输方式</th>
+							<th>运费</th>
+							<th>流程</th>
+							<th>审核人</th>
+							<th>审核时间</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody id="tbody-result">
+						<volist name="purchaselist" id="vo" key="k">
+							<tr>
+								<td>{$k}</td>
+								<td>{$vo.order_number}</td>
+								<td>{$vo.suppliername}</td>
+								<td>{$vo.name}</td>
+								<td>
+									<eq name="vo.transport" value="land">陆运</eq>
+									<eq name="vo.transport" value="sea">海运</eq>
+									<eq name="vo.transport" value="aircraft">空运</eq>
+								</td>
+								<td>{$vo.freight}</td>
+								<td>
+									<if condition="$vo.status eq 1 "> 待审核
+										<elseif condition="$vo.status eq 2" />初审通过
+										<elseif condition="$vo.status eq 3" />审核失败
+										<elseif condition="$vo.status eq 4" />审核通过
+									</if>
+								</td>
+								<td>{$vo.lastname}{$vo.namezhs}</td>
+								<td>{$vo.examine_time}</td>
+								<td>
+									<a href="{:U('PurchaseOrder/productDetails',array('id'=>$vo['id']))}"  target="_blank" style="border: 0px;color: #fff;" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a>
+									<!--<if condition="$vo.status eq 4 ">-->
+									<!--<button onclick='orderPdf("{$vo.id}")' style="border: 0px;" type="button" data-toggle="modal" class="btn btn-primary btn-xs" >-->
+										<!--pdf-->
+									<!--</button>-->
+									<!--</if>-->
+									<if condition="$vo.status eq 3 ">
+										<button onclick='orderDel(this,"{$vo.id}")' style="background: #EE0000; border: 0px;" type="button" data-toggle="modal" class="btn btn-primary btn-xs" >
+										<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+									</button>
+										<elseif condition="$vo.status eq 4" />
+										<button onclick='orderDel(this,"{$vo.id}")' style="background: #EE0000; border: 0px;" type="button" data-toggle="modal" class="btn btn-primary btn-xs" >
+										<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+									</button>
+									</if>
+								</td>
+							</tr>
+						</volist>
+					</tbody>
+				</table>
+				<ul class="pager" style="width: 100%;">
+					<!-- 分页显示 -->{$page}</ul>
+			</div>
+		</section>
+
+	</div>
+</div>
+
+<form onsubmit="return doadd(this)">
+	<div id="node_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">
+						申请采购单
+					</h4>
+				</div>
+				<div class="modal-body" style="line-height: 34px;">
+					<div class="row" style="margin-left: 0;margin-right: 0;">
+						<input type="hidden" name="platform_id" value="{$pid}">
+						<div class="input-group">
+							<span class="input-group-addon">供应商<span style="color: red;">*</span></span>
+							<select id="first" type="text" name="supplier_id" class="form-control" onchange="getAjaxproduct()" style="width: 43.4%;">
+							</select>
+							<!--<input type="text" name="type" class="form-control" placeholder="" style="width: 30%;">-->
+						</div>
+						<div class="col-md-12" style="padding-left: 0;padding-top: 15px;">
+							<div class="input-group">
+								<span class="input-group-addon">产品名称</span>
+								<select id="pid0" name="supplier_pr_id[]" class="selectpicker pid form-control" onchange="getAjaxprice()" data-live-search="true">
+								</select>
+							</div>
+						</div>
+						<div class="col-md-6" style="padding-left: 0;padding-top: 15px;">
+							<div class="input-group">
+								<span class="input-group-addon">单价</span>
+								<input name="price[]" class="form-control" type="text" value="" id="pice0" readonly="readonly">
+							</div>
+						</div>
+						<div class="col-md-6" style="padding-left: 0;padding-top: 15px;">
+							<div class="input-group">
+								<span class="input-group-addon">数量</span>
+								<input name="num[]" class="form-control" type="text" value="">
+							</div>
+						</div>
+						<div id="add_tel">
+
+						</div>
+
+					</div>
+					<div onclick="add_tel()" class="addxm" style="margin-top: 10px;color: #fff;background-color: #0088cc;border-color: #0088cc;width: 80px;height: 30px;border-radius: 4px;text-align: center;line-height: 30px;cursor: pointer;">新增产品</div>
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">仓库<span style="color: red;">*</span></span>
+						<select name="warehouse_id" class="form-control" style="width: 44%;">
+							<option value="">请选择</option>
+							<volist name="warehouse" id="wo">
+								<option value="{$wo.id}">{$wo.name}</option>
+							</volist>
+						</select>
+					</div>
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">运输方式<span style="color: red;">*</span></span>
+						<select name="transport" class="form-control" style="width: 44%;">
+							<option value="">请选择</option>
+							<option value="land">陆运</option>
+							<option value="sea">海运</option>
+							<option value="aircraft">空运</option>
+						</select>
+					</div>
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">运费<span style="color: red;">*</span></span>
+						<input name="freight" class="form-control" type="text" value="">
+					</div>
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">备注<span style="color: red;">*</span></span>
+						<input name="remarks" class="form-control" type="text" value="">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" id="add_pr" type="submit">确认</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	</div>
+</form>
+
+<div id="show_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document" style="width: 50%;">
+		<div class="modal-content">
+			<div class="modal-body" style="line-height: 34px;">
+				<div class="row" style="margin-left: 0;margin-right: 0;">
+					<table class="table table-hover table-striped" style="margin-top: 20px;">
+						<thead>
+							<tr>
+								<th>序号</th>
+								<th>用户</th>
+							</tr>
+						</thead>
+						<tbody id="tbody-result">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+</div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+
+<script>
+    $("#pid0").selectpicker({
+		noneSelectedText:'请选择产品'
+	});
+    $(document).ready(function() {
+        $('#table1').DataTable({
+            "paging": false,
+            "lengthChange": false,
+            "info": false,
+            "searching": false
+        });
+    });
+
+	//申请采购订单弹框
+	function onm() {
+		$('#node_modal').modal('toggle');
+		getAjaxsupplier();
+	}
+	var nn = 0;
+
+	function getAjaxsupplier() //供应商
+	{
+		$.ajax({
+			url: "{:U('PurchaseOrder/getAjaxsupplier')}", //通过页面元素的ID来获取供应商ID
+			type: "post", //选择传值方式
+			data: {},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				var p = "<option id='first_op' value=''>请选择</option>"
+				$("#first").html(p);
+				//将获取到的数据赋值
+				for(var i = 0; i < data.length; i++) {
+					//拼接option标签的 name value 等属性
+					var p = "<option value='" +
+						data[i]['id'] +
+						"'" +
+						">" +
+						data[i]['name'] +
+						"</option>";
+					$("#first_op").after(p);
+				}
+
+			}
+		})
+
+	}
+
+	function add_tel() {
+		nn++;
+		var list = '<div class="col-md-12" style="padding-left: 0;padding-top: 15px;">' +
+			'<div class="input-group">' +
+			'<span class="input-group-addon">产品名称</span>' +
+			'<select id="pid' + nn + '" name="supplier_pr_id[]" class="selectpicker pid form-control" onchange="getAjaxprice1(' + nn + ')" data-live-search="true">' +
+			'</select>' +
+			'</div>' +
+			'</div>' +
+			'<div class="col-md-6" style="padding-left: 0;padding-top: 15px;">' +
+			'<div class="input-group">' +
+			'<span class="input-group-addon">单价</span>' +
+			'<input name="price[]" class="form-control" type="text" value="" id="pice' + nn + '" readonly="readonly">' +
+			'</div>' +
+			'</div>' +
+			'<div class="col-md-6" style="padding-left: 0;padding-top: 15px;">' +
+			'<div class="input-group">' +
+			'<span class="input-group-addon">数量</span>' +
+			'<input name="num[]" class="form-control" type="text" value="">' +
+			'</div>' +
+			'</div>';
+		$('#add_tel').append(list);
+		getAjaxproduct1(nn);
+		getAjaxprice1(nn);
+	};
+	function getAjaxproduct() //供应商下的产品
+	{
+		for(var i=0;i<=nn;i++){
+			$('#pice'+i).val("")
+		}
+		$.ajax({
+			url: "{:U('PurchaseOrder/getAjaxproduct')}", //通过页面元素的ID来获取产品ID
+			type: "post", //选择传值方式
+			data: {
+				superior: $('#first').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				var p = "<option class='second_op' value=''>请选择产品</option>"
+				//将获取到的数据赋值
+				for(var i = 0; i < data.length; i++) {
+					//拼接option标签的 name value 等属性
+					p += "<option value='" +
+						data[i]['pid'] +
+						"'" +
+						">" +
+						data[i]['namezh'] +
+						"</option>";
+				}
+				for(var i = 0; i <= nn; i++) {
+					$("#pid" + i).empty();
+					$('#pid' + i).append(p);
+					$('#pid' + i).selectpicker('refresh');
+				}
+
+			}
+		})
+	}
+
+	function getAjaxproduct1(n) //供应商下的产品
+	{
+		$.ajax({
+			url: "{:U('PurchaseOrder/getAjaxproduct')}", //通过页面元素的ID来获取产品ID
+			type: "post", //选择传值方式
+			data: {
+				superior: $('#first').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				var p = "<option id='second_op" + n + "' class='second_op' value=''>请选择产品</option>"
+				//              $("#pid"+n).html(p);
+				//将获取到的数据赋值
+				for(var i = 0; i < data.length; i++) {
+					//拼接option标签的 name value 等属性
+					p += "<option value='" +
+						data[i]['pid'] +
+						"'" +
+						">" +
+						data[i]['namezh'] +
+						"</option>";
+					//                  $("#second_op"+n).after(p);
+				}
+				console.log(p)
+				$("#pid" + n).empty();
+				$('#pid' + n).append(p);
+				$('#pid' + n).selectpicker('refresh');
+			}
+		})
+
+	}
+
+	function getAjaxprice() //供应商下的产品单价
+	{
+		$.ajax({
+			url: "{:U('PurchaseOrder/getAjaxprice')}", //通过页面元素的ID来获取产品ID
+			type: "post", //选择传值方式
+			data: {
+				suprice: $('#pid0').val(),
+				superior: $('#first').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				if(data == '') {
+					$("#pice0").val('');
+				} else {
+					//将获取到的数据赋值
+					for(var i = 0; i < data.length; i++) {
+						//拼接option标签的 name value 等属性
+						var p = data[i].price;
+						$("#pice0").val(p);
+					}
+				}
+
+			}
+		})
+	}
+
+	function getAjaxprice1(n) //供应商下的产品单价
+	{
+		$.ajax({
+			url: "{:U('PurchaseOrder/getAjaxprice')}", //通过页面元素的ID来获取产品ID
+			type: "post", //选择传值方式
+			data: {
+				suprice: $('#pid' + n).val(),
+				superior: $('#first').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				//将获取到的数据赋值
+				if(data == '') {
+					$("#pice" + n).val('');
+				} else {
+					//for(var i = 0; i < data.length; i++) {
+					//拼接option标签的 name value 等属性
+					var p = data[0].price;
+					$("#pice" + n).val(p);
+					//}
+				}
+
+			}
+		})
+	}
+
+	//申请采购单
+	function doadd(form) {
+		var chk_value = [];
+        $('.pid form-control option:selected').each(function(){
+            chk_value.push($(this).val());
+        });
+        console.log(chk_value);
+        var num_value = [];
+        $('input[name="num[]"]').each(function(){
+            num_value.push($(this).val());
+        });
+        $.ajax({
+            url: "{:U('PurchaseOrder/orderAdd')}",
+            type: "post",
+            data: $(form).serialize(),
+            dataType: "json",
+            async: true,
+            success: function(data) {
+                if(data.status == 0) {
+                    $('#node_message').html('您没有该操作权限');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if(data == "NO") {
+                    $('#node_message').html('申请失败');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if(data == "KO") {
+                    $('#node_message').html('选择的产品重复');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if(data == "OK") {
+                    $('#node_message').html('申请成功');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+                }
+            }
+        });
+        return false;
+    }
+    //删除订单
+    function orderDel(obj,id){
+        var r = confirm("你确定删除?");
+        if (r){
+            $.ajax({
+                url:"{:U('PurchaseOrder/orderDel')}",
+                type:'post',
+                dataType:"json",
+                data:{
+                    id:id
+                },
+                success:function(data){
+                    if (data.status==0){
+                        $('#node_message').html('您没有权限');
+                        node_message.style.display = 'block';
+                        var t = setTimeout("node_message.style.display='none';", 2000);
+                    }else if(data=='NO'){
+                        $('#node_message').html('删除失败');
+                        node_message.style.display = 'block';
+                        var t = setTimeout("node_message.style.display='none';", 2000);
+					}else if (data>0) {
+                        $(obj).parents("tr").remove();
+                        $('#node_message').html('删除成功');
+                        node_message.style.display = 'block';
+                        var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+                    }else{
+                        $('#node_message').html('删除失败');
+                        node_message.style.display = 'block';
+                        var t = setTimeout("node_message.style.display='none';", 2000);
+                    }
+                }
+            });
+        }
+    }
+</script>

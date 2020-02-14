@@ -1,0 +1,61 @@
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+				<h2 class="panel-title">{$Think.lang.Information}</h2>
+			</header>
+			<div class="panel-body">
+				<form action="{:U('System/update','','')}" method="POST">
+					<if condition="($type eq 1)">
+						<div class="form-group">
+							<div class="input-group" style="padding-top: 20px;">
+								<span class="input-group-addon">{$Think.lang.Useraccount}：</span>
+								<input type="text" name="uname" class="form-control" placeholder="{$Think.session.user_info.uname}" style="width: 55%;">
+							</div>
+							<!--<label class="col-md-3 control-label">{$Think.lang.Useraccount}：</label>
+							<div class="col-md-6">
+								<input type="text" name="uname" class="form-control" placeholder="{$Think.session.user_info.uname}">
+							</div>-->
+
+						</div>
+
+						<else />
+						<div class="form-group">
+							<div class="input-group" style="padding-top: 20px;">
+								<span class="input-group-addon">{$Think.lang.Userpassword}：</span>
+								<input type="password" name="pwd" class="form-control" style="width: 55%;">
+							</div>
+							<!--<label class="col-md-3 control-label">{$Think.lang.Userpassword}：</label>
+							<div class="col-md-6">
+								<input type="password" name="pwd" class="form-control">
+
+							</div>-->
+
+						</div>
+					</if>
+					<!--  <div class="form-group">
+                        <label class="col-md-3 control-label">状态：</label>
+                        <div class="col-md-6">
+                            <select id="search_payType" name="status"  data-plugin-selecttwo="" class="form-control populate" >
+                                <option value="0">&#45;&#45;请选择&#45;&#45;</option>
+                                    <option value="1}">启用</option>
+                                    <option value="2}">暂停</option>
+                            </select>
+                        </div>
+                    </div>-->
+					<br>
+					<input type="hidden" name="uid" value="{$Think.session.user_info.uid}">
+					<div class="form-group">
+						<button id="search" type="submit" class="center-block btn btn-primary">{$Think.lang.Modify}</button>
+						<label class="col-md-6 control-label" style="padding-top: 8px;">{$Think.lang.Becareful}：{$Think.lang.Onlythecurrent}。<br/>{$Think.lang.Logged}:{$Think.session.user_info.uname}</label>
+					</div>
+				</form>
+
+			</div>
+		</section>
+	</div>
+</div>

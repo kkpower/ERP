@@ -1,0 +1,224 @@
+<script>
+	$('#41').parents('li').addClass('nav-active')
+	$('#41').parents('li').addClass('nav-expanded')
+</script>
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<style type="text/css">
+	.bootstrap-select.btn-group .dropdown-toggle .filter-option {
+		padding-left: 5px;
+		padding-top: 3px;
+		color: #666;
+	}
+	
+	.bootstrap-select {
+		/*width: 50% !important;*/
+	}
+	
+	.bootstrap-select>button {
+		height: 100%;
+		line-height: 100%;
+	}
+	
+	.bootstrap-select>button:active {
+		background: #fff !important;
+	}
+	
+	.bootstrap-select>button:hover {
+		background: #fff !important;
+	}
+	
+	.bootstrap-select>button:focus {
+		background: #fff !important;
+	}
+	
+	#details_body .col-md-6 {
+		padding-left: 0;
+	}
+	
+	#details_body .col-md-12 {
+		padding-left: 0;
+	}
+	
+	#details_img {
+		text-align: center;
+	}
+	
+	#details_img>div {
+		display: inline-block;
+		width: 45%;
+		position: relative;
+		margin: 0 2% 2%;
+	}
+	
+	#details_img img {
+		width: 100%;
+	}
+	
+	#details_img p {
+		color: #333;
+		line-height: 18px;
+	}
+	
+	#details_img span {
+		position: absolute;
+		top: 0;
+		right: 0;
+		line-height: 16px;
+		text-align: center;
+		font-size: 16px;
+		color: red;
+		font-weight: bold;
+	}
+</style>
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+
+				<h2 class="panel-title">订单修改</h2>
+			</header>
+			<div class="panel-body">
+				<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+				<p id="status_id" style="display: none;">{$info.status_id}</p>
+				<input type="hidden" id="order_id" value="{$info.id}"/>
+				<div class="col-md-6">
+					<div class="input-group">
+						<span class="input-group-addon">订单号</span>
+						<input id="input2" type="text" name="id" class="form-control" value="{$info.id}" placeholder="" readonly="readonly">
+					</div>
+				</div>
+				<!--<div class="col-md-6">
+					<div class="input-group">
+						<span class="input-group-addon">金额</span>
+						<input id="input3" type="text" class="form-control" value="" placeholder="">
+					</div>
+				</div>-->
+				<div class="col-md-6">
+					<div class="input-group">
+						<span class="input-group-addon">收件人</span>
+						<input id="input4" type="text" name="recipient_first_name" class="form-control" value="{$info.recipient_first_name}" placeholder="">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">收件电话</span>
+						<input id="input6" name="buyer_phone" type="text" class="form-control" value="{$info.buyer_phone}" placeholder="">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">邮箱</span>
+						<input id="input7" name="buyer_email" type="text" class="form-control" value="{$info.buyer_email}" placeholder="">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">国家</span>
+						<input id="input5" type="text" name="country" class="form-control" value="{$info.country}" placeholder="">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">省</span>
+						<input id="input8" name="state" type="text" class="form-control" value="{$info.state}" placeholder="">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">市</span>
+						<input id="input9" name="city" type="text" class="form-control" value="{$info.city}" placeholder="">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">收货地址1</span>
+						<input id="input10" name="street_1" type="text" class="form-control" value="{$info.street_1}" placeholder="">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">收货地址2</span>
+						<input id="input11" name="street_2" type="text" class="form-control" value="{$info.street_2}" placeholder="">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">收货地址3</span>
+						<input id="input12" name="street_3" type="text" class="form-control" value="{$info.street_3}" placeholder="">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">邮编</span>
+						<input id="input13" name="zip" type="text" class="form-control" value="{$info.zip}" placeholder="">
+					</div>
+				</div>
+				<div class="col-md-12" style="padding-top: 20px;">
+					<button class="btn btn-primary" id="change_order" onclick="update()">修改</button>
+				</div>		
+			</div>
+		</section>
+
+	</div>
+</div>
+<script>
+	/*if($('#status_id').text() == 2) {
+		$('#change_order').css('display', 'inline-block');
+	}else{
+		$('#change_order').css('display', 'none');
+	}*/
+	//修改订单
+	function update() {
+		console.log($('#order_id').val())
+		if($('#input4').val() == "" || $('#input5').val() == "" || $('#input6').val() == "" || $('#input7').val() == "" || $('#input8').val() == "" || $('#input9').val() == "" || $('#input10').val() == "" || $('#input13').val() == "") {
+			if(t) {
+				clearTimeout(t)
+			};
+			$('#node_message').html('内容不能为空');
+			node_message.style.display = 'block';
+			var t = setTimeout("node_message.style.display='none';", 2000);
+			return false;
+		}
+		$.ajax({
+			url: "{:U('Deliverycenter/update')}", //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				/*id: $('#order_id').val(),*/
+				id: $('#input2').val(),
+				recipient_first_name: $('#input4').val(),
+				country: $('#input5').val(),
+				buyer_phone: $('#input6').val(),
+				buyer_email: $('#input7').val(),
+				state: $('#input8').val(),
+				city: $('#input9').val(),
+				street_1: $('#input10').val(),
+				street_2: $('#input11').val(),
+				street_3: $('#input12').val(),
+				zip: $('#input13').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				if(data == 'NO') {
+					if(t) {
+						clearTimeout(t)
+					};
+					$('#node_message').html('修改失败');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				} else {
+					if(t) {
+						clearTimeout(t)
+					};
+					$('#node_message').html('修改成功');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+				}
+
+			}
+		})
+	}
+</script>

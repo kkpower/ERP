@@ -1,0 +1,196 @@
+<style>
+	.modal-dialog {
+		margin: 60px auto !important;
+	}
+	
+	.caret1 {
+		content: "";
+		border-top: 0;
+		border-bottom: 4px dashed;
+	}
+	
+	.bootstrap-select.btn-group .dropdown-toggle .filter-option {
+		padding-left: 5px;
+		padding-top: 3px;
+		color: #666;
+	}
+	
+	.bootstrap-select>button {
+		height: 100%;
+		line-height: 100%;
+	}
+	
+	.bootstrap-select>button:active {
+		background: #fff !important;
+	}
+	
+	.bootstrap-select>button:hover {
+		background: #fff !important;
+	}
+	
+	.bootstrap-select>button:focus {
+		background: #fff !important;
+	}
+	
+	.caret {
+		color: #333 !important;
+	}
+	
+	select::-ms-expand {
+		display: none;
+	}
+</style>
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<script>
+	$('#316').parents('li').addClass('nav-active')
+	$('#316').parents('li').addClass('nav-expanded')
+</script>
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+				<h2 class="panel-title">完整库存查询</h2>
+			</header>
+			<div class="panel-body">
+				<form class="" action="{:U('Warehouse/inLibrary','','')}" method="get" style="margin-right:15px ;">
+					<div class="col-md-3" style="padding-left: 0;">
+						<div class="input-group">
+							<span class="input-group-addon">{$Think.lang.warehouse}</span>
+							<input type="hidden" id="ck" value="{$k_id}">
+							<select id="father" class="form-control" name="k_id">
+								<option value="">--{$Think.lang.Pleaseselectawarehouse}--</option>
+								<foreach name="warehouse" item="wa">
+									<option value="{$wa.id}">
+										<eq name="Think.cookie.think_language" value="zh-cn">{$wa.name}</eq>
+										<eq name="Think.cookie.think_language" value="en-us">{$wa.englishname}</eq>
+									</option>
+								</foreach>
+							</select>
+						</div>
+					</div>
+					<!--<input type="hidden" id="currency" name="currencyd">-->
+					<div id="status_div" class="col-md-7" style="padding-left: 0;">
+						<div class="input-group">
+							<span class="input-group-addon">{$Think.lang.Productname}</span>
+							<input type="hidden" id="goodid" value="{$p_id}">
+							<select name="p_id" id="product" class="form-control" data-live-search="true">
+								<option value="">--{$Think.lang.Pleaseselectaproduct}--</option>
+								<volist name="product" id="pr">
+									<option value="{$pr.id}">{$pr.bclassc_number}.{$pr.sclassc_number}.{$pr.snumber_number}: {$pr.namezh}</option>
+								</volist>
+							</select>
+						</div>
+					</div>
+					<div class="col-md-2" style="padding-left: 0;">
+						<button type="submit" class="btn btn-success">{$Think.lang.Search}</button>
+					</div>
+				</form>
+				<br style="clear: both;" />
+				<input type="hidden" id="country" value="{$country}">
+				<input type="hidden" id="currency" value="{$currency}">
+				<table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+					<thead>
+						<tr>
+
+							<th>{$Think.lang.product_number}</th>
+							<th>{$Think.lang.Productname}</th>
+							<th>{$Think.lang.UnitPrice}
+								<if condition="$list[0]['spelling'] neq ''">
+									({$list[0]['spelling']})
+								</if>
+							</th>
+							<th style="cursor: pointer;">{$Think.lang.stock_quantity}</th>
+							<th>{$Think.lang.frozen_quantity}</th>
+							<th>{$Think.lang.Amount}
+								<if condition="$list[0]['spelling'] neq ''">
+									({$list[0]['spelling']})
+								</if>
+							</th>
+							<th>{$Think.lang.Operation}</th>
+						</tr>
+					</thead>
+					<tbody id="gbi">
+						<volist name="list" id="vo">
+							<tr>
+								<td class="bm">
+									<a href="{:U('Product/homeProduct',array('pid'=>$vo['pid']))}" target="_blank">{$vo.bclassc_number}.{$vo.sclassc_number}.{$vo.snumber_number}</a>
+								</td>
+								<td>
+									<a href="{:U('Product/homeProduct',array('pid'=>$vo['pid']))}" target="_blank">{$vo.namezh}</a>
+								</td>
+								<td>
+									{$vo.price}
+								</td>
+								<td>
+									{$vo.number}
+								</td>
+								<td>{$vo.freeze_number}</td>
+								<td></td>
+								<td>
+									<a href="{:U('Warehouse/areaReservoir',array('pid'=>$vo['pid'],'kid'=>$vo['zk_id']))}" class="btn btn-primary btn-xs" style="color: #fff;" target="_blank">{$Think.lang.Details}</a>
+								</td>
+							</tr>
+						</volist>
+					</tbody>
+				</table>
+				<ul class="pager" style="width: 100%;">
+					<!-- 分页显示 -->{$page}</ul>
+				<if condition="$list">
+					<div style="float: right;">{$Think.lang.Total}:<span style="font-size: 16px;color: red;" id="totalrmb"> {$rmbtotal}</span><span id="rmb">RMB</span><span style="font-size: 16px;color: red;padding-left: 30px;" id="total"> {$total}</span>{$list[0]['spelling']}</div>
+				</if>
+
+			</div>
+		</section>
+	</div>
+</div>
+<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script>
+	var currency = $('#currency').val();
+	if (currency=='RMB'){
+		$('#totalrmb').hide();
+		$('#rmb').hide();
+		$('#total').css({'padding-left':'0px'});
+	}else {
+		$('#totalrmb').show();
+		$('#rmb').show();
+	}
+	console.log($('#gbi').find('tr'));
+	for(var i=0;i<$('#gbi').find('tr').length;i++){
+		$('#gbi').find('tr')[i].children[2].innerText = parseInt(Number($('#gbi').find('tr')[i].children[2].innerText)*Number($('#country').val())*100+0.5)/100;
+		var tby2 = $('#gbi').find('tr')[i].children[2].innerText;
+		var tby3 = $('#gbi').find('tr')[i].children[3].innerText;
+		$('#gbi').find('tr')[i].children[5].innerText=parseInt(Number(tby2)*Number(tby3)*100+0.5)/100;
+	}
+
+
+	var ck = $('#ck').val();
+	$('#father').val(ck);
+	var goodid = $('#goodid').val();
+	$('#product').val(goodid);
+	$('#product').selectpicker('refresh');
+	$(document).ready(function() {
+		$('#table1').DataTable({
+			"paging": false,
+			"lengthChange": false,
+			"info": false,
+
+			"searching": false
+		});
+	});
+	$('.aa').on('click', function() {
+		//		if($(this).children('span').attr())
+		if($(this).children('span').attr('class').indexOf('1') == -1) {
+			$(this).children('span').addClass('caret1')
+		} else {
+			$(this).children('span').removeClass('caret1')
+		}
+
+	})
+</script>

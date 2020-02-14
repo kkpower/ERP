@@ -1,0 +1,247 @@
+<script src="__ROOT__/Public/login/assets/js/jquery-1.11.1.min.js">
+</script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+</head>
+
+<style>
+	.six:before {
+		content: "";
+		position: absolute;
+		top: -25px;
+		left: 0;
+		width: 0;
+		height: 0;
+		border-left: 50px solid transparent;
+		border-right: 50px solid transparent;
+		border-bottom: 25px solid #ececec;
+	}
+	
+	.six:after {
+		content: "";
+		position: absolute;
+		bottom: -25px;
+		left: 0;
+		width: 0;
+		height: 0;
+		border-left: 50px solid transparent;
+		border-right: 50px solid transparent;
+		border-top: 25px solid #ececec;
+	}
+	
+	.dropdown-toggle {
+		height: 34px;
+	}
+</style>
+<script>
+	$('#81').parents('li').addClass('nav-active')
+	$('#81').parents('li').addClass('nav-expanded')
+</script>
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+				<input type="hidden" name='getRoleAuthority' value="{:U('System/getRoleAuthority','','')}">
+				<h2 class="panel-title">{$Think.lang.warehouse_information}</h2>
+			</header>
+			<!--<div class="panel-body">
+                <button class="btn btn-primary" onclick=""> </button>
+            </div>-->
+			<input type="hidden" name='getRoleAuthority' value="{:U('System/getRoleAuthority','','')}">
+			<input type="hidden" name='delRole' value="{:U('System/delRole','','')}">
+			<div class="panel-body">
+				<div style="width: 30%;float: left;">
+					<!--<div style="width: 100%;height: 160px;background: url('__ROOT__/Public/img/bg.jpg');background-size: cover;">-->
+					<!--</div>-->
+					<div style="padding:0 30px;line-height: 28px;">
+						<h4 style="padding-top: 20px;margin-top: 0;">{$Think.lang.basicInformation}</h4>
+						<div style="width: 30%;float: left;">{$Think.lang.Chinesename}</div>
+						<div style="width: 70%;float: right;text-align: right;height:28px;">{$info.name}</div>
+						<div style="width: 30%;float: left;">{$Think.lang.Engname}</div>
+						<div style="width: 70%;float: right;text-align: right;height:28px;">{$info.englishname}</div>
+						<div style="width: 30%;float: left;">{$Think.lang.Company}</div>
+						<div style="width: 70%;float: right;text-align: right;height:28px;">{$info.namezh}</div>
+						<div style="width: 30%;float: left;">{$Think.lang.Country}</div>
+						<div style="width: 70%;float: right;text-align: right;height:28px;">{$info.countryzh}</div>
+						<div style="width: 30%;float: left;">{$Think.lang.Address}</div>
+						<div style="width: 70%;float: right;text-align: right;height: auto;line-height: 1.5em;margin-top: 4px;word-wrap:break-word;">{$info.address}</div>
+						<!--<br style="clear: both;"/>-->
+							
+						<!--<div style="padding-top: 20px;text-align: center;padding-bottom: 15px;">-->
+							<!--<button class="btn btn-primary" onclick="onm('{$list.cuid}','{$list.id}','{$list.snumber}','{$list.name}','{$list.type}','{$list.address}','{$list.contactnumber}','{$list.contacts}','{$list.payment}','{$list.weburl}','{$list.bank}','{$list.account}','{$list.state}','{$list.email}','{$list.bankname}','{$list.remarks}')">编辑资料</button>-->
+						<!--</div>-->
+					</div>
+				</div>
+				<div style="width: 67%;float: right;">
+					<div style="line-height: 30px;border-bottom:1px solid #e5e5e5;">{$Think.lang.focus_point}</div>
+					<div style="height: 200px;">
+						<a href="{:U('Warehouse/historicalOrder',array('id'=>$id))}" target="_blank">
+							<div style="float: left;width: 25%;height: 100%;">
+								<div class="six" style="width: 100px;height: 50px;background: #ececec;margin: 50px auto 0;position: relative;">
+									<span style="display: block;width: 30px;height: 30px;margin:0 auto;padding-top: 10px;font-size: 30px;" class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+								</div>
+								<p style="text-align: center;padding-top:30px;">{$Think.lang.historical_order}</p>
+							</div>
+						</a>
+						<a href="{:U('Warehouse/inLibrary',array('k_id'=>$id))}" target="_blank">
+							<div style="float: left;width: 25%;height: 100%;">
+								<div class="six" style="width: 100px;height: 50px;background: #ececec;margin: 50px auto 0;position: relative;">
+									<span style="display: block;width: 30px;height: 30px;margin:0 auto;padding-top: 10px;font-size: 30px;" class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>
+								</div>
+								<p style="text-align: center;padding-top:30px;">{$Think.lang.product}</p>
+							</div>
+						</a>
+						<a href="{:U('Warehouse/warehouseManagement',array('id'=>$id))}"  target="_blank">
+						<div style="float: left;width: 25%;height: 100%;">
+							<div class="six" style="width: 100px;height: 50px;background: #ececec;margin: 50px auto 0;position: relative;">
+								<span style="display: block;width: 30px;height: 30px;margin:0 auto;padding-top: 10px;font-size: 30px;" class="glyphicon glyphicon-home" aria-hidden="true"></span>
+							</div>
+							<p style="text-align: center;padding-top:30px;">{$Think.lang.warehouse}</p>
+						</div>
+						</a>
+						<a href="{:U('Warehouse/shelf',array('id'=>$id))}"  target="_blank">
+							<div style="float: left;width: 25%;height: 100%;">
+								<div class="six" style="width: 100px;height: 50px;background: #ececec;margin: 50px auto 0;position: relative;">
+									<span style="display: block;width: 30px;height: 30px;margin:0 auto;padding-top: 10px;font-size: 30px;" class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
+								</div>
+								<p style="text-align: center;padding-top:30px;">{$Think.lang.warehouse_position}</p>
+							</div>
+						</a>
+					</div>
+					<ul id="myTab" class="nav nav-tabs">
+						<li class="active">
+							<a href="#order" data-toggle="tab">
+								{$Think.lang.order_in_transit}
+								<span class="badge" id="ordercount" style="margin-left: 4px;float: right;"></span>
+							</a>
+						</li>
+					</ul>
+					<div id="myTabContent" class="tab-content">
+						<div id="order" style="height: 400px;overflow-y: auto;">
+							<table class="table table-hover table-bordered table-striped" style="border-collapse: collapse;">
+								<thead>
+								<tr>
+									<th>{$Think.lang.order_type}</th>
+									<th>{$Think.lang.ordernumber}</th>
+									<th>{$Think.lang.delivery_time}</th>
+								</tr>
+								</thead>
+								<tbody id="order_list">
+
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+
+<script>
+	function onthum() {
+		window.location.href = "{:U('Supplier/avatar',array('id'=>$list[id]))}";
+	}
+	//修改供应商赋值
+	function onm(cuid, id, snumber, name, type, address, contactnumber, contacts, payment, weburl, bank, account, state, email, bankname, remarks) {
+		$('#pld').val(id);
+		$('#snumber').val(snumber);
+		$('#name').val(name);
+		$('#type').val(type);
+		$('#address').val(address);
+		$('#contactnumber').val(contactnumber);
+		$('#contacts').val(contacts);
+		$('#cycle').val(payment);
+		$('#currency').val(cuid);
+		$('#weburl').val(weburl);
+		$('#bank').val(bank);
+		$('#account').val(account);
+		$('#state').val(state);
+		$('#email').val(email);
+		$('#bankname').val(bankname);
+		$('#remarks').val(remarks);
+		$('#edit_modal').modal('toggle');
+		if(payment == '日结') {
+			$('#wx').attr('selected', 'selected');
+			$('#zfb').removeAttr('selected');
+		} else {
+			$('#zfb').attr('selected', 'selected');
+			$('#wx').removeAttr('selected');
+		}
+		if(state == '1') {
+			$('#on').attr('selected', 'selected');
+			$('#off').removeAttr('selected');
+		} else {
+			$('#off').attr('selected', 'selected');
+			$('#on').removeAttr('selected');
+		}
+		$('#node_modal').modal('toggle');
+	}
+	//修改供应商信息
+	function doupdate(form) {
+		$.ajax({
+			url: "{:U('Supplier/updateSupplier')}",
+			type: "post",
+			data: $(form).serialize(),
+			dataType: "json",
+			async: true,
+			success: function(data) {
+				if(data.status == 0) {
+					$('#node_message').html('您没有该操作权限');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				} else if(data == 'NO') {
+					$('#node_message').html('修改失败');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				} else if(data == 'OK') {
+					$('#node_message').html('修改成功');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+				}
+			}
+		});
+		return false;
+	}
+	//获取供应商详细信息
+	function getAjaxdata(id) {
+		$.ajax({
+			url: "{:U('Warehouse/getAjaxtransport')}",
+			type: 'post',
+			data: {
+				id: id
+			},
+			dataType: 'json',
+			async: true,
+			success: function(data) {
+				console.log(data);
+				if(data.status == 0) {
+					$('#node_message').html('您没有该操作权限');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				} else if(data['list'].length > 0) {
+					$('#ordercount').text(data['count']);
+					var str = "";
+					for(var i = 0; i < data['list'].length; i++) {
+						if (data['list'][i].type=='采购订单'){
+							str += '<tr><td>'+data['list'][i].type+'</td></td><td><a target="_blank" href="' + "{:U('PurchaseOrder/completedDetails','','')}/id/" + data['list'][i].id + '">' + 'PO' + data['list'][i].order_id + '</a></td><td>'+data['list'][i].creation_time+'</td></tr>';
+						}
+
+					}
+					$('#order_list').html(str);
+				}
+			}
+		})
+	}
+	getAjaxdata('{$id}')
+	//查看供应商产品
+	function product(id) {
+		window.open("{:U('Supplier/proDuct','','')}/id/" + id);
+	}
+</script>

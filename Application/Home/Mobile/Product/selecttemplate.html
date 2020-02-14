@@ -1,0 +1,240 @@
+<script src="__ROOT__/Public/login/assets/js/jquery-1.11.1.min.js">
+</script>
+<style>
+	input {
+		border: 1px solid #999;
+	}
+</style>
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+
+				<h2 class="panel-title"></h2>
+			</header>
+			<div class="panel-body">
+				<form id='form' action="">
+					<div style="width: 100%;">
+						<div style="width: 90%;margin: 0 auto;min-height: 300px;position: relative;">
+							<img src="/InternalSystem/Public/FirstEdition/assets/images/background.jpg" alt="" style="width: 45%;margin: 12px 4% 12px 0;" />
+							<img src="/InternalSystem/Public/FirstEdition/assets/images/background.jpg" alt="" style="width: 45%;margin: 12px 0 12px 4%;" />
+							<input placeholder="图片1" type="text" name="img1" style="position: absolute;top: 45%;left: 3%;width: 40%;height: 26px;line-height: 26px;" />
+							<input placeholder="图片2" type="text" name="img2" style="position: absolute;top: 45%;right: 4%;width: 40%;height: 26px;line-height: 26px;" />
+						</div>
+						<div style="width: 90%;margin: 0 auto;min-height: 300px;position: relative;">
+							<img src="/InternalSystem/Public/FirstEdition/assets/images/background.jpg" alt="" style="width: 45%;margin: 12px 4% 12px 0;" />
+							<img src="/InternalSystem/Public/FirstEdition/assets/images/background.jpg" alt="" style="width: 45%;margin: 12px 0 12px 4%;" />
+							<input placeholder="图片3" type="text" name="img3" style="position: absolute;top: 45%;left: 3%;width: 40%;height: 26px;line-height: 26px;" />
+							<input placeholder="图片4" type="text" name="img4" style="position: absolute;top: 45%;right: 4%;width: 40%;height: 26px;line-height: 26px;" />
+						</div>
+						<h2 style="font-size: 22px;color: #222;">Product Description</h2>
+						<span id="add_title" style="margin-right: 10px;display: inline-block;font-size:18px;padding: 4px 10px;border: 1px solid #bbb;cursor: pointer;font-weight: normal;background: #e5e5e5;margin-bottom:20px;">加标题</span>
+						<span id="add_content" style="margin-right: 10px;display: inline-block;font-size:18px;padding: 4px 10px;border: 1px solid #bbb;cursor: pointer;font-weight: normal;background: #e5e5e5;">加内容</span>
+						<span id="recall" style="margin-right: 10px;display: inline-block;font-size:18px;padding: 4px 10px;border: 1px solid #bbb;cursor: pointer;font-weight: normal;background: #e5e5e5;">撤回</span>
+						<div id="prduct_description">
+							<div>内容1：<input type="text" name="ocontent1" style="width: 80%;height: 26px;line-height: 26px;margin-bottom: 4px;" /></div>
+						</div>
+						<div style="font-weight: bold;">
+							<p style="font-size: 22px;padding-top: 16px;color: #708090;margin-top:1em;">Yes, We Wanna Be Your Friend!</p>
+							<p style="font-size: 18px;line-height: 30px;margin-top:1em;">Buying from a local onLine seller, you can avoid any worries and troubles, compare buying from oversea. Yellow-Price has built its own branches and warehouses in USA, Canada and Australia. The sales and follow-up services are processed locally.</p>
+
+							<p style="font-size: 22px;padding-top: 16px;color: #708090;margin-top:1em;">We Ship Locally, From Same Country</p>
+							<p style="font-size: 18px;line-height: 24px;margin-top:1em;"><span>(1) </span><span>American Orders: Ship from Los Angeles, California by USPS First Class with tracking number. Takes 2-7 business days. Expedite Parcel Shipping available but cost extra.</span></p>
+							<p style="font-size: 18px;line-height: 24px;margin-top:1em;"><span>(2) </span><span>Canadian Orders: Ship from Toronto, Ontario by Canada Post Lettermail (No tracking available). Takes 2-10 business days. Expedite Parcel Shipping available but cost extra.</span></p>
+							<p style="font-size: 18px;line-height: 24px;margin-top:1em;"><span>(3) </span><span>Australian Orders: Ship from Sydney, NSW by Australia Post Lettermail (No tracking available). Takes 2-10 business days. Expedite Parcel Shipping available but cost extra.</span></p>
+							<p style="font-size: 18px;line-height: 24px;margin-top:1em;"><span>(4) </span><span>To ensure the on-time delivery, we do not ship anywhere outside USA, Canada and Australia</span></p>
+							<p style="font-size: 18px;line-height: 24px;margin-top:1em;"><span>(5) </span><span>Please note shipping speed mentioned above are estimated only. Non-major Urban Centres, Northern Regions and Remote Centres may expect longer delivery time.</span></p>
+							<p style="font-size: 18px;line-height: 24px;margin-top:1em;"><span>(6) </span><span>Please understand that occasional delays due to carriers and mails are beyond our control.</span></p>
+
+							<p style="font-size: 22px;padding-top: 16px;color: #708090;margin-top:1em;">We Provide Local Warranty</p>
+							<p style="font-size: 18px;line-height: 24px;margin-top:1em;">Every item which purchased from us, has the local warranty and lifetime technical support from our local company. The warranty term is cary per different item, please check within the warranty section.</p>
+
+							<p style="font-size: 22px;padding-top: 16px;color: #708090;margin-top:1em;">30 Days No Reason Return, and We Pay</p>
+							<p style="font-size: 18px;line-height: 24px;margin-top:1em;"><span>(1) </span>You have 30 days to return the item, we pay return postage and no any questions<span></span></p>
+							<p style="font-size: 18px;line-height: 24px;margin-top:1em;"><span>(2) </span><span>Full refund is guaranteed</span></p>
+							<p style="font-size: 18px;line-height: 24px;margin-top:1em;"><span>(3) </span><span>Return to same country, fast and safe. Unless those oversea seller, you don't have to return it to another half of the earth</span></p>
+
+							<p style="font-size: 22px;padding-top: 16px;color: #708090;margin-top:1em;">Quality Guaranteed</p>
+							<p style="font-size: 18px;line-height: 24px;margin-top:1em;"><span style="color:#708090;">Only Premium Materials: </span>Our premium materials and advanced technology prevent you from any quality issues.<span></span></p>
+							<p style="font-size: 18px;line-height: 24px;margin-top:1em;"><span style="color:#708090;">Peace of Mind Included: </span><span>Every purchase includes our worry-free 6-month warranty and lifetime technical support. If you have any questions, our friendly customer service team will be more than happy to help out.</span></p>
+
+							<p style="font-size: 22px;padding-top: 16px;color: #708090;margin-top:1em;">Worry Free Buy</p>
+							<p style="font-size: 18px;line-height: 24px;margin-top:1em;">Ship-Out within one business day, ZERO handling fee</p>
+							<p style="font-size: 18px;line-height: 24px;margin-top:1em;">Free Local Shipping, Expedited Shipping Available</p>
+							<p style="font-size: 18px;line-height: 24px;margin-top:1em;">Seller-provided Warranty, No need to contact manufacturer</p>
+							<p style="font-size: 18px;line-height: 24px;margin-top:1em;">30-days no reason return, ZERO restock fee</p>
+
+							<p style="font-size: 22px;padding-top: 16px;color: #708090;margin-top:1em;">World's Leading OnLine Seller</p>
+							<p style="font-size: 18px;line-height: 24px;margin-top:1em;">Powered by Yellow-Price Inc.</p>
+							<p style="font-size: 18px;line-height: 24px;margin-top:1em;">An eCommerce leader specializing in high quality cables, components and accessories for computer and consumer electronics. Established in 2010, we have built our reputation by the word of our customers.</p>
+
+							<p style="text-align: right;margin-right: 40px;padding-top: 26px;"><img src="https://www.yellow-price.com/ypadmin/i/1416550239.jpg" alt="" style="width: 160px;" /></p>
+						</div>
+					</div>
+					<span id="submit" style="margin:30px auto 20px;display:block;width:120px;font-size:16px;padding: 4px;border: 1px solid #bbb;cursor: pointer;background:#0088cc;color: #fff;text-align: center;border-radius: 4px;">预览</span>
+				</form>
+
+				<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog" style="width: 90%;">
+						<div class="modal-content">
+							<div class="modal-header">
+								<div id="moban">
+									<div style="width: 100%;">
+										<div style="width: 90%;margin: 0 auto;">
+											<img id="img1" src="img/11.JPG" alt="img1" style="width: 45%;margin: 12px 4% 12px 0;">
+											<img id="img2" src="img/12.JPG" alt="img2" style="width: 45%;margin: 12px 0 12px 4%;">
+										</div>
+										<div style="width: 90%;margin: 0 auto;">
+											<img id="img3" src="img/13.JPG" alt="img3" style="width: 45%;margin: 12px 4% 12px 0;">
+											<img id="img4" src="img/11.JPG" alt="img4" style="width: 45%;margin: 12px 0 12px 4%;">
+										</div>
+										<div id="qianyan">
+
+										</div>
+										<h2 style="font-size: 22px;margin: 22px 0 44px;color: #222;">Product Description</h2>
+										<div id="p_d">
+
+										</div>
+										<div style="font-weight: bold;">
+											<p style="font-size: 22px;padding-top: 16px;color: #708090;margin-top:1em;">Yes, We Wanna Be Your Friend!</p>
+											<p style="font-size: 18px;line-height: 30px;margin-top:1em;">Buying from a local onLine seller, you can avoid any worries and troubles, compare buying from oversea. Yellow-Price has built its own branches and warehouses in USA, Canada and Australia. The sales and follow-up services are processed locally.</p>
+
+											<p style="font-size: 22px;padding-top: 16px;color: #708090;margin-top:1em;">We Ship Locally, From Same Country</p>
+											<p style="font-size: 18px;line-height: 24px;margin-top:1em;"><span>(1) </span><span>American Orders: Ship from Los Angeles, California by USPS First Class with tracking number. Takes 2-7 business days. Expedite Parcel Shipping available but cost extra.</span></p>
+											<p style="font-size: 18px;line-height: 24px;margin-top:1em;"><span>(2) </span><span>Canadian Orders: Ship from Toronto, Ontario by Canada Post Lettermail (No tracking available). Takes 2-10 business days. Expedite Parcel Shipping available but cost extra.</span></p>
+											<p style="font-size: 18px;line-height: 24px;margin-top:1em;"><span>(3) </span><span>Australian Orders: Ship from Sydney, NSW by Australia Post Lettermail (No tracking available). Takes 2-10 business days. Expedite Parcel Shipping available but cost extra.</span></p>
+											<p style="font-size: 18px;line-height: 24px;margin-top:1em;"><span>(4) </span><span>To ensure the on-time delivery, we do not ship anywhere outside USA, Canada and Australia</span></p>
+											<p style="font-size: 18px;line-height: 24px;margin-top:1em;"><span>(5) </span><span>Please note shipping speed mentioned above are estimated only. Non-major Urban Centres, Northern Regions and Remote Centres may expect longer delivery time.</span></p>
+											<p style="font-size: 18px;line-height: 24px;margin-top:1em;"><span>(6) </span><span>Please understand that occasional delays due to carriers and mails are beyond our control.</span></p>
+
+											<p style="font-size: 22px;padding-top: 16px;color: #708090;margin-top:1em;">We Provide Local Warranty</p>
+											<p style="font-size: 18px;line-height: 24px;margin-top:1em;">Every item which purchased from us, has the local warranty and lifetime technical support from our local company. The warranty term is cary per different item, please check within the warranty section.</p>
+
+											<p style="font-size: 22px;padding-top: 16px;color: #708090;margin-top:1em;">30 Days No Reason Return, and We Pay</p>
+											<p style="font-size: 18px;line-height: 24px;margin-top:1em;"><span>(1) </span>You have 30 days to return the item, we pay return postage and no any questions<span></span></p>
+											<p style="font-size: 18px;line-height: 24px;margin-top:1em;"><span>(2) </span><span>Full refund is guaranteed</span></p>
+											<p style="font-size: 18px;line-height: 24px;margin-top:1em;"><span>(3) </span><span>Return to same country, fast and safe. Unless those oversea seller, you don't have to return it to another half of the earth</span></p>
+
+											<p style="font-size: 22px;padding-top: 16px;color: #708090;margin-top:1em;">Quality Guaranteed</p>
+											<p style="font-size: 18px;line-height: 24px;margin-top:1em;"><span style="color:#708090;">Only Premium Materials: </span>Our premium materials and advanced technology prevent you from any quality issues.<span></span></p>
+											<p style="font-size: 18px;line-height: 24px;margin-top:1em;"><span style="color:#708090;">Peace of Mind Included: </span><span>Every purchase includes our worry-free 6-month warranty and lifetime technical support. If you have any questions, our friendly customer service team will be more than happy to help out.</span></p>
+
+											<p style="font-size: 22px;padding-top: 16px;color: #708090;margin-top:1em;">Worry Free Buy</p>
+											<p style="font-size: 18px;line-height: 24px;margin-top:1em;">Ship-Out within one business day, ZERO handling fee</p>
+											<p style="font-size: 18px;line-height: 24px;margin-top:1em;">Free Local Shipping, Expedited Shipping Available</p>
+											<p style="font-size: 18px;line-height: 24px;margin-top:1em;">Seller-provided Warranty, No need to contact manufacturer</p>
+											<p style="font-size: 18px;line-height: 24px;margin-top:1em;">30-days no reason return, ZERO restock fee</p>
+
+											<p style="font-size: 22px;padding-top: 16px;color: #708090;margin-top:1em;">World's Leading OnLine Seller</p>
+											<p style="font-size: 18px;line-height: 24px;margin-top:1em;">Powered by Yellow-Price Inc.</p>
+											<p style="font-size: 18px;line-height: 24px;margin-top:1em;">An eCommerce leader specializing in high quality cables, components and accessories for computer and consumer electronics. Established in 2010, we have built our reputation by the word of our customers.</p>
+
+											<p style="text-align: right;margin-right: 40px;padding-top: 26px;"><img src="https://www.yellow-price.com/ypadmin/i/1416550239.jpg" alt="" style="width: 160px;" /></p>
+										</div>
+									</div>
+								</div>
+								<form class="form-horizontal" action="{:U('product/gethtml')}" method="POST">
+									模板名称：<input type="text" name="name">
+									<textarea id="textarea" name="val" rows="" cols="" style="width: 100%;height: 600px;margin-top: 20px;"></textarea>
+									<div style="margin: 0 auto;width:200px;text-align: center;position: relative;">
+										<div id="img_message" style="position: absolute;top: -300px;left: 50%;display: none;background: #aaa;min-width:300px;margin-left: -150px;margin-top: -50px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;"></div>
+										<div class="btn btn-primary" id="code_copy" style="margin-right: 10px;" onclick="copyUrl2()">复制</div>
+										<button class="btn btn-primary" onclick="">提交</button>
+									</div>
+								</form>
+							</div>
+						</div>
+						<!-- /.modal-content -->
+					</div>
+					<!-- /.modal -->
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+<script type="text/javascript">
+	function copyUrl2() {
+		var Url2 = document.getElementById("textarea");
+		Url2.select(); // 选择对象
+		document.execCommand("Copy"); // 执行浏览器复制命令
+		$('#img_message').html('您已复制代码');
+		img_message.style.display = 'block';
+		var t = setTimeout("img_message.style.display='none'", 2000);
+	}
+	//	$('#xianshi').on('click', function() {
+	//		$('#textarea').val($('#moban').html())
+	//	})
+	var arr = [];
+	var ii = 0,
+		jj = 1;
+	$('#add_title').on('click', function() {
+		ii++;
+		var list = "<div>标题" + ii + "：<input type='text' style='width: 80%;height: 26px;line-height: 26px;margin-bottom: 4px;' name='otitle" + ii + "'></div>"
+		$('#prduct_description').append(list)
+	})
+	$('#add_content').on('click', function() {
+		jj++;
+		var list = "<div>内容" + jj + "：<input type='text' style='width: 80%;height: 26px;line-height: 26px;margin-bottom: 4px;' name='ocontent" + jj + "'></div>"
+		$('#prduct_description').append(list)
+	})
+
+	$('#recall').on('click', function() {
+		if($('#prduct_description div').length != 0) {
+			if($('#prduct_description div').eq(-1).children('input').attr('name').indexOf('content') > -1) {
+				jj--;
+			} else if($('#prduct_description div').eq(-1).children('input').attr('name').indexOf('title') > -1) {
+				ii--
+			}
+		} else {
+			return false;
+		};
+		$('#prduct_description div').eq(-1).remove('div')
+	})
+
+	$("#submit").click(function() {
+		x = $("#form").serializeArray();
+		arr = x;
+		console.log(arr)
+		$('#userModal').modal('toggle');
+		show();
+		$('#textarea').val($('#moban').html())
+		//$.each(x, function(i, field){
+		//  $("#results").append(field.name + ":" + field.value + " ");
+		//});
+	});
+
+	function show() {
+		var lis1, lis;
+		$('#p_d').html('');
+		for(var i = 0; i < arr.length; i++) {
+			if(arr[i].name.indexOf('otitle') != -1) {
+				lis1 = '<h2 style="font-size: 22px;margin: 22px 0 44px;color:#222;">' + arr[i].value + '</h2>'
+				$('#p_d').append(lis1)
+			} else if(arr[i].name.indexOf('ocontent') != -1) {
+				lis1 = '<p style="line-height: 30px;font-size: 18px;margin-bottom: 0;margin-top:1em;">' + arr[i].value + '</p>'
+				$('#p_d').append(lis1)
+			} else if(arr[i].name.indexOf('img1') != -1) {
+				$('#img1').attr('src', arr[i].value)
+			} else if(arr[i].name.indexOf('img2') != -1) {
+				$('#img2').attr('src', arr[i].value)
+			} else if(arr[i].name.indexOf('img3') != -1) {
+				$('#img3').attr('src', arr[i].value)
+			} else if(arr[i].name.indexOf('img4') != -1) {
+				$('#img4').attr('src', arr[i].value)
+			}
+		}
+		for(var j = 0; j < arr.length; j++) {
+			if(arr[j].name.indexOf('ttitle') != -1) {
+				lis = '<p style="font-size: 22px;padding-top: 16px;color: #708090;margin-top:1em;">' + arr[j].value + '</p>'
+				$('#c_u').append(lis)
+			} else if(arr[j].name.indexOf('tcontent') != -1) {
+				lis = '<p style="font-size: 18px;line-height: 24px;margin-top:1em;">' + arr[j].value + '</p>'
+				$('#c_u').append(lis)
+			}
+		}
+	}
+</script>

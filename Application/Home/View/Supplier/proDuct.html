@@ -1,0 +1,408 @@
+<style>
+    .modal-dialog {
+        margin: 60px auto !important;
+    }
+	.bootstrap-select.btn-group .dropdown-toggle .filter-option {
+		padding-left: 5px;
+		padding-top: 3px;
+		color: #666;
+	}
+    .caret1 {
+        content: "";
+        border-top: 0;
+        border-bottom: 4px dashed;
+    }
+    .bootstrap-select>button {
+        height: 100%;
+        line-height: 100%;
+    }
+
+    .bootstrap-select>button:active {
+        background: #fff !important;
+    }
+
+    .bootstrap-select>button:hover {
+        background: #fff !important;
+    }
+
+    .bootstrap-select>button:focus {
+        background: #fff !important;
+    }
+
+    select::-ms-expand {
+        display: none;
+    }
+</style>
+<script>
+    $('#79').parents('li').addClass('nav-active')
+    $('#79').parents('li').addClass('nav-expanded')
+</script>
+<input type="hidden" id="getajaxproductCode" value="{:U('Supplier/getajaxproductCode','','')}">
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<div id="edit_modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">
+                    {$Think.lang.modify_supplier_product}
+                </h4>
+            </div>
+                <input id="pld" value="" type="hidden" name="id">
+                <input type="hidden" value="{$pid}" name="pid">
+                <div class="modal-body">
+                    <div class="row" style="margin-left: 0;margin-right: 0;">
+                        <div class="input-group" style="padding:0 20px 15px;float: left;">
+                            <span class="input-group-addon">{$Think.lang.product_number}</span>
+                            <input id="procode" type="text"  class="form-control" placeholder=""  value="" readonly="readonly">
+                        </div>
+                        <div class="input-group" style="padding:0 20px 15px;float: left;">
+                            <span class="input-group-addon">{$Think.lang.Productname}</span>
+                            <input id="proname" type="text"  class="form-control" placeholder=""  value="" readonly="readonly">
+                        </div>
+                        <input type="hidden" id="g_id" value="">
+                        <div class="input-group" style="padding:0 20px 15px;float: left;">
+                            <span class="input-group-addon">{$Think.lang.supplier_part_number}</span>
+                            <input id="Account" type="text" name="name" class="form-control" placeholder=""  value="">
+                        </div>
+                        <div class="input-group" style="padding:0 20px 15px;float: left;">
+                            <span class="input-group-addon">{$Think.lang.production_cycle_day}<span style="color: red;">*</span></span>
+                            <input id="production" type="text" class="form-control" placeholder=""  value="">
+                        </div>
+                        <div class="input-group" style="padding:0 20px 15px;float: left;">
+                            <span class="input-group-addon">{$Think.lang.Minimumnumberofpackages}<span style="color: red;">*</span></span>
+                            <input id="minimum_packing" type="text" class="form-control" placeholder=""  value="">
+                        </div>
+                        <div class="input-group" style="padding:0 20px 15px;float: left;">
+                            <span class="input-group-addon">{$Think.lang.Minimumpurchasevolume}<span style="color: red;">*</span></span>
+                            <input id="minimum_purchase" type="text" class="form-control" placeholder=""  value="">
+                        </div>
+                        <br style="clear: both;" />
+                        <div class="input-group" style="padding:0 20px 0;">
+                            <span class="input-group-addon">{$Think.lang.UnitPrice}{$supplier['namezh']}<span style="color: red;">*</span></span>
+                            <input id="englishname" type="text" name="englishname" class="form-control" placeholder=""  value="" style="float: left;width: 50%;">
+                            <select name="company" class="form-control" data-live-search="true" id="company" style="float: left;width: 50%;">
+                                <option value="">{$Think.lang.please_select_currency}</option>
+                                <volist name="companyd" id="po">
+                                    <option value="{$po.id}">{$po.name}</option>
+                                </volist>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="addCompanyuu()">{$Think.lang.Save}</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cancel}</button>
+                </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+                    <a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+                </div>
+                <h2 class="panel-title">{$supplier['name']}{$Think.lang.supplier}-{$Think.lang.product}</h2>
+            </header>
+            <div class="panel-body">
+                <form class="" action="{:U('Supplier/proDuct',array('id'=>$gid))}" method="get" style="display: inline-block;float: left;margin-right:15px ;">
+                    <div class="input-group" style="width: 500px;">
+                        <input name="search" type="text" value="" id="godcod" class="form-control"  placeholder="{$Think.lang.product_part_number_or_product}">
+                        <input type="hidden" value="{$search}" id="search">
+                    	<span class="input-group-btn">
+		                    <button type="submit" class="btn btn-success" style="white-space: nowrap;">{$Think.lang.Search}</button>
+		                </span>
+                    </div>
+                </form>
+                <button class="btn btn-primary" onclick="add()" style="float: left;">{$Think.lang.add_product}</button>
+                <br style="clear: both;" />
+                <table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+                    <thead>
+                    <tr>
+                        <th class="bm" style="cursor: pointer;">{$Think.lang.Id}<span class="caret"></span></th>
+                        <th>{$Think.lang.product_number}</th>
+                        <th>{$Think.lang.Productname}</th>
+                        <th>{$Think.lang.supplier_part_number}</th>
+                        <th>{$Think.lang.production_cycle_day}</th>
+                        <th>{$Think.lang.UnitPrice}</th>
+                        <th>{$Think.lang.Minimumnumberofpackages}</th>
+                        <th>{$Think.lang.Minimumpurchasevolume}</th>
+                        <th>{$Think.lang.Operation}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <volist name="list" id="vo" key="k">
+                        <tr>
+                            <td class="bm">{$k}</td>
+                            <td><a href="{:U('Product/homeProduct',array('pid'=>$vo['cid']))}" target="_blank">{$vo.bclassc_number}.{$vo.sclassc_number}.{$vo.snumber_number}</a></td>
+                            <td>
+                                <a href="{:U('Product/homeProduct',array('pid'=>$vo['cid']))}" target="_blank">{$vo.namezh}</a>
+                            </td>
+                            <td>{$vo.code}</td>
+                            <td>{$vo.production_cycle}</td>
+                            <td>{$vo.hname}{$vo.price}</td>
+                            <td>{$vo.minimum_packing}</td>
+                            <td>{$vo.minimum_purchase}</td>
+                            <td>
+                                <button id="zq" onclick='onm("{$vo.hid}","{$vo.bclassc_number}","{$vo.sclassc_number}","{$vo.snumber_number}","{$vo.namezh}","{$vo.id}","{$vo.code}","{$vo.price}","{$vo.minimum_packing}","{$vo.minimum_purchase}","{$vo.production_cycle}")' style="border: 0px;" type="button" class="btn btn-primary btn-xs" >
+                                    {$Think.lang.Modify}
+                                </button>
+                                <!--<button class="btn btn-danger"  onclick='gysproductdel(this,"{$vo.id}")'>删除</button>-->
+                                <button onclick='gysproductdel(this,"{$vo.id}")' style="background: #EE0000; border: 0px;" type="button"data-toggle="modal" class="btn btn-primary btn-xs" onclick="adclass(2,'{$vo.id}')" >
+                                    {$Think.lang.Delete}
+                                </button>
+                            </td>
+                        </tr>
+                    </volist>
+                    </tbody>
+                </table>
+                <ul class="pager" style="width: 100%;">
+                    <!-- 分页显示 -->{$page}</ul>
+            </div>
+        </section>
+    </div>
+</div>
+<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+<div id="node_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">
+                   {$Think.lang.add_supplier_products}
+                </h4>
+            </div>
+            <form class="form-horizontal" onsubmit="return doadd(this)">
+                <div class="modal-body" style="line-height: 34px;">
+                    <div class="input-group">
+                        <span class="input-group-addon">{$Think.lang.Productname}<span style="color: red;">*</span></span>
+                        <select name="pid" class="form-control" data-live-search="true" id="product" required="required">
+                            <option value="">{$Think.lang.Pleasechoose}</option>
+                            <volist name="product" id="po">
+                                <option value="{$po.id}">{$po.bclassc_number}.{$po.sclassc_number}.{$po.snumber_number}: {$po.namezh}</option>
+                            </volist>
+                        </select>
+                        <!--<input type="text" name="type" class="form-control" placeholder="" style="width: 30%;">-->
+                    </div>
+                    <div class="row" style="margin-left: 0;margin-right: 0;">
+                        <div class="input-group" style="padding-top: 20px;">
+                            <span class="input-group-addon">{$Think.lang.production_cycle_day}<span style="color: red;">*</span></span>
+                            <input type="text" name="production_cycle" class="form-control" value="" placeholder="" required="required" id="production_cycle">
+                        </div>
+                    </div>
+                    <input type="hidden" value="{$gid}" name="supplier_id">
+                    <div class="col-md-6" style="padding-left: 0;">
+                        <div class="input-group" style="padding-top: 20px;">
+                            <span class="input-group-addon">{$Think.lang.UnitPrice}<span style="color: red;">*</span></span>
+                            <input type="text" name="price" class="form-control" value="" placeholder="" required="required" style="float: left;width: 50%;">
+                            <!--<input type="text" class="form-control" value="￥" placeholder="" readonly="readonly" style="float: left;width: 50%;">-->
+                            <select name="company" class="form-control" data-live-search="true" id="currency" required="required" style="float: left;width: 50%;">
+                                <option value="">{$Think.lang.please_select_currency}</option>
+                                <volist name="companyd" id="po">
+                                    <option value="{$po.id}">{$po.name}</option>
+                                </volist>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6" style="padding-right: 0;">
+                        <div class="input-group" style="padding-top: 20px;">
+                            <span class="input-group-addon">{$Think.lang.supplier_part_number}</span>
+                            <input type="text" name="code" class="form-control"  value="" placeholder="">
+                        </div>
+                    </div>
+                    <div class="col-md-6" style="padding-left: 0;">
+                        <div class="input-group" style="padding-top: 20px;">
+                            <span class="input-group-addon">{$Think.lang.Minimumnumberofpackages}<span style="color: red;">*</span></span>
+                            <input type="text" name="minimum_packing" class="form-control" required="required" value="" placeholder="">
+                        </div>
+                    </div>
+                    <div class="col-md-6" style="padding-right: 0;">
+                        <div class="input-group" style="padding-top: 20px;">
+                            <span class="input-group-addon">{$Think.lang.Minimumpurchasevolume}<span style="color: red;">*</span></span>
+                            <input type="text" name="minimum_purchase" required="required" class="form-control" value="" placeholder="">
+                        </div>
+                    </div>
+					<br style="clear: both;"/>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">{$Think.lang.Save}</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cancel}</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+    <script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+    <script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script>
+    var search = $('#search').val();
+    $('#godcod').val(search);
+    //ajax获取产品料号
+    // function getAjaxcode(){
+    //     var url = $('#getajaxproductCode').val();
+    //     $.ajax({
+    //         url:url,
+    //         type:'post',
+    //         data:{
+    //             pid:$('#product').val()
+    //         },
+    //         dataType:'JSON',
+    //         success:function (data) {
+    //             $('#code').val(data['bclassc_number']+'.'+data['sclassc_number']+'.'+data['snumber_number']);
+    //         }
+    //     })
+    // }
+    //修改供应商产品信息
+    function onm(hid,bclass,cclass,snumber,namezh,id,code,price,minimum_packing,minimum_purchase,production){
+        $('#Account').val(code);
+        $('#englishname').val(price);
+        $('#g_id').val(id);
+        $('#proname').val(namezh);
+        $('#company').val(hid);
+        $('#procode').val(bclass+'.'+snumber+'.'+snumber);
+        $('#minimum_packing').val(minimum_packing);
+        $('#minimum_purchase').val(minimum_purchase);
+        $('#production').val(production);
+        $('#edit_modal').modal('toggle');
+    }
+    //执行修改供应商产品信息
+    function addCompanyuu(){
+        var id = $('#g_id').val();
+        var code = $('#Account').val();
+        var price = $('#englishname').val();
+        var minimum_packing = $('#minimum_packing').val();
+        var minimum_purchase = $('#minimum_purchase').val();
+        var production_cycle = $('#production').val();
+        $.ajax({
+            url:"{:U('Supplier/editSuppliergood')}",
+            type:"post",
+            data:{
+                id:id,
+                code:code,
+                price:price,
+                minimum_packing:minimum_packing,
+                minimum_purchase:minimum_purchase,
+                hid:$('#company').val(),
+                production:production_cycle
+            },
+            dataType:"json",
+            async:true,
+            success:function(data){
+                console.log(data);
+                if (data.status==0){
+                    $('#node_message').html('{$Think.lang.Operationauthority}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if(data=="OK"){
+                    $('#node_message').html('{$Think.lang.Successfullymodified}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+                }else if (data=="CF"){
+                    $('#node_message').html('{$Think.lang.Cannotbeempty}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if (data=="NO"){
+                    $('#node_message').html('{$Think.lang.Noinformationhasbeenmodified}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if (data=='KO'){
+                    $('#node_message').html('{$Think.lang.Theminimumpackagequantity}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }
+            }
+        });
+        return false;
+    }
+    $(document).ready(function() {
+        $('#table1').DataTable({
+            "paging": false,
+            "lengthChange": false,
+            "info": false,
+            "searching": false
+        });
+    });
+    //添加供应商页面
+    function add(){
+        $('#node_modal').modal('toggle');
+    }
+    $('#product').selectpicker('refresh');
+    //添加供应商
+    function doadd(form){
+        $.ajax({
+            url:"{:U('Supplier/gysproductAdd')}",
+            type:"post",
+            data:$(form).serialize(),
+            dataType:"json",
+            async:true,
+            success:function(data){
+                console.log(data);
+                if (data.status==0) {
+                    $('#node_message').html('{$Think.lang.Operationauthority}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if(data=='NO'){
+                    $('#node_message').html('{$Think.lang.add_failed}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if (data=='OK'){
+                    $('#node_message').html('{$Think.lang.Addsuccessfully}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+                }else if (data=='KO'){
+                    $('#node_message').html('{$Think.lang.Theminimumpackagequantity}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if (data=='PO'){
+                    $('#node_message').html('{$Think.lang.thisproduct_already_exists}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }
+            }
+        });
+        return false;
+    }
+    function gysproductdel(obj,id){
+        var r = confirm("{$Think.lang.Confirmdelete}");
+        if (r){
+            $.ajax({
+                url:"{:U('Supplier/gysproductdelete')}",
+                type:'post',
+                dataType:"json",
+                data:{
+                    id:id
+                },
+                success:function(data){
+                    if (data.status==0){
+                        $('#node_message').html('{$Think.lang.Operationauthority}');
+                        node_message.style.display = 'block';
+                        var t = setTimeout("node_message.style.display='none';", 2000);
+                    }else if (data>0) {
+                        $(obj).parents("tr").remove();
+                        $('#node_message').html('{$Think.lang.Successfullydeleted}');
+                        node_message.style.display = 'block';
+                        var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+                    }else{
+                        $('#node_message').html('{$Think.lang.Failedtodelete}');
+                        node_message.style.display = 'block';
+                    }
+                }
+            });
+        }
+    }
+    $('.aa').on('click', function() {
+        //		if($(this).children('span').attr())
+        if($(this).children('span').attr('class').indexOf('1') == -1) {
+            $(this).children('span').addClass('caret1')
+        } else {
+            $(this).children('span').removeClass('caret1')
+        }
+
+    })
+</script>

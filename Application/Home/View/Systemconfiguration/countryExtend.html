@@ -1,0 +1,237 @@
+<script>
+    $('#320').parents('li').addClass('nav-active')
+    $('#320').parents('li').addClass('nav-expanded')
+</script>
+<!-- ZUI 标准版压缩后的 JavaScript 文件 -->
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+<div id="edit_modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">
+                    修改名称
+                </h4>
+            </div>
+                <input id="hld" value="" type="hidden" name="id">
+                <input type="hidden" value="{$pid}" name="pid">
+            <div class="modal-body">
+                <div class="input-group" style="float: left;padding: 0 20px 0;">
+                    <span class="input-group-addon">名称</span>
+                    <input type="text" name="rate" class="form-control" style="width: 100%;" value="" id="rate1">
+                </div>
+                <br style="clear: both;" />
+            </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="add_pr" type="submit" onclick="doupdate()">{$Think.lang.Save}</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cantel}</button>
+                </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+                    <a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+                </div>
+                <h2 class="panel-title">{$countryname}扩展名称</h2>
+            </header>
+            <div class="panel-body">
+                <!--<button class="btn btn-primary" data-toggle="modal" data-target="#myModal" onclick="showarehouse(1)">-->
+                    <!--添加汇率-->
+                <!--</button>-->
+                <div>
+                    <table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+                        <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>名称</th>
+                            <th>{$Think.lang.Operation}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <input type="hidden" name='getSupplier' value="{:U('Warehouse/getWarehouse','','')}">
+                        <foreach name="list" item="vo">
+                            <tr>
+                                <td>{$key+1}</td>
+                                <td>{$vo.name}</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" onclick="ckedit('{$vo.id}','{$vo.name}')">{$Think.lang.Modify}</button>
+                                </td>
+                            </tr>
+                        </foreach>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+    </div>
+</div>
+
+<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">添加汇率</h4>
+            </div>
+                <div class="modal-body">
+                    <div class="input-group" style="float: left;padding: 0 20px 0;">
+                        <span class="input-group-addon">1人民币&nbsp;&nbsp;&nbsp;=</span>
+                        <input type="text" name="rate" class="form-control" style="width: 50%;" value="" id="rate">
+                        <select  name="country_national" class="form-control" style="width: 50%;" id="country_national">
+                            <option value="" >请选择</option>
+                            <volist name="national" id="po">
+                                <option value="{$po.id}">{$po.namezh}({$po.name})</option>
+                            </volist>
+                        </select>
+                    </div>
+                    <div id="name_check" style="float: left;margin-left: 20px;"></div>
+                    <br style="clear: both;" />
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" onclick="doadd()">确认</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Close}</button>
+                </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+
+</div>
+
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script>
+
+    $(document).ready(function() {
+        $('#table1').DataTable({
+            "paging": false,
+            "lengthChange": false,
+            "info": false,
+            "searching": false
+        });
+    });
+
+    function option_del(id) {
+        var r = confirm("确认删除吗？")
+        if(r) {
+            $.ajax({
+                url: "{:U('Warehouse/exchangerateDel')}",
+                type: "post", //选择传值方式
+                data: {
+                    id: id
+                },
+                dataType: "JSON",
+                success: function(data) {
+                    if(t) {
+                        clearTimeout(t)
+                    };
+                    if (data=='OK'){
+                        $('#node_message').html('删除成功');
+                        node_message.style.display = 'block';
+                        var t = setTimeout("node_message.style.display='none'", 2000);
+                        location.reload();
+                    }else if (data=='NO'){
+                            $('#node_message').html('删除失败');
+                            node_message.style.display = 'block';
+                            var t = setTimeout("node_message.style.display='none'", 2000);
+                    }
+
+                    //				console.log(data)
+                }
+            })
+        } else {
+            return false;
+        }
+    }
+    //修改汇率弹框(赋值)
+    function ckedit(id,name){
+        $('#hld').val(id);
+        $('#rate1').val(name);
+        $('#edit_modal').modal('toggle');
+    }
+
+    //修改汇率
+    function doupdate(){
+        $.ajax({
+            url:"{:U('Warehouse/countryNameEdit')}",
+            type:"post",
+            data:{
+                id:$('#hld').val(),
+                rate:$('#rate1').val()
+            },
+            dataType:"json",
+            async:true,
+            success:function(data){
+                console.log(data);
+                if (data.status==0){
+                    $('#node_message').html('您没有该操作权限');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if(data=="OK"){
+                    $('#node_message').html('修改成功');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+                }else  if (data=="NO"){
+                    $('#node_message').html('修改失败');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else  if (data=="KO"){
+                    $('#node_message').html('不能为空');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }
+            }
+        });
+        return false;
+    }
+    //添加仓库
+    function doadd(){
+        $.ajax({
+            url:"{:U('Warehouse/exchangerateAdd')}",
+            type:"post",
+            data:{
+                rate:$('#rate').val(),
+                country_national:$('#country_national').val()
+            },
+            dataType:"json",
+            async:true,
+            success:function(data){
+                console.log(data);
+                if (data.status==0){
+                    $('#node_message').html('您没有该操作权限');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if(data=='OK'){
+                    $('#node_message').html('添加成功');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+                }else if (data=="KO"){
+                    $('#node_message').html('添加失败');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if (data=="NO"){
+                    $('#node_message').html('不能为空');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if (data=="CO"){
+                    $('#node_message').html('该币种已存在,不能重复添加');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }
+            }
+        });
+        return false;
+    }
+</script>

@@ -1,0 +1,187 @@
+<script src="__ROOT__/Public/login/assets/js/jquery-1.11.1.min.js">
+</script>
+<style type="text/css">
+	.row1:after {
+		display: block;
+		content: " ";
+		clear: both;
+	}
+</style>
+
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<div id="img_message" style="position: fixed;z-index: 10;top: 50%;left: 50%;display: none;background: #aaa;min-width:300px;-webkit-transform: translate(-50%, -50%);transform: translate(-50%, -50%);border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;"></div>
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+
+				<h2 class="panel-title">{$Think.lang.Productgallery}</h2>
+			</header>
+			<!--<div class="panel-body">
+                <button class="btn btn-primary" onclick=""> </button>
+            </div>-->
+			<input type="hidden" name='getRoleAuthority' value="{:U('System/getRoleAuthority','','')}">
+			<input type="hidden" name='delRole' value="{:U('System/delRole','','')}">
+			<div class="panel-body">
+				<div class="table-responsive" style="position: relative;">
+				</div>
+				<ul id="myTab" class="nav nav-tabs">
+					<li class="active">
+						<a href="#home" data-toggle="tab">
+							管理现有的图片
+							<span class="badge" style="margin-left: 4px;float: right;" id="badge1"></span>
+						</a>
+					</li>
+					<li>
+						<a href="#small_img" data-toggle="tab">
+							从同一小类里寻找图片
+							<span class="badge" style="margin-left: 4px;float: right;" id="badge2"></span>
+						</a>
+					</li>
+					<li>
+						<a href="#big_img" data-toggle="tab">
+							从同一大类里寻找图片
+							<span class="badge" style="margin-left: 4px;float: right;" id="badge3"></span>
+						</a>
+					</li>
+				</ul>
+				<div id="myTabContent" class="tab-content">
+					<div class="tab-pane fade in active" id="home">
+						<div class="row1">
+							<volist name="productlist" id="plist" key="k">
+								<div class="col-sm-3" style="border: 1px solid #eee;margin-bottom: 10px;">
+									<input type="hidden" value="{$k}" name="imgnum">
+									<div style="text-align: center;line-height: 30px;">momo camera</div>
+									<img style="width: 100%;margin-bottom:10px;" src="__ROOT__{$plist.thumpath}{$plist.thumfile}" onclick="onm('__ROOT__{$plist.path}{$plist.filename}')" />
+									<input readonly="readonly" type="text" id="url{$plist.id}" class="form-control" value="https://{$dizhi}__ROOT__{$plist.path}{$plist.filename}" />
+									<button style="padding: 1px 5px; font-size: 12px;display: block;margin: 10px auto;" class="btn btn-mini btn-info" onClick="img_url_copy({$plist.id})">复制链接</button>
+								</div>
+							</volist>
+						</div>
+					</div>
+					<div class="tab-pane fade" id="small_img">
+						<div class="row1">
+							<volist name="bclasslist" id="blist" key="k">
+								<div class="col-sm-3" style="border: 1px solid #eee;margin-bottom: 10px;">
+									<input type="hidden" value="{$k}" name="imgnum1">
+									<div style="text-align: center;line-height: 30px;">momo camera <!--<button class="btn btn-primary btn-xs" style="float: right;margin-top: 5px;">添加</button>--></div>
+									<img style="width: 100%;margin-bottom:10px;" src="__ROOT__{$blist.thumpath}{$blist.thumfile}" onclick="onm('__ROOT__{$blist.path}{$blist.filename}')" />
+									<input readonly="readonly" type="text" id="url{$blist.id}" class="form-control" value="https:/{$dizhi}___ROOT__{$blist.path}{$blist.filename}" />
+									<button style="padding: 1px 5px; font-size: 12px;display: block;margin: 10px auto;" class="btn btn-mini btn-info" onClick="img_url_copy({$blist.id})">复制链接</button>
+								</div>
+							</volist>
+						</div>
+					</div>
+
+					<div class="tab-pane fade" id="big_img">
+						<div class="row1">
+							<volist name="sclasslist" id="slist" key="k">
+								<div class="col-sm-3" style="border: 1px solid #eee;margin-bottom: 10px;">
+									<input type="hidden" value="{$k}" name="imgnum2">
+									<div style="text-align: center;line-height: 30px;">momo camera <!--<button class="btn btn-primary btn-xs" style="float: right;margin-top: 5px;">添加</button>--></div>
+									<img style="width: 100%;margin-bottom:10px;" src="__ROOT__{$slist.thumpath}{$slist.thumfile}" onclick="onm('__ROOT__{$slist.path}{$slist.filename}')" />
+									<input readonly="readonly" type="text" id="url{$slist.id}" class="form-control" value="https:/{$dizhi}___ROOT__{$slist.path}{$slist.filename}" />
+									<button style="padding: 1px 5px; font-size: 12px;display: block;margin: 10px auto;" class="btn btn-mini btn-info" onClick="img_url_copy({$slist.id})">复制链接</button>
+								</div>
+							</volist>
+						</div>
+					</div>
+				</div>
+
+				<div style="text-align: center;padding-top: 20px;">
+					<button class="btn btn-primary" onclick="history.go(-1)">返回</button>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+
+<div id="img_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">
+					图片
+				</h4>
+			</div>
+			<div class="modal-body" style="line-height: 34px;">
+				<img id="big_img1" src="" style="width: 100%;" />
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+</div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/imgshow.js">
+</script>
+<script>
+    window.onload = function(){
+        var arr1=[];
+        for(var i=0;i<$('[name="imgnum"]').length;i++){
+            arr1.push($('[name="imgnum"]')[i].defaultValue)
+        }
+        var arr2=parseInt(arr1.pop());
+        console.log(arr2);
+        if (isNaN(arr2)){
+            var imgnum = $("#badge1").text();
+            console.log(imgnum);
+        } else{
+            var imgnum = $("#badge1").text(arr2);
+            console.log(imgnum);
+        }
+
+        var arr3=[];
+        for(var i=0;i<$('[name="imgnum1"]').length;i++){
+            arr3.push($('[name="imgnum1"]')[i].defaultValue)
+        }
+        var arr4=parseInt(arr3.pop());
+        console.log(arr4);
+        if (isNaN(arr4)) {
+            var imgnum1 = $("#badge2").text();
+            console.log(imgnum1);
+        }else{
+            var imgnum1 = $("#badge2").text(arr4);
+            console.log(imgnum1);
+        }
+
+        var arr5=[];
+        for(var i=0;i<$('[name="imgnum2"]').length;i++){
+            arr5.push($('[name="imgnum2"]')[i].defaultValue)
+        }
+        var arr6=parseInt(arr5.pop());
+        console.log(arr6);
+        if (isNaN(arr6)) {
+            var imgnum2 = $("#badge3").text();
+            console.log(imgnum2);
+        }else{
+            var imgnum2 = $("#badge3").text(arr6);
+            console.log(imgnum2);
+        }
+    }
+	function onm(url) {
+		$('#img_modal').modal('toggle');
+		$('#big_img1').attr('src', url);
+	}
+
+	function img_url_copy(num) {
+		if(t) {
+			clearTimeout(t)
+		};
+		console.log('url' + num);
+		$("#url" + num).select();
+		document.execCommand('Copy');
+		$('#img_message').html('您已复制链接' + $("#url" + num).val());
+		img_message.style.display = 'block';
+		var t = setTimeout("img_message.style.display='none'", 2000);
+	};
+</script>
+<script>
+	$('#86').parents('li').addClass('nav-active')
+	$('#86').parents('li').addClass('nav-expanded')
+</script>

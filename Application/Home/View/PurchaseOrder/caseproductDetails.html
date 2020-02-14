@@ -1,0 +1,155 @@
+
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<input type="hidden" id="getAjaxdata" value="{:U('PurchaseOrder/getAjaxdata','','')}">
+<script>
+	$('#323').parents('li').addClass('nav-active')
+	$('#323').parents('li').addClass('nav-expanded')
+</script>
+<style>
+    .bootstrap-select.btn-group .dropdown-toggle .filter-option {
+        padding-left: 5px;
+        padding-top: 3px;
+        color: #666;
+    }
+
+    .bootstrap-select {
+        /*width: 50% !important;*/
+    }
+
+    .bootstrap-select>button {
+        height: 100%;
+        line-height: 100%;
+    }
+
+    .bootstrap-select>button:active {
+        background: #fff !important;
+    }
+
+    .bootstrap-select>button:hover {
+        background: #fff !important;
+    }
+
+    .bootstrap-select>button:focus {
+        background: #fff !important;
+    }
+
+    select {
+        appearance: none;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+    }
+
+    select::-ms-expand {
+        display: none;
+    }
+
+    .caret {
+        color: #333 !important;
+    }
+
+    #binning .form-control{
+        border:0;
+    }
+    #binning_td td{
+        padding: 0;
+        line-height: 34px;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+                    <a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+                </div>
+
+                <h2 class="panel-title">{$Think.lang.Purchaseordernumber}:<span style="color: #EE0000;font-weight: bold;">PO{$purchsearchid}</span></h2>
+            </header>
+            <div class="panel-body">
+                <div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+                <table id="table" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;margin-top: 15px;">
+                    <thead>
+                    <tr>
+                        <th>{$Think.lang.TrackingNumber}</th>
+                        <th>{$Think.lang.supplier}</th>
+                        <th>{$Think.lang.Receivingwarehouse}</th>
+                        <th>{$Think.lang.Transporters}</th>
+                        <th>{$Think.lang.Modeoftransport}</th>
+                        <th>{$Think.lang.Freight}</th>
+                        <th>{$Think.lang.Estimateddeliverydate}</th>
+                        <th>{$Think.lang.Remarks}</th>
+                        <th>{$Think.lang.Applicant}</th>
+                        <th>{$Think.lang.Applicationtime}</th>
+                        <th>{$Think.lang.Reviewer}</th>
+                        <th>{$Think.lang.Reviewtime}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{$purchaselist.tracking_number}</td>
+                            <td><a href="{:U('Supplier/detail',array('id'=>$purchaselist['supplier_id']))}" target="_blank">{$purchaselist.suppliername}</a></td>
+                            <td>{$purchaselist.zkname}</td>
+                            <td>{$purchaselist.yssname}</td>
+                            <td>
+                               {$purchaselist.ysfxname}
+                            </td>
+                            <td>{$purchaselist.freight}</td>
+                            <input type="hidden" id="date" value="{$purchaselist.delivery_date}">
+                            <td>{$purchaselist.delivery_date}</td>
+                            <td>{$purchaselist.remarks}</td>
+                            <td>{$purchaselist.lastnamezh}{$purchaselist.namezh}</td>
+                            <td>{$purchaselist.creationtime}</td>
+                            <td>{$purchaselist.lastnamezhs}{$purchaselist.namezhs}</td>
+                            <td>{$purchaselist.examine_time}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+                <h2 class="panel-title">箱号:<span style="color: #EE0000;font-weight: bold;">PN{$pn}</span></h2>
+                <table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+                    <thead>
+                    <tr>
+                        <th>{$Think.lang.product_number}</th>
+                        <th>{$Think.lang.Productname}</th>
+                        <th>{$Think.lang.Number}</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tbody">
+                    <volist name="list" id="vo" key="k">
+                        <tr>
+                            <td><a href="{:U('Product/homeProduct',array('pid'=>$vo['pid']))}" target="_blank">{$vo.bclassc_number}.{$vo.sclassc_number}.{$vo.snumber_number}</a></td>
+                            <td><a href="{:U('Product/homeProduct',array('pid'=>$vo['pid']))}" target="_blank">{$vo.namezh}</a></td>
+                            <td>
+                               {$vo.num}
+                            </td>
+                        </tr>
+                    </volist>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </div>
+</div>
+
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script>
+
+
+    $(document).ready(function() {
+        $('#table1').DataTable({
+            "paging": false,
+            "lengthChange": false,
+            "info": false,
+            "searching": false
+        });
+    });
+    var sum=0;
+    $("span[name='xj']").each(function(){
+        sum+=+$(this).text();
+    });
+    $("#total_price").text(sum.toFixed(2));
+</script>

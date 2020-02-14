@@ -1,0 +1,6 @@
+[ 2019-03-29T15:31:46+08:00 ] ::1 /InternalSystem/index.php/Home/Login/index.html
+ERR: 无法加载控制器:Home
+
+[ 2019-03-29T15:31:51+08:00 ] ::1 /InternalSystem/
+ERR: 模板不存在:./Application/index/View/Layout/layout.html
+

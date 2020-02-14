@@ -1,0 +1,141 @@
+<style>
+    .modal-dialog {
+        margin: 60px auto !important;
+    }
+
+    .caret1 {
+        content: "";
+        border-top: 0;
+        border-bottom: 4px dashed;
+    }
+
+    .bootstrap-select.btn-group .dropdown-toggle .filter-option {
+        padding-left: 5px;
+        padding-top: 3px;
+        color: #666;
+    }
+    .bootstrap-select>button {
+        height: 100%;
+        line-height: 100%;
+    }
+
+    .bootstrap-select>button:active {
+        background: #fff !important;
+    }
+
+    .bootstrap-select>button:hover {
+        background: #fff !important;
+    }
+
+    .bootstrap-select>button:focus {
+        background: #fff !important;
+    }
+    .caret {
+        color: #333 !important;
+    }
+
+    select::-ms-expand {
+        display: none;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<script>
+    $('#314').parents('li').addClass('nav-active')
+    $('#314').parents('li').addClass('nav-expanded')
+</script>
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+                    <a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+                </div>
+                <h2 class="panel-title">{$Think.lang.total_inventory_inquiry}</h2>
+            </header>
+            <div class="panel-body">
+                <form class="" action="{:U('Warehouse/inventoryTotal','','')}" method="get" style="margin-right:15px;">
+                    <div class="col-md-7" style="padding-left: 0;">
+                        <div class="input-group">
+                            <span class="input-group-addon">{$Think.lang.product}</span>
+                            <input type="hidden" id="goodid" value="{$p_id}">
+                            <select name="p_id" id="product" class="form-control" data-live-search="true" >
+                                <option value="">{$Think.lang.Pleaseselectaproduct}</option>
+                                <volist name="product" id="pr">
+                                    <option value="{$pr.id}">{$pr.bclassc_number}.{$pr.sclassc_number}.{$pr.snumber_number}: {$pr.namezh}</option>
+                                </volist>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3" style="padding-left: 0;">
+                        <button type="submit" class="btn btn-primary" id="seare">{$Think.lang.Search}</button>
+                    </div>
+                </form>
+                <br style="clear: both;" />
+                <table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+                    <thead>
+                    <tr>
+                        <th>{$Think.lang.product_number}</th>
+                        <th>{$Think.lang.Productname}</th>
+                        <th class="bm" style="cursor: pointer;">{$Think.lang.UnitPrice}(RMB)</th>
+                        <th style="cursor: pointer;">{$Think.lang.Number}<span class="caret"></span></th>
+                        <th>{$Think.lang.Amount}(RMB)</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tbody">
+                    <volist name="list" id="vo">
+                        <tr>
+                            <td class="bm"><a href="{:U('Product/homeProduct',array('pid'=>$vo['pid']))}" target="_blank">{$vo.bclassc_number}.{$vo.sclassc_number}.{$vo.snumber_number}</a></td>
+                            <td><a href="{:U('Product/homeProduct',array('pid'=>$vo['pid']))}" target="_blank">{$vo.namezh}</a></td>
+                            <td>
+                                {$vo.price}
+                            </td>
+                            <td>
+                                {$vo.number}
+                            </td>
+                            <td></td>
+                        </tr>
+                    </volist>
+                    </tbody>
+                </table>
+                <ul class="pager" style="width: 100%;">
+                    <!-- 分页显示 -->{$page}</ul>
+                <div style="float: right;">{$Think.lang.Total}:<span style="font-size: 16px;color: red;"> {$total}</span> RMB</div>
+            </div>
+        </section>
+    </div>
+</div>
+<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script>
+    var goodid = $('#goodid').val();
+    $('#product').val(goodid);
+    $('#product').selectpicker('refresh');
+    $(document).ready(function() {
+        $('#table1').DataTable({
+            "paging": false,
+            "lengthChange": false,
+            "info": false,
+            "searching": false
+        });
+        console.log($('#tbody').find('tr'));
+        for(var i=0;i<$('#tbody').find('tr').length;i++){
+        	var td_3 = $('#tbody').find('tr')[i].children[2].innerText;
+        	var td_4 = $('#tbody').find('tr')[i].children[3].innerText;
+        	$('#tbody').find('tr')[i].children[4].innerText =(Number(td_3)*Number(td_4)).toFixed(2);
+        }
+    });
+
+
+    $('.aa').on('click', function() {
+        //		if($(this).children('span').attr())
+        if($(this).children('span').attr('class').indexOf('1') == -1) {
+            $(this).children('span').addClass('caret1')
+        } else {
+            $(this).children('span').removeClass('caret1')
+        }
+
+    })
+</script>

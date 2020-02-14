@@ -1,0 +1,527 @@
+<script>
+    $('#61').parents('li').addClass('nav-active')
+    $('#61').parents('li').addClass('nav-expanded')
+</script>
+<style type="text/css">
+    #details_body .col-md-6 {
+        padding-left: 0;
+    }
+
+    #details_body .col-md-12 {
+        padding-left: 0;
+    }
+
+    #details_img {
+        text-align: center;
+    }
+
+    #details_img>div {
+        display: inline-block;
+        width: 45%;
+        position: relative;
+        margin: 0 2% 2%;
+    }
+
+    #details_img img {
+        width: 50%;
+    }
+
+    #details_img p {
+        color: #333;
+        line-height: 18px;
+    }
+
+    #details_img span {
+        position: absolute;
+        top: 0;
+        right: 0;
+        line-height: 16px;
+        text-align: center;
+        font-size: 20px;
+        color: red;
+        font-weight: bold;
+    }
+    /*section {
+        padding: 0 !important;
+        min-height: 100% !important;
+    }*/
+</style>
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+                    <a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+                </div>
+
+                <h2 class="panel-title">审批</h2>
+            </header>
+            <div class="panel-body">
+                <p id="status_id" style="display: none;">{$info.status_id}</p>
+                <p id="orderid" style="display: none;">{$info.orderid}</p>
+                <div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+               <!-- <div class="input-group" style="width: 50%;padding-right: 15px;">
+                    <input name="search" id="search_order" type="text" value="" class="form-control" placeholder="请输入你想查询的订单号" />
+                    <span class="input-group-btn">
+                    	<button type="button" class="btn btn-success" style="white-space: nowrap;" onclick="order_details()">搜索</button>
+                	</span>
+                </div>-->
+                <br style="clear: both;" />
+                <div id="details_body" style="line-height: 34px;width: 50%;float: left;">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-addon">订单号</span>
+                            <div class="form-control" id="details_o_number">{$info.o_number}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-addon">订单日期</span>
+                            <div class="form-control" id="details_status"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                    <div class="input-group" style="padding-top: 20px;">
+                        <span class="input-group-addon">审批状态</span>
+                        <div class="form-control" id="details_status" style="color: red;">{$info.processing_status}</div>
+                    </div>
+                </div>
+                    <div class="col-md-6">
+                        <div class="input-group" style="padding-top: 20px;">
+                            <span class="input-group-addon">运输要求</span>
+                            <div class="form-control" id="details_status"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group" style="padding-top: 20px;">
+                            <span class="input-group-addon">国家</span>
+                            <div class="form-control" id="details_status"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group" style="padding-top: 20px;">
+                            <span class="input-group-addon">包装重量</span>
+                            <div class="form-control" id="details_status">{$weight}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group" style="padding-top: 20px;">
+                            <span class="input-group-addon">申请人</span>
+                            <div class="form-control" id="details_status"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group" style="padding-top: 20px;">
+                            <span class="input-group-addon">劳动时间</span>
+                            <input class="form-control" id="details_status" value="" />
+                            <span class="input-group-addon">分钟</span>
+                        </div>
+                    </div>
+
+                    <div style="display: none;" id="shipping">
+                        <div class="col-md-12">
+                            <div class="input-group" style="padding-top: 20px;">
+                                <span class="input-group-addon">追踪号码<span style="color: red;">*</span></span>
+                                <input class="form-control" id="tracking_number" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="input-group" style="padding-top: 20px;">
+                                <span class="input-group-addon">运输商</span>
+                                <select class="form-control" id="details_status">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group" style="padding-top: 20px;">
+                                <span class="input-group-addon">运输方式</span>
+                                <!--<input class="form-control" id="transport_way" />-->
+                                <datalist id="browsers">
+                                    <option value="Internet Explorer">
+                                    <option value="Firefox">
+                                    <option value="Chrome">
+                                    <option value="Opera">
+                                    <option value="Safari">
+                                </datalist>
+                                <input list="browsers" class="form-control">
+
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group" style="padding-top: 20px;">
+                                <span class="input-group-addon">运输费用<span style="color: red;">*</span></span>
+                                <input class="form-control" id="transport_costs" />
+                            </div>
+                        </div>
+                    </div>
+                    <div id="problem_order">
+                        <div class="col-md-6">
+                            <div class="input-group" style="padding-top: 20px;">
+                                <span class="input-group-addon">问题类型</span>
+                                <div class="form-control" />{$info.problemtype}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group" style="padding-top: 20px;">
+                            <span class="input-group-addon">问题描述</span>
+                            <div class="form-control" />{$info.problem}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12" style="padding: 0;" id="order_products">
+                <table class="table table-hover table-bordered table-striped" style="margin-top: 20px;border-collapse: collapse;text-align: center;">
+                    <thead>
+                    <tr>
+                        <th style="text-align: center;">序号</th>
+                        <th style="text-align: center;">料号</th>
+                        <th style="text-align: center;">产品名称</th>
+                        <th style="text-align: center;">产品数量</th>
+                       <!-- <th style="text-align: center;">操作</th>-->
+                    </tr>
+                    </thead>
+                    <tbody id="details_tbody">
+                    <volist name="list" id="vo">
+                        <tr id="tr_{$vo.pid}">
+                            <td>{$key+1}</td>
+                            <td>
+                                <a target="_blank" href="{:U('Product/homeProduct','','')}/pid/{$vo.pid}">{$vo.bclass}.{$vo.sclass}.{$vo.num}</a>
+                            </td>
+                            <td>
+                                <a target="_blank" href="{:U('Product/homeProduct','','')}/pid/{$vo.pid}">{$vo.namezh}</a>
+                            </td>
+                            <td>{$vo.number}</td>
+                            <!--<td><button class="btn btn-primary btn-xs" onclick="hand_scan(this)">None</button></td>-->
+                        </tr>
+                    </volist>
+                    </tbody>
+                </table>
+            </div>
+            <br style="clear: both;" />
+            <!--<button id="Packaging" class="btn btn-primary" disabled="disabled" style="display: none;" onclick="Packaging()">打包完成</button>
+            <button id="confirm_ship" class="btn btn-primary" style="display: none;" onclick="confirm_ship()">确认发货</button>
+            <button class="btn btn-primary" id="change_order">修改</button>
+            <button class="btn btn-danger" id="report_problem" onclick="report_problem()">报告问题</button>-->
+            <button class="btn btn-primary" id="report_problem" onclick="">确认</button>
+           <!-- <p style="font-size: 14px;font-weight: bold;margin: 0;">订单流程记录：</p>
+            <div id="process_record" style="line-height: 24px;">
+                <volist name="process" id="vo">
+                    <li>{$vo.time} {$vo.lastnamezh}{$vo.namezh} {$vo.operating} {$vo.field} {$vo.modify}</li>
+                </volist>
+            </div>-->
+    </div>
+    <div style="width: 50%;float: left;" id="details_img">
+        <volist name="list" id="vo">
+            <div id="div_{$vo.pid}">
+                <img src="__ROOT__{$vo.thumb}" /><span>x{$vo.number}</span>
+                <p>{$vo.namezh}</p>
+                <p>料号:{$vo.bclass}.{$vo.sclass}.{$vo.num} 货架</p>
+            </div>
+        </volist>
+    </div>
+</div>
+</section>
+
+</div>
+</div>
+
+<div id="problem_modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">
+                    报告问题
+                </h4>
+            </div>
+            <div class="modal-body" style="line-height: 34px;">
+                <div class="input-group">
+                    <span class="input-group-addon">问题类型</span>
+                    <select class="form-control" id="problem_type">
+                        <option value="">请选择问题类型</option>
+                        <option value="11">库存不足</option>
+                        <option value="12">地址不清</option>
+                        <option value="13">其他</option>
+                    </select>
+                </div>
+
+                <div class="input-group" style="padding-top: 20px;">
+                    <span class="input-group-addon">问题描述</span>
+                    <input class="form-control" id="problem_ds" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn no-print btn-primary" onclick="sickorder()">提交</button>
+                <!--<button type="button" class="btn btn-primary" onclick="change_message(num)">修改</button>-->
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+<script>
+    var pid_arr = [],
+            pid_length = $('#details_tbody').find('tr').length,
+            pid_arr1 = [];
+    for(var i = 0; i < $('#details_tbody').find('tr').length; i++) {
+        var pid = $('#details_tbody').find('tr')[i].id.split('_')[1];
+        pid_arr1.push(pid);
+    }
+    //判断是否有订单
+    if(pid_arr1.length == 0 || $('#status_id').text() == 6 || $('#status_id').text() == 7 || $('#status_id').text() == 9) {
+        $('#search_order').focus();
+    } else {
+        $('#order_list').focus();
+    }
+    //状态判断
+    if($('#status_id').text() == 5) {
+        $('#Packaging').css('display', 'inline-block');
+        $('#confirm_ship').css('display', 'none');
+        $('#shipping').css('display', 'none');
+    } else if($('#status_id').text() == 6) {
+        $('#Packaging').css('display', 'none');
+        $('#confirm_ship').css('display', 'inline-block');
+        $('#shipping').css('display', 'inline-block');
+        $('#order_products').css('display', 'none');
+        $('#order_list').attr('readonly', true);
+    } else {
+        $('#Packaging').css('display', 'none');
+        $('#confirm_ship').css('display', 'none');
+        $('#shipping').css('display', 'none');
+    }
+
+    if($('#status_id').text() == 7) {
+        $('#shipping').css('display', 'inline-block');
+        $('#order_products').css('display', 'none');
+        $('#change_order').css('display', 'none');
+        $('#order_list').attr('readonly', true);
+        $('#shipping').find('input').attr('readonly', true);
+        $('#shipping').find('select').attr('disabled', true);
+        $('#report_problem').css('display', 'none');
+    }
+
+    if($('#status_id').text() == 9) {
+        $('#report_problem').css('display', 'none');
+        $('#problem_order').css('display', 'block');
+    } else {
+        $('#problem_order').css('display', 'none');
+    }
+
+    if($('#status_id').text() == 2) {
+        $('#change_order').css('display', 'inline-block');
+    } else {
+        $('#change_order').css('display', 'none');
+    }
+
+    function order_details() {
+        location.href = "{:U('Deliverycenter/ordertrack')}?o_number=" + $('#search_order').val();
+    }
+
+    $('#search_order').on('keyup', function(event) {
+        if(event.keyCode == '13') {
+            order_details();
+        }
+    })
+
+    //扫描产品
+    $('#order_list').on('keyup', function(event) {
+        if(event.keyCode == '13') {
+            console.log(pid_arr1);
+            var pid_input = $('#order_list').val();
+            if(pid_arr1.indexOf(pid_input) == -1) {
+                if(t) {
+                    clearTimeout(t)
+                };
+                $('#node_message').text('没有这个产品');
+                node_message.style.display = 'block';
+                var t = setTimeout("node_message.style.display='none'", 2000);
+                return false;
+            }
+            scan_product()
+        }
+    })
+
+    //扫描产品码
+    function scan_product() {
+        $.ajax({
+            url: "{:U('Order/getAjaxPid','','')}", //通过页面元素的ID来获取设备ID
+            type: "post", //选择传值方式
+            data: {
+                pid: $('#order_list').val()
+            },
+            dataType: "JSON",
+            success: function(data) {
+                console.log(data);
+                if(pid_arr.indexOf(data) != -1) {
+                    if(t) {
+                        clearTimeout(t)
+                    };
+                    $('#node_message').html('该产品已扫描完毕');
+                    node_message.style.display = 'block';
+                    $('#order_list').val('');
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                    return false;
+                }
+                console.log('#tr_' + data)
+                //				$('#tr_'+data).css('background','#47a447');
+                var tr_text = $('#tr_' + data).find('td').eq(3).text() - 0 + 1;
+                var tr_text1 = $('#tr_' + data).find('td').eq(2).text();
+                $('#tr_' + data).css('background', '#ecc71f');
+                $('#tr_' + data).find('td').eq(3).text(tr_text);
+                console.log($('#tr_' + data).find('td').eq(2).text());
+                $('#order_list').val('');
+                if(tr_text == tr_text1) {
+                    pid_arr.push(data);
+                    $('#tr_' + data).css('background', '#47a447');
+                    $('#div_' + data).css('background', '#47a447');
+                    console.log(pid_arr);
+                    if(pid_arr.length == pid_length) {
+                        $('#Packaging').attr('disabled', false);
+                    }
+                }
+
+            }
+        })
+    }
+    //手动扫描
+    function hand_scan(obj) {
+        console.log($(obj).parents('tr').attr('id').split('_')[1]);
+        var tr_text = $(obj).parent().siblings('td').eq(3).text() - 0 + 1;
+        var tr_text1 = $(obj).parent().siblings('td').eq(2).text();
+        if(tr_text - 1 == tr_text1) {
+            if(t) {
+                clearTimeout(t)
+            };
+            $('#node_message').html('该产品已扫描完毕');
+            node_message.style.display = 'block';
+            $('#order_list').val('');
+            var t = setTimeout("node_message.style.display='none';", 2000);
+            return false;
+        }
+        $(obj).parents('tr').css('background', '#ecc71f');
+        $(obj).parent().siblings('td').eq(3).text(tr_text);
+        if(tr_text == tr_text1) {
+            var pr_pid = $(obj).parents('tr').attr('id').split('_')[1];
+            pid_arr.push(pr_pid);
+            $(obj).parents('tr').css('background', '#47a447');
+            $('#div_' + pr_pid).css('background', '#47a447');
+            console.log(pid_arr);
+            if(pid_arr.length == pid_length) {
+                $('#Packaging').attr('disabled', false);
+            }
+        }
+    }
+    //报告问题
+    function report_problem() {
+        $('#problem_modal').modal('toggle');
+    }
+
+    //打包完成
+    function Packaging() {
+        var r = confirm("确定打包完成吗？");
+        if(r == true) {
+            $.ajax({
+                url: "{:U('Deliverycenter/waitship')}", //通过页面元素的ID来获取设备ID
+                type: "post", //选择传值方式
+                data: {
+                    id: $('#orderid').text(),
+                    o_number: $('#details_o_number').text()
+                },
+                dataType: "JSON",
+                success: function(data) {
+                    console.log(data)
+                    if(t) {
+                        clearTimeout(t)
+                    };
+                    $('#node_message').text('打包完成');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+                }
+            })
+        } else {
+            return false;
+        }
+    }
+    //确认发货
+    function confirm_ship() {
+        if($('#tracking_number').val() == "" || $('#transport_costs').val() == "") {
+            if(t) {
+                clearTimeout(t)
+            };
+            $('#node_message').text('追踪号码和运输费用不能为空');
+            node_message.style.display = 'block';
+            var t = setTimeout("node_message.style.display='none';", 2000);
+            return false;
+        }
+        var r = confirm("确定发货吗？");
+        if(r == true) {
+            $.ajax({
+                url: "{:U('Deliverycenter/shipped')}", //通过页面元素的ID来获取设备ID
+                type: "post", //选择传值方式
+                data: {
+                    id: $('#orderid').text(),
+                    o_number: $('#details_o_number').text()
+                },
+                dataType: "JSON",
+                success: function(data) {
+                    console.log(data)
+                    if(t) {
+                        clearTimeout(t)
+                    };
+                    $('#node_message').text('发货成功');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+                }
+            })
+        } else {
+            return false;
+        }
+    }
+    //修改
+    $('#change_order').on('click', function() {
+        location.href = "{:U('Deliverycenter/updateOrder')}?id=" + $('#orderid').text();
+    })
+
+    //问题订单
+    function sickorder() {
+        if($('#problem_type').val() == "") {
+            if(t) {
+                clearTimeout(t)
+            };
+            $('#node_message').text('请选择问题类型');
+            node_message.style.display = 'block';
+            var t = setTimeout("node_message.style.display='none'", 2000);
+            return false;
+        }
+        if($('#problem_type').val() == "13" && $('#problem_ds').val() == "") {
+            if(t) {
+                clearTimeout(t)
+            };
+            $('#node_message').text('请输入问题描述');
+            node_message.style.display = 'block';
+            var t = setTimeout("node_message.style.display='none'", 2000);
+            return false;
+        }
+        $.ajax({
+            url: "{:U('Deliverycenter/sickorder')}", //通过页面元素的ID来获取设备ID
+            type: "post", //选择传值方式
+            data: {
+                id: $('#orderid').text(),
+                ptype: $('#problem_type').val(),
+                problem: $('#problem_ds').val(),
+            },
+            dataType: "JSON",
+            success: function(data) {
+                console.log(data)
+                if(t) {
+                    clearTimeout(t)
+                };
+                $('#node_message').text('转为问题订单');
+                node_message.style.display = 'block';
+                var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+            }
+        })
+    }
+</script>

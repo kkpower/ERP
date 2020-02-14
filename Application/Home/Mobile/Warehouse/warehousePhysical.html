@@ -1,0 +1,298 @@
+<script>
+    $('#81').parents('li').addClass('nav-active')
+    $('#81').parents('li').addClass('nav-expanded')
+</script>
+<!--仓库名称 重复检测-->
+<input type="hidden" id="storehouse" name='' value="{:U('Warehouse/warehousename','','')}">
+<!-- ZUI 标准版压缩后的 JavaScript 文件 -->
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+<div id="edit_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">
+                    修改仓库
+                </h4>
+            </div>
+            <form onsubmit="return doupdate(this)">
+                <input id="pld" value="" type="hidden" name="id">
+                <input type="hidden" value="{$pid}" name="pid">
+                <div class="modal-body">
+                    <div class="row" style="margin-left: 0;margin-right: 0;">
+                        <div class="input-group" style="padding-left: 10px;float: left;">
+                            <span class="input-group-addon">中文名称<span style="color: red;">*</span></span>
+                            <input id="Account" type="text" name="name" class="form-control" placeholder=""  value="" onblur="warehousename1()">
+                        </div>
+                        <div id="name_check1" style="float: left;margin-left: 1.2rem;"></div>
+                        <br style="clear: both;" />
+                        <div class="input-group" style="padding-left: 10px;float: left;padding-top: 1.2rem;">
+                            <span class="input-group-addon">英文名称<span style="color: red;">*</span></span>
+                            <input id="englishname" type="text" name="englishname" class="form-control" placeholder=""  value="">
+                        </div>
+                        <div class="input-group col-md-6" style="padding-top: 1.2rem;padding-left: 10px;">
+                            <span class="input-group-addon">地址<span style="color: red;">*</span></span>
+                            <input id="address" type="text" name="address" class="form-control" placeholder="" value="">
+                        </div>
+                        <div class="input-group col-md-6" style="padding-top: 1.2rem;padding-left: 10px;">
+                            <span class="input-group-addon">状态<span style="color: red;">*</span></span>
+                            <select  name="state" class="form-control">
+                                <option value="1" id="ebay">正常</option>
+                                <option value="2" id="amazon">锁定</option>
+                            </select>
+                            <!--<input id="pltype" type="text" name="type" class="form-control" placeholder="" style="width: 30%;" value="">-->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="add_pr" type="submit">{$Think.lang.Save}</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cantel}</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+                    <a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+                </div>
+                <h2 class="panel-title">{$Think.lang.warehouseManagement}</h2>
+            </header>
+            <div class="panel-body">
+                <button class="btn btn-primary" data-toggle="modal" data-target="#myModal" onclick="showarehouse(1)">
+                    {$Think.lang.Addwarehouse }
+                </button>
+                <div>
+                    <table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+                        <thead>
+                        <tr>
+                            <th>{$Think.lang.Id}</th>
+                            <th>中文名称</th>
+                            <th>英文名称</th>
+                            <th>{$Think.lang.Address}</th>
+                            <th>{$Think.lang.state}</th>
+                            <th>{$Think.lang.Operation}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <input type="hidden" name='getSupplier' value="{:U('Warehouse/getWarehouse','','')}">
+                        <foreach name="list" item="vo">
+                            <tr>
+                                <td>{$key+1}</td>
+                                <td>
+                                    <eq name="vo.state" value="1"><a href="{:U('Warehouse/warehouseManagement',array('id'=>$vo['id']))}"  target="_blank">{$vo.name}</a></eq>
+                                    <eq name="vo.state" value="2">{$vo.name}</eq>
+                                </td>
+                                <td>{$vo.englishname}</td>
+                                <td>{$vo.address}</td>
+                                <td>
+                                    <eq name="vo.state" value="1">正常</eq>
+                                    <eq name="vo.state" value="2">锁定</eq>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" onclick="ckedit('{$vo.id}','{$vo.name}','{$vo.address}','{$vo.state}','{$vo.englishname}')">{$Think.lang.Modify}</button>
+
+                                </td>
+                            </tr>
+                        </foreach>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+    </div>
+</div>
+
+<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="userModalLabel"></h4>
+            </div>
+            <form class="form-horizontal" onsubmit="return doadd(this)">
+                <div class="modal-body">
+                    <input type="hidden" name="kqname[]" value="待检仓">
+                    <input type="hidden" name="kqname[]" value="主仓">
+                    <input type="hidden" name="kqname[]" value="待处理仓">
+                    <input type="hidden" name="kqname[]" value="废品仓">
+                    <input type="hidden" name="type[]" value="1">
+                    <input type="hidden" name="type[]" value="2">
+                    <input type="hidden" name="type[]" value="3">
+                    <input type="hidden" name="type[]" value="4">
+                    <div class="input-group" style="float: left;padding: 0 1.2rem 0;">
+                        <span class="input-group-addon">中文名称:</span>
+                        <input type="text" name="ckname" class="form-control" value="" placeholder="" onblur="warehousename()">
+                    </div>
+                    <div id="name_check" style="float: left;margin-left: 1.2rem;"></div>
+                    <br style="clear: both;" />
+                    <div class="input-group" style="padding:1.2rem 1.2rem 0;">
+                        <span class="input-group-addon">英文名称:</span>
+                        <input type="text" name="englishname" class="form-control" value="" placeholder="">
+                    </div>
+                    <div class="input-group" style="padding: 1.2rem 1.2rem 0;">
+                        <span class="input-group-addon">{$Think.lang.Address}:</span>
+                        <input type="text" class="form-control" name="address" id="address">
+                    </div>
+                    <div class="input-group" style="padding: 1.2rem 1.2rem 0;">
+                        <span class="input-group-addon">{$Think.lang.state}:</span>
+                        <select name="state" id="state" class="form-control">
+                            <option value="">{$Think.lang.Pleasechoose}</option>
+                            <option value='1'>正常</option>
+                            <option value='2'>锁定</option>
+                        </select>
+                    </div>
+
+                    <input type="hidden" id="id" name="id" value="">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">{$Think.lang.Sub}</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Close}</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+
+</div>
+
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script>
+
+    $(document).ready(function() {
+        $('#table1').DataTable({
+            "paging": false,
+            "lengthChange": false,
+            "info": false,
+            "searching": false
+        });
+    });
+    //仓库名称检测 添加
+    function warehousename() {
+        var wname = $("#storehouse").val();
+        $.ajax({
+            url:wname,
+            type: "post", //选择传值方式
+            data: {
+                name: $("input[name='ckname']").val()
+            },
+            dataType: "JSON",
+            success: function(data) {
+                console.log(data);
+                if(data == 'can') {
+                    $('#name_check').html('<span style="color:#5cb85c;">{$Think.lang.Namecanused}</span>');
+                } else {
+                    $('#name_check').html('<span style="color:red;">中文名称重复</span>');
+                }
+
+            }
+        })
+    }
+    //仓库名称检测 修改
+    function warehousename1() {
+        $.ajax({
+            url: "{:U('Warehouse/warehousename1')}",
+            type: "post", //选择传值方式
+            data: {
+                name: $("input[name='name']").val()
+            },
+            dataType: "JSON",
+            success: function(data) {
+                console.log(data);
+                if(data == 'can') {
+                    $('#name_check1').html('<span style="color:#5cb85c;">{$Think.lang.Namecanused}</span>');
+                } else {
+                    $('#name_check1').html('<span style="color:red;">中文名称重复</span>');
+                }
+
+            }
+        })
+    }
+    //修改仓库弹框(赋值)
+    function ckedit(id,name,address,state,englishname){
+        $('#pld').val(id);
+        $('#Account').val(name);
+        $('#address').val(address);
+        $('#englishname').val(englishname);
+        if(state=='1'){
+            $('#ebay').attr('selected','selected');
+            $('#amazon').removeAttr('selected');
+        }else{
+            $('#amazon').attr('selected','selected');
+            $('#ebay').removeAttr('selected');
+        }
+        $('#edit_modal').modal('toggle');
+    }
+
+    //修改仓库
+    function doupdate(form){
+        $.ajax({
+            url:"{:U('Warehouse/ckupdate')}",
+            type:"post",
+            data:$(form).serialize(),
+            dataType:"json",
+            async:true,
+            success:function(data){
+                console.log(data);
+                if (data.status==0){
+                    $('#node_message').html('您没有该操作权限');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if(data=="OK"){
+                    $('#node_message').html('修改成功');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+                }else if (data=="CF"){
+                    $('#node_message').html('不能为空');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else  if (data=="NO"){
+                    $('#node_message').html('仓库名称重复');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }
+            }
+        });
+        return false;
+    }
+    //添加仓库
+    function doadd(form){
+        $.ajax({
+            url:"{:U('Warehouse/savewarehouse')}",
+            type:"post",
+            data:$(form).serialize(),
+            dataType:"json",
+            async:true,
+            success:function(data){
+                console.log(data);
+                if (data.status==0){
+                    $('#node_message').html('您没有该操作权限');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if(data>0){
+                    $('#node_message').html('添加成功');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+                }else if (data=="NO"){
+                    $('#node_message').html('添加失败');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }
+            }
+        });
+        return false;
+    }
+</script>

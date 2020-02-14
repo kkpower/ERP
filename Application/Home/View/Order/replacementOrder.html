@@ -1,0 +1,667 @@
+<script>
+	$('#34').parents('li').addClass('nav-active')
+	$('#34').parents('li').addClass('nav-expanded')
+</script>
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<style>
+	#order_info .input-group {
+		width: 100%;
+	}
+	
+	#order_info .input-group .input-group-addon {
+		width: 150px;
+	}
+	/*#order_info .col-md-6:nth-child(n+8) {
+		padding-top: 12px;
+	}*/
+	
+	.bootstrap-select.btn-group .dropdown-toggle .filter-option {
+		padding-left: 5px;
+		padding-top: 3px;
+		color: #666;
+	}
+	
+	.bootstrap-select {
+		/*width: 50% !important;*/
+	}
+	
+	.bootstrap-select>button {
+		height: 100%;
+		line-height: 100%;
+	}
+	
+	.bootstrap-select>button:active {
+		background: #fff !important;
+	}
+	
+	.bootstrap-select>button:hover {
+		background: #fff !important;
+	}
+	
+	.bootstrap-select>button:focus {
+		background: #fff !important;
+	}
+	
+	#details_body .col-md-6 {
+		padding-left: 0;
+	}
+	
+	#details_body .col-md-12 {
+		padding-left: 0;
+	}
+	
+	#details_img {
+		text-align: center;
+	}
+	
+	#details_img>div {
+		display: inline-block;
+		width: 45%;
+		position: relative;
+		margin: 0 2% 2%;
+	}
+	
+	#details_img img {
+		width: 100%;
+	}
+	
+	#details_img p {
+		color: #333;
+		line-height: 18px;
+	}
+	
+	#details_img span {
+		position: absolute;
+		top: 0;
+		right: 0;
+		line-height: 16px;
+		text-align: center;
+		font-size: 16px;
+		color: red;
+		font-weight: bold;
+	}
+	
+	#details_tbody input {
+		border: 0;
+	}
+	
+	#details_tbody td {
+		line-height: 34px;
+		padding: 0;
+	}
+	
+	#details_tbody img {
+		width: 34px;
+		margin: 4px;
+	}
+	
+	#product_list tr td:nth-child(5) {
+		width: 100px;
+	}
+	
+	#details_tbody tr td:nth-child(4) {
+		width: 100px;
+	}
+	
+	#image {
+		position: absolute;
+		display: none;
+		z-index: 9999;
+		border: 1px solid #ccc;
+	}
+</style>
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<h2 class="panel-title">补单</h2>
+				<p style="margin: 0;">订单号：<span style="color: red;" id="new_id">{$info.id}</span></p>
+			</header>
+			<div class="panel-body">
+				<img id="image" src="" />
+				<div id="order_info">
+					<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+					<p id="status_id" style="display: none;">{$info.status_id}</p>
+					<input type="hidden" id="ebay_id" value="{$info.ebay_id}" />
+					<div class="col-md-6">
+						<div class="input-group">
+							<span class="input-group-addon">平台</span>
+							<input id="input4" type="text" name="recipient_first_name" class="form-control" value="{$info.type}" placeholder="" readonly="readonly">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="input-group">
+							<span class="input-group-addon">外部订单号</span>
+							<input id="external_sn" type="text" name="external_sn" class="form-control" value="{$info.external_sn}" placeholder="" readonly="readonly">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="input-group">
+							<span class="input-group-addon">买家名</span>
+							<input id="input4" type="text" name="recipient_first_name" class="form-control" value="{$info.fullname}" placeholder="">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="input-group">
+							<span class="input-group-addon">邮箱</span>
+							<input id="buyer_email" name="buyer_email" type="text" class="form-control" value="{$info.buyer_email}" placeholder="">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="input-group">
+							<span class="input-group-addon">收件地址1</span>
+							<input id="street_1" name="street_1" type="text" class="form-control" value="{$info.street_1}" placeholder="">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="input-group">
+							<span class="input-group-addon">收件电话</span>
+							<input id="buyer_phone" name="buyer_phone" type="text" class="form-control" value="{$info.buyer_phone}" placeholder="">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="input-group">
+							<span class="input-group-addon">收件地址2</span>
+							<input id="street_2" name="street_2" type="text" class="form-control" value="{$info.street_2}" placeholder="">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="input-group">
+							<span class="input-group-addon">运输要求</span>
+							<input id="ship_level" name="ship_level" type="text" class="form-control" value="{$info.ship_level}" placeholder="">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="input-group">
+							<span class="input-group-addon">收件地址3</span>
+							<input id="street_3" name="street_3" type="text" class="form-control" value="{$info.street_3}" placeholder="">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="input-group">
+							<span class="input-group-addon">收件人</span>
+							<input id="recipient_first_name" name="recipient_first_name" type="text" class="form-control" value="{$info.recipient_first_name}" placeholder="">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="input-group">
+							<span class="input-group-addon">市</span>
+							<input id="city" name="city" type="text" class="form-control" value="{$info.city}" placeholder="">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="input-group">
+							<span class="input-group-addon">运输商</span>
+							<input id="input6" name="buyer_phone" type="text" class="form-control" value="" placeholder="">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="input-group">
+							<span class="input-group-addon">州</span>
+							<input id="state" name="state" type="text" class="form-control" value="{$info.state}" placeholder="">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="input-group">
+							<span class="input-group-addon">仓库</span>
+							<select id="input6" name="buyer_phone" type="text" class="form-control" value="{$info.var}">
+							</select>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="input-group">
+							<span class="input-group-addon">国家</span>
+							<input id="country" name="country" type="text" class="form-control" value="{$info.country}" placeholder="">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="input-group">
+							<span class="input-group-addon">邮编</span>
+							<input id="zip" name="zip" type="text" class="form-control" value="{$info.zip}" placeholder="">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="input-group">
+							<span class="input-group-addon">Sku</span>
+							<input id="sku" name="sku" type="text" class="form-control" value="{$info.var}" placeholder="" readonly="readonly">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="input-group">
+							<span class="input-group-addon">Item</span>
+							<input id="item" name="item" type="text" class="form-control" value="{$info.external_title}" placeholder="" readonly="readonly">
+						</div>
+					</div>
+
+					<div class="col-md-12" id="order_products">
+						<form id="form1">
+							<table class="table table-hover table-bordered table-striped" style="margin-top: 12px;border-collapse: collapse;text-align: center;margin-bottom: 0;">
+								<thead>
+									<tr>
+										<th style="text-align: center;">图片</th>
+										<th style="text-align: center;">料号</th>
+										<th style="text-align: center;">产品名称</th>
+										<th style="text-align: center;">产品数量</th>
+										<th style="text-align: center;width: 50px;">操作</th>
+									</tr>
+								</thead>
+								<tbody id="details_tbody">
+									<volist name="list" id="vo">
+										<tr id="tr_{$vo.pid}">
+											<td>
+												<img src="__ROOT__{$vo.thumb}" alt="" onmouseover="displayImg(this)" onmouseout="vanishImg()" onmousemove="displayImg(this)">
+											</td>
+											<td>
+												<if condition="$vo.bclass neq null">
+													<a target="_blank" href="{:U('Product/homeProduct','','')}/pid/{$vo.pid}">{$vo.bclass}.{$vo.sclass}.{$vo.num}</a>
+												</if>
+											</td>
+											<td>
+												<a target="_blank" href="{:U('Product/homeProduct','','')}/pid/{$vo.pid}">{$vo.namezh}</a>
+											</td>
+											<td><input class="form-control" id="input_{$vo.pid}" name="num[]" type="text" value="{$vo.number}"></td>
+											<td>
+												<div class="btn btn-danger btn-xs" onclick="delete_pr('{$vo.pid}')">删除</div>
+											</td>
+										</tr>
+									</volist>
+								</tbody>
+							</table>
+						</form>
+					</div>
+					<div class="col-md-6">
+						<div class="input-group" style="padding-top: 12px;">
+							<span class="input-group-addon">补单原因</span>
+							<select id="reason" name="buyer_phone" class="form-control">
+								<volist name="cause" id="vo">
+								
+									<option value="{$vo.val}">
+										<eq name="Think.cookie.think_language" value="en-us">{$vo.name}<else/>{$vo.namezh}</eq>
+									</option>
+								</volist>
+							</select>
+						</div>
+					</div>
+					<br style="clear: both;" />
+					<div class="col-md-12" style="padding-bottom: 12px;padding-top: 12px;">
+						<div class="input-group">
+							<span class="input-group-addon">其他原因</span>
+							<textarea id="other_reason" type="text" class="form-control"></textarea>
+						</div>
+					</div>
+					<br style="clear: both;" />
+					<div style="margin: 0 auto;width: 280px;">
+						<button id="Add" class="btn btn-primary" onclick="add_pr()" style="margin-right: 15px;">关联产品</button>
+						<button id="Packaging" class="btn btn-primary" style="margin-right: 15px;" onclick="save_list()">提交</button>
+						<button class="btn btn-default">取消</button>
+
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+
+<div id="node_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+	<div style="width: 90%;" class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">
+						标题:<span style="color: red;">{$info.var}</span>
+					</h4>
+			</div>
+			<div class="modal-body" style="line-height: 34px;">
+				<div class="row" style="margin-left: 0;margin-right: 0;">
+					<input type="hidden" value="{$info.var}" name="sku" readonly="readonly" class="form-control" />
+					<div class="col-md-5" style="padding-left: 0;padding-bottom: 15px;">
+						<div class="input-group">
+							<span class="input-group-addon">产品关键词</span>
+							<input type="text" id="pr_keyword" class="form-control" value="{$keywords}" />
+							<span class="input-group-addon btn btn-success" onclick="search_pr()" style="white-space: nowrap;">搜索</span>
+						</div>
+					</div>
+					<button class="btn btn-primary" style="float: right;" onclick="add_all()">添加全部</button>
+					<div class="col-md-2" style="float: left;">
+						<div class="input-group">
+							<span class="input-group-addon">显示数量</span>
+							<select id="select_num" class="form-control">
+								<option value="15">15</option>
+								<option value="30">30</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+								<option value="all">全部</option>
+							</select>
+						</div>
+					</div>
+					<br style="clear: both;" />
+					<table class="table table-hover table-bordered table-striped" style="border-collapse: collapse;text-align: center;">
+						<thead>
+							<tr>
+								<th style="text-align: center;">图片</th>
+								<th style="text-align: center;">料号</th>
+								<th style="text-align: center;">产品名称</th>
+								<th style="text-align: center;">选择</th>
+								<th style="text-align: center;">产品数量</th>
+								<th style="text-align: center;">操作</th>
+							</tr>
+						</thead>
+						<tbody id="product_list">
+							<volist name="product" id="vo">
+								<tr id="tr_{$vo.pid}">
+									<td>
+										<img style="width: 34px;" src="__ROOT__{$vo.thumb}" alt="" onmouseover="displayImg(this)" onmouseout="vanishImg()" onmousemove="displayImg(this)">
+									</td>
+									<td>
+										<a target="_blank" href="{:U('Product/homeProduct','','')}/pid/{$vo.pid}">{$vo.bclassc_number}.{$vo.sclassc_number}.{$vo.snumber_number}</a>
+									</td>
+									<td>
+										<a target="_blank" href="{:U('Product/homeProduct','','')}/pid/{$vo.pid}">{$vo.namezh}</a>
+									</td>
+									<td>
+										<input type="checkbox" name="check" id="check_{$vo.pid}" value="{$vo.pid}" style="width: 25px;height: 25px;">
+									</td>
+									<td><input class="form-control" id="input1_{$vo.pid}" name="num[]" type="text" value="1" onblur="check_change(this)"></td>
+									<td><button class="btn btn-primary btn-xs" onclick="one_add('{$vo.pid}')">添加</button></td>
+								</tr>
+							</volist>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<!--<button class="btn btn-primary" id="add_pr" onclick="confirm_add()" type="submit">确认</button>-->
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+
+	</div>
+	<!-- /.modal-content -->
+</div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script>
+	var arr = [];
+	var pid_arr = [];
+	$(document).ready(function() {
+		var tr = $('#details_tbody').find('tr');
+		for(var i = 0; i < tr.length; i++) {
+			arr.push(tr[i].id.split('_')[1]);
+			pid_arr.push(tr[i].id.split('_')[1]);
+		}
+		console.log(arr);
+	});
+	//添加产品，生成随机sku
+	function add_pr() {
+		$('#node_modal').modal('toggle');
+	}
+	//保存信息
+	function save_list() {
+		var form_arr = $('#form1').serializeArray();
+		var num_arr = [];
+		for(var i = 0; i < form_arr.length; i++) {
+			num_arr.push(form_arr[i].value);
+		}
+		console.log(arr);
+		console.log(num_arr);
+		var r = confirm('确定提交吗');
+		if(r == true) {
+			$.ajax({
+				url: "{:U('Order/applyNow')}",
+				type: "post",
+				data: {
+					recipient_first_name: $('#recipient_first_name').val(), //收件人
+					buyer_phone: $('#buyer_phone').val(), //收件电话
+					buyer_email: $('#buyer_email').val(), //收件邮箱
+					country: $('#country').val(), //国家
+					state: $('#state').val(), //省/州
+					city: $('#city').val(), //市
+					zip: $('#zip').val(), //邮编
+					street_1: $('#street_1').val(),
+					street_2: $('#street_2').val(),
+					street_3: $('#street_3').val(),
+					ship_level: $('#ship_level').val(), //运输方式
+					sku: $('#sku').val(),
+					supplier_pr_id: arr,
+					type: $('#reason').val(),
+					describe: $('#other_reason').val(),
+					id: $('#new_id').text(),
+					num: num_arr
+				},
+				dataType: "json",
+				async: true,
+				success: function(data) {
+					console.log(data);
+					if(t) {
+						clearTimeout(t)
+					};
+					$('#node_message').html('已提交');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+				}
+			});
+		} else {
+			return false;
+		}
+
+	}
+
+	//添加产品
+	function skuInfo() {
+		$.ajax({
+			url: "{:U('Order/skuInfo')}", //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				sku: $('#sku').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				for(var i = 0; i < data.length; i++) {
+					$('#input_' + data[i].pid).val(data[i].number)
+				}
+
+			}
+		})
+	}
+
+	//提交添加
+	function confirm_add() {
+		var arr1 = $('#form').serializeArray();
+		for(var i = 0; i < arr1.length; i++) {
+			arr.push(arr1[i].value);
+		}
+		console.log(arr);
+		arr = Array.from(new Set(arr));
+		arr.sort();
+		$.ajax({
+			url: "{:U('Order/getAjaxProduct')}", //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				pid: arr
+			},
+			dataType: "JSON",
+			success: function(data) {
+				$('#details_tbody').empty();
+				console.log(data)
+				var str = ""
+				for(var i = 0; i < data.length; i++) {
+					str += '<tr id="tr_' + data[i].pid + '">' +
+						'<td><img src="__ROOT__' + data[i].thumb + '"></td>' +
+						'<td><a target="_blank" href="' + "{:U('Product/homeProduct','','')}/pid/" + data[i].pid + '">' + data[i].bclassc_number + '.' + data[i].sclassc_number + '.' + data[i].snumber_number + '</a></td>' +
+						'<td><a target="_blank" href="' + "{:U('Product/homeProduct','','')}/pid/" + data[i].pid + '">' + data[i].namezh + '</a></td>' +
+						'<td><input class="form-control" id="input_' + data[i].pid + '" name="num[]" type="text" value="1"></td>' +
+						'<td><div class="btn btn-danger btn-xs" onclick="delete_pr(' + data[i].pid + ')">删除</div></td>' +
+						'</tr>'
+				}
+				$('#details_tbody').append(str);
+				skuInfo();
+				$('#node_modal').modal('toggle');
+			}
+		})
+	}
+
+	//产品关键词搜索
+	$('#pr_keyword').on('keyup', function(event) {
+		if(event.keyCode == '13') {
+			search_pr()
+		}
+	})
+
+	$('#select_num').on('change', function() {
+		search_pr()
+	})
+
+	//搜索
+	function search_pr() {
+		$.ajax({
+			url: "{:U('Order/titleInfo')}", //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				search: $('#pr_keyword').val(),
+				limit: $('#select_num').val(),
+				pid: pid_arr
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data)
+				$('#product_list').empty();
+				var str = "";
+				for(var i = 0; i < data.length; i++) {
+					str += '<tr id="tr_' + data[i].pid + '">' +
+						'<td><img style="width: 34px;" src="__ROOT__' + data[i].thumb + '" onmouseover="displayImg(this)" onmouseout="vanishImg()" onmousemove="displayImg(this)"></td>' +
+						'<td><a target="_blank" href="' + "{:U('Product/homeProduct','','')}/pid/" + data[i].pid + '">' + data[i].bclassc_number + '.' + data[i].sclassc_number + '.' + data[i].snumber_number + '</a></td>' +
+						'<td><a target="_blank" href="' + "{:U('Product/homeProduct','','')}/pid/" + data[i].pid + '">' + data[i].namezh + '</a></td>' +
+						'<td><input type="checkbox" name="check" id="check_' + data[i].pid + '" value="' + data[i].pid + '" style="width: 25px;height: 25px;"></td>' +
+						'<td><input class="form-control" id="input1_' + data[i].pid + '" name="num[]" type="text" value="1" onblur="check_change(this)"></td>' +
+						'<td><button class="btn btn-primary btn-xs" onclick="one_add(' + data[i].pid + ')">添加</button></td>' +
+						'</tr>'
+				}
+				$('#product_list').append(str);
+			}
+		})
+	}
+	//添加一条产品
+	function one_add(pid) {
+		$.ajax({
+			url: "{:U('Order/addLink')}", //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				sku: $('#sku').val(),
+				supplier_pr_id: pid,
+				num: Number($('#input1_' + pid).val()),
+				id: $('#ebay_id').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				if(t) {
+					clearTimeout(t)
+				};
+				$('#node_message').html('保存成功');
+				node_message.style.display = 'block';
+				var t = setTimeout("node_message.style.display='none';location.reload()", 1000);
+			}
+		})
+	}
+	//添加多条产品
+	function add_all() {
+		var all_arr = [],
+			input_arr = [];
+		var check = $('input[name="check"]');
+		console.log(check);
+		for(var i = 0, c; c = check[i++];) {
+			if(c.checked) {
+				var pid1 = c.id.split('_')[1];
+				all_arr.push(pid1);
+			}
+		}
+		if(all_arr.length == 0) {
+			if(t) {
+				clearTimeout(t)
+			};
+			$('#node_message').html('请选择产品');
+			node_message.style.display = 'block';
+			var t = setTimeout("node_message.style.display='none';", 2000);
+			return false;
+		}
+		console.log(all_arr)
+		for(var i = 0; i < all_arr.length; i++) {
+			//			console.log()
+			var num1 = $('#input1_' + all_arr[i]).val();
+			input_arr.push(num1);
+		}
+		console.log(input_arr)
+		$.ajax({
+			url: "{:U('Order/addAllLink')}", //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				sku: $('#sku').val(),
+				supplier_pr_id: all_arr,
+				num: input_arr,
+				id: $('#ebay_id').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				if(t) {
+					clearTimeout(t)
+				};
+				$('#node_message').html('保存成功');
+				node_message.style.display = 'block';
+				var t = setTimeout("node_message.style.display='none';location.reload()", 1000);
+			}
+		})
+	}
+	//删除产品
+	function delete_pr(pid) {
+		var r = confirm('确认删除吗');
+		if(r == true) {
+			$.ajax({
+				url: "{:U('Order/delLinkProduct')}", //通过页面元素的ID来获取设备ID
+				type: "post", //选择传值方式
+				data: {
+					pid: pid,
+					sku: $('#sku').val()
+				},
+				dataType: "JSON",
+				success: function(data) {
+					console.log(data)
+					$('#tr_' + pid).remove();
+					var index = arr.indexOf(String(pid));
+					arr.splice(index, 1);
+					console.log(arr);
+				}
+			})
+		} else {
+			return false;
+		}
+
+	}
+
+	//显示图片  
+	function displayImg(obj) {
+		var img = document.getElementById("image");
+
+		//var x = event.clientX + document.body.scrollLeft + 20;  
+		//var y = event.clientY + document.body.scrollTop - 5;   
+		var e = event || window.event;
+		var scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
+		var scrollY = document.documentElement.scrollTop || document.body.scrollTop;
+		var x = e.pageX || e.clientX + scrollX;
+		var y = e.pageY || e.clientY + scrollY;
+		img.style.left = x - 216 + "px";
+		img.style.top = y - 130 + "px";
+		img.style.display = "block";
+		img.src = obj.src;
+	}
+	//图片消失
+	function vanishImg() {
+		var img = document.getElementById('image');
+		img.style.display = "none";
+	}
+	//检测输入框变化选择框选中
+	function check_change(obj) {
+		if(obj.value != '1') {
+			$(obj).parents('tr').find('input[name="check"]').attr('checked', true);
+		}
+	}
+</script>

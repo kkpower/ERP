@@ -1,0 +1,269 @@
+﻿<script>
+    $('#81').parents('li').addClass('nav-active')
+    $('#81').parents('li').addClass('nav-expanded')
+</script>
+<!-- ZUI 标准版压缩后的 JavaScript 文件 -->
+<script src="//cdn.bootcss.com/zui/1.8.1/js/zui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+<div id="edit_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">
+					{$Think.lang.Modifylibraryarea}
+				</h4>
+			</div>
+			<form onsubmit="return doupdate(this)">
+				<input id="pld" value="" type="hidden" name="id">
+				<div class="modal-body" style="line-height: 34px;">
+					<div class="row" style="margin-left: 0;margin-right: 0;">
+
+						<div class="input-group" style="padding-top: 20px;">
+							<span class="input-group-addon">{$Think.lang.state}<span style="color: red;">*</span></span>
+							<select  name="status">
+								<option value="1" id="ebay">{$Think.lang.normal}</option>
+								<option value="2" id="amazon">{$Think.lang.locking}</option>
+
+							</select>
+							<!--<input id="pltype" type="text" name="type" class="form-control" placeholder="" style="width: 30%;" value="">-->
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" id="add_pr" type="submit">{$Think.lang.Save}</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cantel}</button>
+				</div>
+			</form>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+				<h2 class="panel-title">
+					<eq name="Think.cookie.think_language" value="zh-cn">{$w_name}</eq>
+					<eq name="Think.cookie.think_language" value="en-us">{$w_nameus}</eq>
+					{$Think.lang.position_management}</h2>
+			</header>
+			<div class="panel-body">
+				<button class="btn btn-primary"  onclick="showarehouse(1)">
+					{$Think.lang.add_position}
+				</button>
+				<div style="padding-top: 20px;">
+					<table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+						<thead>
+						<tr>
+							<th>{$Think.lang.position_name}</th>
+							<!--<th>{$Think.lang.state}</th>-->
+							<th>{$Think.lang.Creationtime}</th>
+							<th>{$Think.lang.Operation}</th>
+						</tr>
+						</thead>
+						<tbody>
+						<input type="hidden" name='getSupplier' value="{:U('Warehouse/getWarehouse','','')}">
+						<foreach name="list" item="vo" key="k">
+							<tr>
+								<td>
+									{$vo.name}
+								</td>
+								<!--<td>-->
+									<!--<eq name="vo.status" value="1">{$Think.lang.normal}</eq>-->
+									<!--<eq name="vo.status" value="2">{$Think.lang.locking}</eq>-->
+								<!--</td>-->
+								<td>
+									{$vo.creation_time}
+								</td>
+								<!--<td>-->
+									<!--<eq name="vo.status" value="1"><button type="button" class="btn btn-danger btn-xs"  onclick="editShelf('{$vo.id}','2')">{$Think.lang.locking}</button></eq>-->
+									<!--<eq name="vo.status" value="2"><button type="button" class="btn btn-success btn-xs"  onclick="editShelf('{$vo.id}','1')">{$Think.lang.normal}</button></eq>-->
+								<!--</td>-->
+								<td>
+									<eq name="vo.type" value="1">
+										<button onclick='setup("{$vo.id}")' style="border: 0px;" type="button" class="btn btn-success btn-xs" >
+											设为默认
+										</button>
+									</eq>
+									<eq name="vo.type" value="2">
+										<button style="border: 0px;" type="button" class="btn btn-danger btn-xs" >
+											默认仓位
+										</button>
+									</eq>
+								</td>
+							</tr>
+						</foreach>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+		</section>
+	</div>
+</div>
+
+<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="">{$Think.lang.add_position}</h4>
+			</div>
+				<div class="modal-body">
+					<div class="input-group" style="padding: 0 20px 0;">
+						<span class="input-group-addon">{$Think.lang.position_name}:</span>
+						<input type="text" class="form-control" value="" placeholder="" id="shelfname">
+						<!--<select name="shelfname" id="shelfname">-->
+							<!--<option value="A" >A</option>-->
+							<!--<option value="B" >B</option>-->
+							<!--<option value="C" >C</option>-->
+							<!--<option value="D" >D</option>-->
+							<!--<option value="E" >E</option>-->
+							<!--<option value="F" >F</option>-->
+							<!--<option value="G" >G</option>-->
+							<!--<option value="H" >H</option>-->
+							<!--<option value="I" >I</option>-->
+							<!--<option value="J" >J</option>-->
+							<!--<option value="K" >K</option>-->
+							<!--<option value="L" >L</option>-->
+							<!--<option value="M" >M</option>-->
+							<!--<option value="N" >N</option>-->
+							<!--<option value="O" >O</option>-->
+							<!--<option value="P" >P</option>-->
+							<!--<option value="Q" >Q</option>-->
+							<!--<option value="R" >R</option>-->
+							<!--<option value="S" >S</option>-->
+							<!--<option value="T" >T</option>-->
+							<!--<option value="U" >U</option>-->
+							<!--<option value="V" >V</option>-->
+							<!--<option value="W" >W</option>-->
+							<!--<option value="X" >X</option>-->
+							<!--<option value="Y" >Y</option>-->
+							<!--<option value="Z" >Z</option>-->
+						<!--</select>-->
+					</div>
+				</div>
+				<!--<div class="modal-body">-->
+					<!--<div class="input-group" style="padding: 0 20px 0;">-->
+						<!--<span class="input-group-addon">类型:</span>-->
+						<!--<input type="text" class="form-control" name="type">-->
+					<!--</div>-->
+				<!--</div>-->
+			<input type="hidden" id="w_id" value="{$w_id}">
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary" onclick="addShelf()">{$Think.lang.Sub}</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Close}</button>
+					<!-- <button type="button" class="btn btn-primary">
+                         提交更改
+                     </button>-->
+				</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal -->
+</div>
+
+</div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#table1').DataTable({
+            "paging": false,
+            "lengthChange": false,
+            "info": false,
+            "searching": false
+        });
+    });
+    var arr1=[];
+    for(var i=0;i<$('[name="type1"]').length;i++){
+        arr1.push($('[name="type1"]')[i].defaultValue)
+    }
+    var arr2=parseInt(arr1.pop());
+    var arr3 = $("#badge2").val(arr2+2);
+    console.log(arr3);
+    //添加货架
+    function addShelf(){
+		var w_id = $('#w_id').val();
+		var name = $('#shelfname').val();
+        $.ajax({
+            url:"{:U('Warehouse/addShelf')}",
+            type:"post",
+            data:{
+				w_id:w_id,
+				name:name
+			},
+            dataType:"json",
+            async:true,
+            success:function(data){
+                if (data.status==0){
+                    $('#node_message').html('{$Think.lang.Operationauthority}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if (data=="no"){
+                    $('#node_message').html('{$Think.lang.add_failed}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if(data=="ok"){
+                    $('#node_message').html('{$Think.lang.Addsuccessfully}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+                }else if(data=="lo"){
+					$('#node_message').html('{$Think.lang.Cannotbeempty}');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				}else if(data=="ao"){
+					$('#node_message').html('{$Think.lang.duplicate_position_name}');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				}
+            }
+        });
+    }
+	//设置默认仓位
+	function setup(id){
+
+			var r = confirm('确定要设为默认?');
+
+
+		if(r == true){
+			$.ajax({
+				url:"{:U('Warehouse/setup')}",
+				type:"post",
+				data:{
+					id: id
+				},
+				dataType:"json",
+				async:true,
+				success:function(data){
+					console.log(data);
+					if (data.status==0){
+						$('#node_message').html('{$Think.lang.Operationauthority}');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';", 2000);
+					}else if(data>0){
+						$('#node_message').html('设置成功');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+					}else if(data=0){
+						$('#node_message').html('设置失败');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';", 2000);
+					}
+				}
+			});
+		}else{
+			return false;
+		}
+	}
+</script>

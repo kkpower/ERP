@@ -1,0 +1,285 @@
+<script>
+	$('#201').parents('li').addClass('nav-active')
+	$('#201').parents('li').addClass('nav-expanded')
+</script>
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<input type="hidden" id="purchaseOrderdownPdf" value="{:U('PurchaseOrder/purchaseOrderdownPdf','','')}">
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+
+				<h2 class="panel-title">{$Think.lang.purchase_order_review}</h2>
+			</header>
+			<div class="panel-body">
+				<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+				<!--<form class="" action="{:U('PurchaseOrder/paymentOrder')}" method="get" style="display: inline-block;float: left;margin-right:15px ;">-->
+					<!--<div class="input-group" style="width: 500px;">-->
+						<!--<input name="search" type="text" value="{$ordername}" class="form-control" placeholder="请输入订单号">-->
+						<!--<span class="input-group-btn">-->
+		                    <!--<button type="submit" class="btn btn-success" style="white-space: nowrap;">搜索</button>-->
+		                <!--</span>-->
+					<!--</div>-->
+					<!--<input type="hidden" id="" name='' value="">-->
+					<!--<input type="hidden" name='' value="">-->
+				<!--</form>-->
+				<!--<br style="clear: both;" />-->
+				<table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+					<thead>
+						<tr>
+							<th>{$Think.lang.ID}</th>
+							<!--<th>采购订单号</th>-->
+							<th>{$Think.lang.supplier}</th>
+							<th>{$Think.lang.TrackingNumber}</th>
+							<th>{$Think.lang.Receivingwarehouse}</th>
+							<th>{$Think.lang.Transporters}</th>
+							<th>{$Think.lang.Modeoftransport}</th>
+							<th>{$Think.lang.Freight}</th>
+							<th>{$Think.lang.firstinstance}</th>
+							<th>{$Think.lang.initial_review_time}</th>
+							<th>{$Think.lang.Operation}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<volist name="purchaselist" id="vo" key="k">
+							<tr>
+								<td>{$k}</td>
+								<td><a href="{:U('Supplier/detail',array('id'=>$vo['supplier_id']))}" target="_blank">{$vo.suppliername}</a></td>
+								<td>{$vo.tracking_number}</td>
+								<td>{$vo.name}</td>
+								<td>{$vo.transporters}</td>
+								<td>
+									{$vo.mode}
+								</td>
+								<td>{$vo.freight}</td>
+								<td>{$vo.lastname}{$vo.namezhs}</td>
+								<td>{$vo.examine_time}</td>
+								<td>
+									<button onclick="toexamine('{$vo.id}','{$vo.warehouse_id}','{$vo.supplier_id}','{$vo.order_number}','{$vo.transport}')" style="border: 0px;" type="button" data-toggle="modal" class="btn btn-primary btn-xs" " >
+									{$Think.lang.Review}
+                                </button>
+                                <a href="{:U( 'PurchaseOrder/productDetailstwo',array( 'id'=>$vo['id']))}" target="_blank" style="border: 0px;color: #fff;" class="btn btn-primary btn-xs">{$Think.lang.Details}</a>
+								</td>
+							</tr>
+						</volist>
+					</tbody>
+				</table>
+				<ul class="pager" style="width: 100%;">
+					<!-- 分页显示 -->{$page}</ul>
+			</div>
+		</section>
+
+	</div>
+</div>
+
+<form onsubmit="return doexamine(this)">
+	<div id="tode_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-lg" role="document" style="width: 86%;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<!--<h4 class="modal-title">-->
+                        <!--采购订单号:<span style="color: red;">PO</span><span id="order_number1" style="color: red;"></span>-->
+                    <!--</h4>-->
+				</div>
+				<div class="modal-body">
+					<table id="table" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+						<thead>
+							<tr>
+								<th>{$Think.lang.TrackingNumber}</th>
+								<th>{$Think.lang.supplier}</th>
+								<th>{$Think.lang.Receivingwarehouse}</th>
+								<th>{$Think.lang.Transporters}</th>
+								<th>{$Think.lang.Modeoftransport}</th>
+								<th>{$Think.lang.Freight}</th>
+								<th>{$Think.lang.Estimateddeliverydate}</th>
+								<th>{$Think.lang.Remarks}</th>
+								<th>{$Think.lang.Process}</th>
+								<th>{$Think.lang.Applicant}</th>
+								<th>{$Think.lang.Applicationtime}</th>
+								<th>{$Think.lang.firstinstance}</th>
+								<th>{$Think.lang.initial_review_time}</th>
+							</tr>
+						</thead>
+						<tbody id="tbody-info">
+						</tbody>
+					</table>
+					<table class="table table-hover table-striped table-bordered" style="margin-top: 20px;">
+						<thead>
+							<tr>
+								<td>{$Think.lang.product_number}</td>
+								<td>{$Think.lang.Productname}</td>
+								<td id="priced"></td>
+								<td>{$Think.lang.Number}</td>
+								<td id="current"></td>
+							</tr>
+						</thead>
+						<tbody id="tbody-result">
+						</tbody>
+					</table>
+					<center>
+						<input type="hidden" name="id" value="" id="oid">
+						<input type="hidden" name="o_id" value="" id="order_number">
+						<input type="hidden" value="" id="warehouse_id" name="warehouse_id">
+						<input type="hidden" value="" id="supplier_id" name="g_id">
+						<input type="hidden" value="" id="transport" name="transport">
+						<div class="input-group">
+							<span class="input-group-addon">{$Think.lang.Remarks}</span>
+							<input type="text" name="reason" class="form-control" style="width: 50%;">
+						</div>
+						<input type="hidden" name="status" value="" id="status">
+					</center>
+				</div>
+				<div class="modal-footer">
+					<div style="float: left;vertical-align: middle;line-height: 30px;">
+						<span>{$Think.lang.Total}：</span><span id="total_price" style="color: red;font-size: 16px;"></span><span id="currencym"></span>
+					</div>
+					<button class="btn btn-primary" id="add_ok" type="submit">{$Think.lang.agree}</button>
+					<button type="submit" class="btn btn-default" id="add_no">{$Think.lang.refuse}</button>
+				</div>
+			</div>
+
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	</div>
+</form>
+<div id="show_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document" style="width: 50%;">
+		<div class="modal-content">
+			<div class="modal-body" style="line-height: 34px;">
+				<div class="row" style="margin-left: 0;margin-right: 0;">
+					<table class="table table-hover table-striped" style="margin-top: 20px;">
+						<thead>
+							<tr>
+								<th>序号</th>
+								<th>用户</th>
+							</tr>
+						</thead>
+						<tbody id="tbody-resultx">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+</div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script>
+	//审核采购订单弹框
+	function toexamine(id, warehouse_id, supplier_id, order_number, transport) {
+		$('#add_ok').click(function() {
+			$('#status').val(3);
+		});
+		$('#add_no').click(function() {
+			$('#status').val(4);
+		});
+		var tbody = window.document.getElementById("tbody-result");
+		var tbodys = window.document.getElementById("tbody-info");
+		$('#oid').val(id);
+		$('#order_number1').text(order_number);
+		$('#order_number').val(order_number);
+		$('#warehouse_id').val(warehouse_id);
+		$('#supplier_id').val(supplier_id);
+		$('#transport').val(transport);
+		$('#tode_modal').modal('toggle');
+		$.ajax({
+			url: "{:U('PurchaseOrder/reviewOrders')}",
+			type: "post",
+			data: {
+				id: id
+			},
+			dataType: "json",
+			async: true,
+			success: function(data) {
+				console.log(data);
+				var order = "";
+				order += "<tr>" +
+						"<td>" + data['info']['list'][0]['tracking_number'] + "</td>" +
+					"<td>"+"<a href=\"{:U('Supplier/detail','','')}/id/"+ data['info']['list'][0]['supplier_id']+"\" target=\"_blank\">" + data['info']['list'][0]['suppliername']+"</a>"+ "</td>" +
+					"<td>" + data['info']['list'][0]['name'] + "</td>" +
+						"<td>" + data['info']['list'][0]['transporters'] + "</td>" +
+					"<td>" + data['info']['list'][0]['mode'] + "</td>" +
+					"<td>" + data['info']['list'][0]['freight'] + "</td>" +
+					"<td>" + data['info']['list'][0]['delivery_date'] + "</td>" +
+					"<td>" + data['info']['list'][0]['remarks'] + "</td>" +
+					"<td>" + data['info']['list'][0]['lcname'] + "</td>" +
+					"<td>" + data['info']['list'][0]['lastnamea'] + data['info']['list'][0]['namezha'] + "</td>" +
+					"<td>" + data['info']['list'][0]['creationtime'] + "</td>" +
+					"<td>" + data['info']['list'][0]['lastname'] + data['info']['list'][0]['namezhs'] + "</td>" +
+					"<td>" + data['info']['list'][0]['examine_time'] + "</td>" +
+					"</tr>";
+				tbodys.innerHTML = order;
+				$('#priced').text("{$Think.lang.UnitPrice}" + '(' + data['list']['list'][0]['currency'] + ')');
+				$('#current').text("{$Think.lang.Amount}" + '(' + data['list']['list'][0]['currency'] + ')');
+				var str = "";
+				for(i in data['list']['list']) {
+					str += "<tr>" +
+						"<input name='pid[]' type='hidden' value='" + data['list']['list'][i].supplier_pr_id + "'/>" +
+						"<input name='number[]' type='hidden' value='" + data['list']['list'][i].num + "'/>" +
+						"<input name='price[]' type='hidden' value='" + data['list']['list'][i].price + "'/>" +
+						"<input name='total[]' type='hidden' value='" + data['list']['list'][i].total + "'/>" +
+						"<input name='currency[]' type='hidden' value='" + data['list']['list'][i].currency + "'/>" +
+						"<td>" + "<a href=\"{:U('Product/homeProduct','','')}/pid/"+data['list']['list'][i]['supplier_pr_id']+"\" target=\"_blank\">" +data['list']['list'][i].bclassc_number + '.' + data['list']['list'][i].sclassc_number + '.' + data['list']['list'][i].snumber_number +"</a>"+"</td>" +
+						"<td>" + "<a href=\"{:U('Product/homeProduct','','')}/pid/"+data['list']['list'][i]['supplier_pr_id']+"\" target=\"_blank\">"+ data['list']['list'][i]['namezh']+"</a>"+"</td>" +
+						"<td>" + data['list']['list'][i]['price'] + "</td>" +
+						"<td>" + data['list']['list'][i]['num'] + "</td>" +
+						"<td>" + "<span name='xj'>" + data['list']['list'][i]['total'] + "</span>" + "</td>" +
+						"</tr>";
+				}
+				tbody.innerHTML = str;
+				var sum = 0;
+				$("span[name='xj']").each(function() {
+					sum += +$(this).text();
+				});
+				$('#total_price').text(sum.toFixed(2));
+				$('#currencym').text(data['list']['list'][0]['currency']);
+			}
+		});
+	}
+	//审核采购订单
+	function doexamine(form) {
+		$.ajax({
+			url: "{:U('PurchaseOrder/examineTo')}",
+			type: "post",
+			data: $(form).serialize(),
+			dataType: "json",
+			async: true,
+			success: function(data) {
+				if(data.status == 0) {
+					$('#node_message').html('{$Think.lang.Operationauthority}');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				} else if(data == 'OK') {
+					$('#node_message').html('{$Think.lang.successful_review}');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+				} else if(data == 'NO') {
+					$('#node_message').html('{$Think.lang.audit_failure}');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				} else if(data == 'SO') {
+					$('#node_message').html('{$Think.lang.successful_review}');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+				}
+			}
+		});
+		return false;
+	}
+	$(document).ready(function() {
+		$('#table1').DataTable({
+			"paging": false,
+			"lengthChange": false,
+			"info": false,
+			"searching": false
+		});
+	});
+</script>

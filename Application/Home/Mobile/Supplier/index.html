@@ -1,0 +1,265 @@
+<style>
+	.modal-dialog {
+		margin: 60px auto !important;
+	}
+
+	.caret1 {
+		content: "";
+		border-top: 0;
+		border-bottom: 4px dashed;
+	}
+</style>
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<script>
+    $('#79').parents('li').addClass('nav-active')
+    $('#79').parents('li').addClass('nav-expanded')
+</script>
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+				<h2 class="panel-title">供应商目录</h2>
+			</header>
+			<div class="panel-body">
+				<form class="" action="{:U('Supplier/index')}" method="get" style="display: inline-block;float: left;">
+					<div class="input-group">
+						<input name="search" type="text" value="" class="form-control"  placeholder="请输入你想查询的供应商编码|名称|或类型">
+						<span class="input-group-btn">
+		                    <button type="submit" class="btn btn-success" style="white-space: nowrap;">搜索</button>
+		                </span>
+					</div>
+				</form>
+				<button class="btn btn-primary" onclick="add()" style="float: left;margin-top: 1.2rem;">添加供应商</button>
+				<br style="clear: both;" />
+				<table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+					<thead>
+					<tr>
+						<th>缩略图</th>
+						<th class="bm" style="cursor: pointer;">供应商编码<span class="caret"></span></th>
+						<th style="cursor: pointer;">供应商名称<span class="caret"></span></th>
+						<th>供应商类型</th>
+						<th>付款方式</th>
+						<th>操作</th>
+					</tr>
+					</thead>
+					<tbody>
+					<volist name="list" id="vo">
+						<tr>
+							<td><img style="width: 40px;height: 40px;" src="__ROOT__{$vo.thumb}" alt="" /></td>
+							<td class="bm">{$vo.snumber}</td>
+							<input type="hidden" value="{$vo.snumber}" name="pao">
+							<td>
+								{$vo.name}
+							</td>
+							<td>
+								{$vo.type}
+							</td>
+							<td>{$vo.payment}</td>
+							<td>
+								<a href="{:U('Supplier/proDuct',array('id'=>$vo['id']))}" class="btn btn-primary btn-xs" style="color: #fff;"  target="_blank" ><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span></a>
+								<a href="{:U('Supplier/detail',array('id'=>$vo['id']))}" class="btn btn-primary btn-xs" style="color: #fff;"  target="_blank" ><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a>
+								<button class="btn btn-danger btn-xs"  onclick='gysdel(this,"{$vo.id}")'><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+							</td>
+						</tr>
+					</volist>
+					</tbody>
+				</table>
+				<ul class="pager" style="width: 100%;">
+					<!-- 分页显示 -->{$page}</ul>
+			</div>
+		</section>
+	</div>
+</div>
+<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+<div id="node_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">
+					添加新供应商
+				</h4>
+			</div>
+			<form class="form-horizontal" onsubmit="return doadd(this)">
+				<div class="modal-body" style="line-height: 34px;">
+					<input type="hidden" name="id" value="{$vo.id}">
+					<div class="row" style="margin-left: 0;margin-right: 0;">
+						<div class="input-group">
+
+							<span class="input-group-addon">供应商编码(自动生成)<span style="color: red;">*</span></span>
+							<input type="text" id="snumber" name="snumber" class="form-control" value="" readonly="readonly">
+						</div>
+						<div class="input-group" style="padding-top: 1.2rem;">
+							<span class="input-group-addon">供应商类型<span style="color: red;">*</span></span>
+							<select type="text" name="type" class="form-control">
+								<option value="">请选择供应商类型</option>
+								<option value="生产厂商">生产厂商</option>
+							</select>
+						</div>
+						<div class="input-group" style="padding-top: 1.2rem;">
+							<span class="input-group-addon">供应商名称<span style="color: red;">*</span></span>
+							<input type="text" name="name" class="form-control" value="{$vo.namezh}" placeholder="">
+						</div>
+						<div class="input-group" style="padding-top: 1.2rem;">
+							<span class="input-group-addon">供应商地址</span>
+							<textarea type="text" name="address" class="form-control" placeholder="">{$vo.remarks}</textarea>
+						</div>
+						<div class="input-group" style="padding-top: 1.2rem;">
+							<span class="input-group-addon">联系人</span>
+							<input type="text" name="contacts" class="form-control" value="{$vo.email}" placeholder="">
+						</div>
+						<div class="input-group" style="padding-top: 1.2rem;">
+							<span class="input-group-addon">电话号码</span>
+							<input type="text" name="contactnumber" class="form-control" value="{$vo.email}">
+						</div>
+						<div class="input-group" style="padding-top: 1.2rem;">
+							<span class="input-group-addon">首选电子邮件</span>
+							<input type="text" name="email" class="form-control" value="{$vo.email}">
+						</div>
+						<div class="input-group" style="padding-top: 1.2rem;">
+							<span class="input-group-addon">公司网址</span>
+							<input type="text" name="weburl" class="form-control" value="{$vo.email}">
+						</div>
+						<div class="input-group" style="padding-top: 1.2rem;">
+							<span class="input-group-addon">开户行（请包含分行名称）</span>
+							<input type="text" name="bank" value="{$vo.bank}" class="form-control">
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon">银行账号只有人姓名</span>
+							<input type="text" name="bankname" value="{$vo.account}" class="form-control">
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon">银行账号</span>
+							<input type="text" name="account" value="{$vo.account}" class="form-control" placeholder="">
+						</div>
+						<div class="input-group" style="padding-top: 1.2rem;">
+							<span class="input-group-addon">付款方式</span>
+							<select type="text" name="payment" class="form-control" placeholder="Last Name">
+								<option value="">请选择付款方式</option>
+								<option value="微信">微信</option>
+								<option value="支付宝">支付宝</option>
+							</select>
+						</div>
+						<div class="input-group" style="padding-top: 1.2rem;">
+							<span class="input-group-addon">公司简介（500字内）</span>
+							<textarea type="text" name="remarks" class="form-control" placeholder=""></textarea>
+						</div>
+						<div class="input-group" style="padding-top: 1.2rem;">
+							<span class="input-group-addon">状态</span>
+							<select type="text" name="state" class="form-control">
+								<option value="1">启用</option>
+								<option value="2">禁用</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" type="submit">保存</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</form>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#table1').DataTable({
+            "paging": false,
+            "lengthChange": false,
+            "info": false,
+            "searching": false
+        });
+    });
+    //添加供应商页面
+    function add(){
+
+        var arr1=[];
+        for(var i=0;i<$('[name="pao"]').length;i++){
+            arr1.push($('[name="pao"]')[i].defaultValue)
+        }
+        var arr2=parseInt(arr1.pop());
+        console.log(arr2);
+        var arr3=arr2+1;
+        console.log(arr3);
+        if (isNaN(arr2))
+        {
+            var snumber = $("#snumber").val(1);
+            console.log(snumber);
+        }else{
+            var snumber = $("#snumber").val(arr3);
+            console.log(snumber);
+        }
+        $('#node_modal').modal('toggle');
+    }
+    //添加供应商
+    function doadd(form){
+        $.ajax({
+            url:"{:U('Supplier/supplierAdd')}",
+            type:"post",
+            data:$(form).serialize(),
+            dataType:"json",
+            async:true,
+            success:function(data){
+                if (data.status==0) {
+                    $('#node_message').html('您没有该操作权限');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if(data=='NO'){
+                    $('#node_message').html('添加失败');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if (data=='OK'){
+                    $('#node_message').html('添加成功');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+                }
+            }
+        });
+        return false;
+    }
+    function gysdel(obj,id){
+        var r = confirm("确认删除吗？");
+        if (r){
+            $.ajax({
+                url:"{:U('Supplier/gysdelete')}",
+                type:'post',
+                dataType:"json",
+                data:{
+                    id:id
+                },
+                success:function(data){
+                    if (data.status==0){
+                        $('#node_message').html('您没有该操作权限');
+                        node_message.style.display = 'block';
+                        var t = setTimeout("node_message.style.display='none';", 2000);
+                    }else if (data>0) {
+                        $(obj).parents("tr").remove();
+                        $('#node_message').html('删除成功');
+                        node_message.style.display = 'block';
+                        var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+                    }else{
+                        $('#node_message').html('删除失败');
+                        node_message.style.display = 'block';
+                    }
+                }
+            });
+        }
+    }
+    $('.aa').on('click', function() {
+        //		if($(this).children('span').attr())
+        if($(this).children('span').attr('class').indexOf('1') == -1) {
+            $(this).children('span').addClass('caret1')
+        } else {
+            $(this).children('span').removeClass('caret1')
+        }
+
+    })
+</script>

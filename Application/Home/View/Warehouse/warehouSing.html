@@ -1,0 +1,356 @@
+<script src="__ROOT__/Public/js/zen.js"></script>
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-spinner.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<!--ajax获取子目录的地址-->
+<script>
+	$('#253').parents('li').addClass('nav-active')
+	$('#253').parents('li').addClass('nav-expanded')
+</script>
+<style>
+	#table2 tr td{
+		line-height: 34px;
+	}
+	#table2 tr td input{
+		vertical-align: middle;
+		margin: 0;
+	}
+	#tbody-result .form-control{
+		border: 0;
+	}
+	#tbody-result td{
+		padding-top: 0;
+		padding-bottom: 0;
+		line-height: 34px;
+	}
+</style>
+<input type="hidden" id="classaddurl" value="{:U('Product/getclassAjax','','')}">
+<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+				<h2 class="panel-title">{$Think.lang.pending_receipt}</h2>
+			</header>
+			<div class="panel-body">
+				<form class="form-horizontal" action="{:U('Warehouse/warehouSing','','')}" method="get">
+					<div class="row">
+						<div class="col-md-3">
+							<div class="input-group">
+								<span class="input-group-addon">{$Think.lang.ordernumber}</span>
+								<input type="hidden" id="orderon" value="{$orderon}">
+								<input id="odid" name="orderon" type="text" value="" class="form-control" placeholder="{$Think.lang.Pleaseordernumber}">
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="input-group">
+								<span class="input-group-addon">{$Think.lang.supplier}</span>
+								<input type="hidden" id="supp" value="{$supp}">
+								<select name="supplier" id="supper" class="form-control">
+									<option value="">{$Think.lang.All}</option>
+									<foreach name="supplier" item="su">
+										<option value="{$su.id}">{$su.name}</option>
+									</foreach>
+								</select>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="input-group">
+								<span class="input-group-addon">{$Think.lang.sent_to_the_warehouse}</span>
+								<input type="hidden" id="mbck" value="{$zkid}">
+								<select name="zk_id" id="father" class="form-control">
+									<option value="">{$Think.lang.All}</option>
+									<foreach name="warehouse" item="wa">
+										<option value="{$wa.id}">{$wa.name}</option>
+									</foreach>
+								</select>
+							</div>
+						</div>
+						<!--<div class="col-md-3">-->
+							<!--<div class="input-group">-->
+								<!--<span class="input-group-addon">运输方式</span>-->
+								<!--<input type="hidden" id="ysfs" value="{$type}">-->
+								<!--<select class="form-control" id="type" name="type">-->
+									<!--<option value="">{$Think.lang.All}</option>-->
+									<!--<foreach name="transport" item="ys">-->
+										<!--<option value="{$ys.id}">{$ys.mode}</option>-->
+									<!--</foreach>-->
+								<!--</select>-->
+							<!--</div>-->
+						<!--</div>-->
+						  <span class="input-group-btn">
+								<button type="submit" class="btn btn-success">{$Think.lang.Search}</button>
+                           </span>
+					</div>
+				</form>
+
+				<div>
+					<table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+						<thead>
+							<tr>
+								<th>{$Think.lang.ordernumber}</th>
+								<th>{$Think.lang.kind}</th>
+								<th>{$Think.lang.from_supplier}</th>
+								<th>{$Think.lang.Receivingwarehouse}</th>
+								<th>{$Think.lang.Transporters}</th>
+								<th>{$Think.lang.Modeoftransport}</th>
+								<th>{$Think.lang.delivery_time}</th>
+								<th>{$Think.lang.Operation}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<input type="hidden" name='getSupplier' value="{:U('Warehouse/getWarehouse','','')}">
+							<foreach name="list" item="vo">
+								<tr>
+									<td><a href="{:U('PurchaseOrder/completedDetails',array('id'=>$vo['oid']))}" target="_blank">PO{$vo.order_number}</a></td>
+									<td>{$vo.number}</td>
+									<td><a href="{:U('Supplier/detail',array('id'=>$vo['supplier_id']))}" target="_blank">{$vo.supname}</a></td>
+									<td>
+										{$vo.name}
+									</td>
+									<td>{$vo.yssname}</td>
+									<td>
+										{$vo.namezh}
+									</td>
+									<td>{$vo.examine_time}</td>
+									<td>
+										<button onclick='collectGood("{$vo.zku_id}","{$vo.ku_id}","{$vo.logistics_status}","{$vo.order_number}","{$vo.supname}","{$vo.name}","{$vo.oid}","{$vo.namezh}","{$vo.examine_time}","{$vo.yssname}","{$vo.tracking_number}","{$vo.delivery_date}")' style="border: 0px;" type="button" class="btn btn-primary btn-xs">
+                                       {$Think.lang.receipt}
+                                    </button>
+										<button onclick='' style="border: 0px;" type="button" class="btn btn-primary btn-xs">
+											查看物流
+										</button>
+									</td>
+								</tr>
+							</foreach>
+						</tbody>
+					</table>
+					<!--<ul class="pager" style="width: 100%;">-->
+						<!--&lt;!&ndash; 分页显示 &ndash;&gt;{$page}</ul>-->
+				</div>
+			</div>
+
+		</section>
+	</div>
+</div>
+
+<div id="node_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog" >
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">
+						{$Think.lang.receipt}
+                                </h4>
+				</div>
+				<div class="modal-body" style="line-height: 34px;">
+					<div class="row" style="margin-left: 0;margin-right: 0;">
+						<table id="table3" class="table table-hover table-striped table-bordered" style="margin-bottom: 0;border-collapse: collapse;">
+							<thead>
+							<tr>
+								<th>{$Think.lang.Purchaseordernumber}</th>
+								<th>{$Think.lang.TrackingNumber}</th>
+								<th>{$Think.lang.from_supplier}</th>
+								<th>{$Think.lang.Receivingwarehouse}</th>
+								<th>{$Think.lang.Transporters}</th>
+								<th>{$Think.lang.Modeoftransport}</th>
+								<th>{$Think.lang.estimated_delivery_time}</th>
+								<th>{$Think.lang.delivery_time}</th>
+							</tr>
+							<tr>
+								<td id="ordernum"></td>
+								<td id="track"></td>
+								<td id="supplier2"></td>
+								<td id="ware"></td>
+								<td id="yss"></td>
+								<td id="tran"></td>
+								<td id="arrival"></td>
+								<td id="futime"></td>
+								<input type="hidden" id="ku_id">
+								<input type="hidden" id="zku_id">
+								<input type="hidden" value="" id="logistics_status">
+							</tr>
+							</thead>
+							<tbody id="tbody-info">
+							</tbody>
+						</table>
+						<table id="table2" class="table table-hover table-striped table-bordered" style="margin-bottom: 0;border-collapse: collapse;margin-top: 20px;">
+							<thead>
+								<tr>
+									<th><input type="checkbox" class="check-all" style="vertical-align: middle;margin: 0;">{$Think.lang.select_all}</th>
+									<th>{$Think.lang.product_number}</th>
+									<th>{$Think.lang.Productname}</th>
+									<th id="priced"></th>
+									<th>{$Think.lang.expected_quantity}</th>
+									<th>{$Think.lang.actual_quantity}</th>
+									<th id="current"></th>
+								</tr>
+							</thead>
+							<tbody id="tbody-result">
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div style="float: left;vertical-align: middle;line-height: 30px;">
+						<span>{$Think.lang.Total}：</span><span id="total_price" style="color: red;font-size: 16px;"></span><span id="currencym"></span>
+					</div>
+					<button class="btn btn-primary" id="add_pr" type="submit" onclick="dogoods()">{$Think.lang.confirm}</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cancel}</button>
+				</div>
+
+			</div>
+			<!-- /.modal-content -->
+		</div>
+</div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/jquery.spinner.min.js"></script>
+
+<script>
+    var mbck = $('#mbck').val();
+    var ysfs = $('#ysfs').val();
+    var supp = $('#supp').val();
+    var odid = $('#orderon').val();
+    $('#father').val(mbck);
+    $('#type').val(ysfs);
+    $('#supper').val(supp);
+    $('#odid').val(odid);
+	$(document).ready(function() {
+		$('#table1').DataTable({
+			"paging": false,
+			"lengthChange": false,
+			"info": false,
+			"searching": false
+		});
+	});
+
+	function collectGood(zku_id,ku_id,logistics_status,odnumber,namezhs,name,oid,namezh,futime,yssname,tracking_number,delivery_date) {
+	    $('#ordernum').text('PO'+odnumber);
+		$('#supplier2').text(namezhs);
+	    $('#ware').text(name);
+		$('#tran').text(namezh);
+		$('#futime').text(futime);
+		$('#ku_id').val(ku_id);
+		$('#zku_id').val(zku_id);
+		$('#logistics_status').val(logistics_status);
+		$('#yss').text(yssname);
+		$('#track').text(tracking_number);
+		$('#arrival').text(delivery_date);
+		var tbody = window.document.getElementById("tbody-result");
+		tbody.innerHTML='';
+		$.ajax({
+			url: "{:U('Warehouse/collectGoods')}",
+			type: 'post',
+			data: {
+				oid: oid
+			},
+			dataType: "json",
+			async: true,
+			success: function(data) {
+				$('#priced').text("{$Think.lang.UnitPrice}"+'('+data[0]['currency']+')');
+				$('#current').text("{$Think.lang.Amount}"+'('+data[0]['currency']+')');
+			    console.log(data)
+				for(i in data) {
+					str = "<tr>" +
+						"<td>" + "<input   class='row_check' name='pid[]' type='checkbox' value='" + data[i].pid + "'/>" + "</td>" +
+							"<input name='sjnum[]' type='hidden' value='" + data[i].number + "'/>" +
+						"<input name='o_id' type='hidden' value='" + data[i].oid + "' id='oidm'/>" +
+						"<input name='warehouse_id' type='hidden' value='" + data[i].warehouse_id + "'/>" +
+						"<input name='g_id' type='hidden' value='" + data[i].supplier_id + "'/>" +
+						"<input name='type' type='hidden' value='" + data[i].logistics_status + "'/>" +
+                        // "<input name='sourceorder' type='hidden' value='" + data[i].source + "'/>" +
+                        "<td>"+"<a href=\"{:U('Product/homeProduct','','')}/pid/"+data[i]['pid']+"\" target=\"_blank\">" + data[i].bclassc_number +'.'+ data[i].sclassc_number +'.'+data[i].snumber_number+"</a>"+"</td>" +
+						"<td>"+"<a href=\"{:U('Product/homeProduct','','')}/pid/"+data[i]['pid']+"\" target=\"_blank\">" + data[i].namezh + "</a>"+"</td>" +
+							"<td>" + data[i].price + "</td>" +
+							"<td>" + data[i].number + "</td>" +
+							"<td style='padding:0;'>" + "<input name='number[]' class='form-control' placeholder='{$Think.lang.please_enter}' type='text' value='" + data[i].number + "'/>" + "</td>" +
+							"<td>"+"<span name='xj'>"+ data[i].total+"</span>" + "</td>" +
+						"</tr>";
+                    $('#tbody-result').append(str);
+				}
+				var sum = 0;
+				$("span[name='xj']").each(function () {
+					sum+=+$(this).text();
+				});
+				$('#total_price').text(sum.toFixed(2));
+				$('#currencym').text(data[0]['currency']);
+				$('#node_modal').modal('toggle');
+			}
+		});
+	}
+
+	function dogoods(form) {
+		var ku_id = $('#ku_id').val();
+		var zku_id = $('#zku_id').val();
+		//捉到所有被选中的
+		var chk_value = [];
+		$('input[name="pid[]"]:checked').each(function() {
+			chk_value.push($(this).val());
+			//将单选框被选中的value值放到chk_value[]数组里
+		});
+		var num_value = [];
+		$('input[name="pid[]"]:checked').each(function() {
+			num_value.push($(this).parent().next().next().next().next().next().next().next().next().next().next().children().val());
+			//将单选框被选中的value值放到chk_value[]数组里
+		});
+		var sjnum_value = [];
+		$('input[name="pid[]"]:checked').each(function() {
+			sjnum_value.push($(this).parent().next().val());
+			//将单选框被选中的value值放到chk_value[]数组里
+		});
+        var val=$('input[name="pid[]"]:checked').val();
+		var logistics_status = $('#logistics_status').val();
+		var oid = $('#oidm').val();
+        if(val==null){
+            $('#node_message').html('{$Think.lang.nothing_is_selected}');
+            node_message.style.display = 'block';
+            var t = setTimeout("node_message.style.display='none';", 2000);
+            return false;
+        }
+		$.ajax({
+			url: "{:U('Warehouse/collectDo')}",
+			type: 'post',
+			dataType: "json",
+			async: true,
+			data: {
+				pid:chk_value,
+				logistics_status:logistics_status,
+				o_id:oid,
+				number:num_value,
+				yqnum:sjnum_value,
+				ku_id:ku_id,
+				zku_id:zku_id
+			},
+			success: function(data) {
+				console.log(data);
+                if(data.info) {
+					$('#node_message').html('{$Think.lang.Operationauthority}');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				} else if(data=='ok') {
+					$('#node_message').html('{$Think.lang.successful_receipt}');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+				}else if(data=='no') {
+					$('#node_message').html('{$Think.lang.nothavewarehouse}');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				} else {
+					$('#node_message').html('{$Think.lang.goods_receipt_failure}');
+					node_message.style.display = 'block';
+				}
+			}
+		});
+		return false;
+	}
+
+	$('.check-all').change(function() {
+		var choose = $(this).prop('checked');
+            $('.row_check').prop('checked', choose);
+	});
+</script>

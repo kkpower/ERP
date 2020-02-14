@@ -1,0 +1,73 @@
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/FirstEdition/assets/shu/boot/bootstrap-fileinput.css" />
+<script src="__PUBLIC__/FirstEdition/assets/shu/boot/bootstrap-fileinput.js">
+</script>
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+				<input type="hidden" name='getRoleAuthority' value="{:U('System/getRoleAuthority','','')}">
+				<h2 class="panel-title">头像上传</h2>
+			</header>
+			<div class="panel-body">
+				<form action="{:U('Supplier/upload')}" enctype="multipart/form-data" method="post">
+					<input type="hidden" name="gid" value="{$id}">
+					<div class="form-group" id="uploadForm" enctype='multipart/form-data'>
+						<div class="h4">图片预览</div>
+						<div class="fileinput fileinput-new" data-provides="fileinput" id="exampleInputUpload">
+							<div class="fileinput-new thumbnail" style="width: 200px;height: auto;max-height:150px;">
+								<img id='picImg' style="width: 100%;height: auto;max-height: 140px;" src="__PUBLIC__/img/noimage.png" alt="" />
+							</div>
+							<div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
+							<div>
+								<span class="btn btn-primary btn-file">
+                            <span class="fileinput-new">选择文件</span>
+								<span class="fileinput-exists">换一张</span>
+								<input type="file" name="pic1" id="picID" accept="image/gif,image/jpeg,image/x-png" />
+								</span>
+								<a href="javascript:;" class="btn btn-warning fileinput-exists" data-dismiss="fileinput" style="color: #fff;">移除</a>
+							</div>
+						</div>
+
+					</div>
+					<button type="submit"  class="btn btn-info">提交</button>
+				</form>
+			</div>
+		</section>
+
+	</div>
+</div>
+<script>
+	$(function () {
+    //比较简洁，细节可自行完善
+    $('#uploadSubmit').click(function () {
+        var data = new FormData($('#uploadForm')[0]);
+		var url =
+//      console.log(data)
+        $.ajax({
+            url: 'xxx/xxx',
+            type: 'POST',
+            data: data,
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                console.log(data);
+                if(data.status){
+                    console.log('upload success');
+                }else{
+                    console.log(data.message);
+                }
+            },
+            error: function (data) {
+                console.log(data.status);
+            }
+        });
+    });
+})
+
+</script>

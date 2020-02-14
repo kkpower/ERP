@@ -1,0 +1,82 @@
+<div class="row">
+	<div class="col-md-12">
+		<header class="">
+			<h2 class="">
+                	编辑我的个人资料
+            </h2>
+		</header>
+		<section class="panel">
+			<div class="panel-body">
+				<input type="hidden" name="id" value="{$vo.id}">
+
+				<div class="row" style="margin-left: 0;margin-right: 0;">
+					<div class="input-group">
+
+						<span class="input-group-addon">First Name in English</span>
+						<input type="text" name="lastname" class="form-control" value="{$vo.lastname}" placeholder="First Name" style="width: 30%;">
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon">Last Name in English</span>
+						<input type="text" name="name" class="form-control" value="{$vo.name}" placeholder="Last Name" style="width: 30%;">
+					</div>
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">中文名</span>
+						<input type="text" name="namezh" class="form-control" value="{$vo.namezh}" placeholder="" style="width: 20%;">
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon">中文姓</span>
+						<input type="text" name="lastnamezh" class="form-control" value="{$vo.lastnamezh}" placeholder="" style="width: 20%;">
+					</div>
+
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">电子邮件</span>
+						<input type="text" name="email" class="form-control" value="{$vo.email}" placeholder="" style="width: 50%;">
+					</div>
+
+					<div id="add_tel">
+						<foreach name="phone" item="pvo">
+							<div class="input-group" style="padding-top: 20px;">
+
+								<span class="input-group-addon">电话号码</span>
+								<input type="text" name="contact[]" value="{$pvo.phone}" class="form-control" placeholder="" style="width: 30%;">
+
+							</div>
+						</foreach>
+					</div>
+					<div onclick="add_tel()" class="btn btn-primary" style="margin-top: 10px;">增加电话</div>
+
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">开户行（请包含分行名称）</span>
+						<input type="text" name="bank" value="{$vo.bank}" class="form-control" placeholder="" style="width: 50%;">
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon">银行账号</span>
+						<input type="text" name="account" value="{$vo.account}" class="form-control" placeholder="" style="width: 50%;">
+					</div>
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">身份证号</span>
+						<input type="text" name="identity" value="{$vo.identity}" class="form-control" placeholder="" style="width: 40%;">
+					</div>
+
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">关于我  < 150字</span>
+						<textarea type="text" name="remarks" class="form-control" placeholder="" style="width: 40%;">{$vo.remarks}</textarea>
+					</div>
+					<!--性别-->
+					<div class="input-group" style="padding-top: 20px;">
+						<span class="input-group-addon">性别</span>
+						<div style="border: 1px solid #ccc;width: 30%;border-bottom-right-radius: 4px;border-top-right-radius: 4px;height: 34px;line-height: 34px;">
+							<label for="sex_man" style="margin-bottom: 0;">
+								<input type="radio" id="sex_man" style="width: 16px;height: 16px;vertical-align: top;margin-top: 8px;margin-left: 20px;" name="sex" value="1" checked="checked">男
+							</label>
+							<label for="sex_woman" style="margin-bottom: 0;">
+								<input type="radio" id="sex_woman" style="width: 16px;height: 16px;vertical-align: top;margin-top: 8px;margin-left: 5px;" name="sex" value="2">女
+							</label>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</section>
+	</div>
+</div>

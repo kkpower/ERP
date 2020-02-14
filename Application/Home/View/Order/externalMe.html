@@ -1,0 +1,214 @@
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<style>
+	#tbody-result input {
+		width: 20px;
+		height: 20px;
+		margin: 0;
+	}
+</style>
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+				<h2 class="panel-title">{$Think.lang.internal_user_list}</h2>
+				<span>关联<span style="color: #CD0000;" >{$ptname}</span><span>平台下的外部账号</span><span style="color: #CD0000;">{$pid}</span></span>
+			</header>
+			<div class="panel-body">
+				<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+				<button id="xix" class="btn btn-primary" style="float: left;">{$Think.lang.add_internal_users}</button>
+				<br style="clear: both;" />
+				<table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+					<thead>
+						<tr>
+							<th>{$Think.lang.Id}</th>
+							<th>{$Think.lang.Account}</th>
+							<th>{$Think.lang.numbering}</th>
+							<th>{$Think.lang.Operation}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<volist name="list" id="vo" key="k">
+							<tr>
+								<td>{$k}</td>
+								<input type="hidden" value="{$vo.id}" name="pao">
+								<td>
+									<eq name="Think.cookie.think_language" value="zh-cn"> {$vo.lastnamezh}{$vo.namezh}</eq>
+									<eq name="Think.cookie.think_language" value="en-us">{$vo.uname}</eq>
+								</td>
+								<td>
+									{$vo.numbering}
+								</td>
+								<td>
+									<button title="{$Think.lang.Delete}" onclick="zhdel(this,'{$vo.uid}')" style="background: #EE0000; border: 0px;" type="button" data-toggle="modal" class="btn btn-primary btn-xs">
+                                   		<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                </button>
+								</td>
+							</tr>
+						</volist>
+					</tbody>
+				</table>
+			</div>
+		</section>
+	</div>
+</div>
+
+<form onsubmit="return doadd(this)">
+	<div id="node_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">
+                        {$Think.lang.add_internal_users}
+                    </h4>
+				</div>
+				<div class="modal-body" style="line-height: 34px;">
+					<div class="row" style="margin-left: 0;margin-right: 0;">
+						<div class="modal-title">
+							<span>关联<span style="color: #CD0000;">{$ptname}</span><span>平台下的外部账号</span><span style="color: #CD0000;">{$pid}</span></span>
+							<input type="hidden" value="{$sid}" name="pl_account_id">
+						</div>
+						<table class="table table-hover table-striped table-bordered" style="margin-top: 12px;margin-bottom: 0;">
+							<thead>
+								<tr>
+									<th>{$Think.lang.select}</th>
+									<th>{$Think.lang.Account}</th>
+									<th>{$Think.lang.numbering}</th>
+								</tr>
+							</thead>
+							<tbody id="tbody-result">
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" id="add_pr" type="submit">{$Think.lang.Save}</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cancel}</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script>
+	$(document).ready(function() {
+		$('#table1').DataTable({
+			"paging": false,
+			"lengthChange": false,
+			"info": false,
+			"searching": false
+		});
+	});
+
+	function onming() {
+		console.log("{:U('Order/externalAdd')}");
+		var tbody = window.document.getElementById("tbody-result");
+		$.ajax({
+			url: "{:U('Order/externalAdd')}",
+			type: 'post',
+			dataType: "json",
+			async: true,
+			success: function(data) {
+				var arr1 = [];
+				var arr2 = [];
+				var arr3 = [];
+				console.log($('[name="pao"]'));
+				for(var i = 0; i < $('[name="pao"]').length; i++) {
+					arr1.push($('[name="pao"]')[i].defaultValue)
+				}
+				console.log(arr1);
+				for(var i = 0; i < arr1.length; i++) {
+					arr2[arr1[i]] = true;
+				}
+				for(var i = 0; i < data.length; i++) {
+					if(!arr2[data[i].id]) {
+						arr3.push(data[i])
+					}
+				}
+				console.log(arr3);
+				console.log(data);
+				var str = "";
+				for(i in arr3) {
+					str += "<tr>" +
+						"<td>" + "<input name='uid[]' type='checkbox' value='" + arr3[i].uid + "'/>" + "</td>" +
+						"<td>" + arr3[i].lastnamezh + arr3[i].namezh + "</td>" +
+						"<td>" + arr3[i].numbering + "</td>" +
+						"</tr>";
+				}
+				tbody.innerHTML = str;
+				$('#node_modal').modal('toggle');
+			}
+		});
+	}
+	$('#xix').on('click', onming)
+	//添加内部用户
+	function doadd(form) {
+		//捉到所有被选中的
+		var chk_value = [];
+		$('input[name="uid[]"]:checked').each(function() {
+			chk_value.push($(this).val());
+			//将单选框被选中的value值放到chk_value[]数组里
+		});
+		console.log(chk_value);
+		$.ajax({
+			url: "{:U('Order/externalInster')}",
+			type: "post",
+			data: $(form).serialize(),
+			dataType: "json",
+			async: true,
+			success: function(data) {
+				if(data.status == 0) {
+					$('#node_message').html('{$Think.lang.Operationauthority}');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				} else if(data > 0) {
+					$('#node_message').html('{$Think.lang.Addsuccessfully}');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+				} else {
+					$('#node_message').html('{$Think.lang.add_failed}');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				}
+			}
+		});
+		return false;
+	}
+	//删除内部用户
+	function zhdel(obj, uid) {
+		var r = confirm("{$Think.lang.Confirmdelete}");
+		if(r) {
+			$.ajax({
+				url: "{:U('Order/externalDel')}",
+				type: 'post',
+				dataType: "json",
+				async: true,
+				data: {
+					uid: uid
+				},
+				success: function(data) {
+					if(data.status == 0) {
+						$('#node_message').html('{$Think.lang.Operationauthority}');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';", 2000);
+					} else if(data) {
+						$(obj).parents("tr").remove();
+						$('#node_message').html('{$Think.lang.Successfullydeleted}');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+					} else {
+						$('#node_message').html('{$Think.lang.Failedtodelete}');
+						node_message.style.display = 'block';
+					}
+				}
+			});
+		}
+	}
+</script>

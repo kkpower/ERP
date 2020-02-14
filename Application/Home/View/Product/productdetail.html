@@ -1,0 +1,273 @@
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/FirstEdition/assets/shu/boot/chartist-custom.css" />
+<style>
+	.six:before {
+		content: "";
+		position: absolute;
+		top: -20px;
+		left: 0;
+		width: 0;
+		height: 0;
+		border-left: 40px solid transparent;
+		border-right: 40px solid transparent;
+		border-bottom: 20px solid #ececec;
+	}
+	
+	.six:after {
+		content: "";
+		position: absolute;
+		bottom: -20px;
+		left: 0;
+		width: 0;
+		height: 0;
+		border-left: 40px solid transparent;
+		border-right: 40px solid transparent;
+		border-top: 20px solid #ececec;
+	}
+</style>
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+				<input type="hidden" name='getRoleAuthority' value="{:U('System/getRoleAuthority','','')}">
+				<h2 class="panel-title">产品详情</h2>
+			</header>
+			<div class="panel-body">
+				<div style="width: 36%;float: left;">
+					<div style="width: 100%;height: 180px;background: url('__ROOT__/Public/img/bg.jpg');background-size: cover;">
+						<div style="width: 80px;margin: 0 auto;">
+							<img style="width: 80px;display: block;height: 80px;margin: 0 auto;padding-top: 30px;cursor: pointer;box-sizing: content-box;" src="{$vo.path}" onclick="location.href='__ROOT__/index.php/Home/my/avatar'" />
+							<p style="text-align: center;margin-bottom: 0;">充电线</p>
+							<p style="text-align: center;margin-bottom: 0;">充电线</p>
+						</div>
+					</div>
+
+					<div style="height: 70px;background: deepskyblue;color: #fff;text-align: center;line-height: 24px;">
+						<div style="width: 33%;border-right: 1px solid #fff;height: 100%;float: left;">
+							<p style="padding-top: 12px;margin-bottom: 0;">状态</p>
+							<p>Active</p>
+						</div>
+						<div style="width: 34%;border-right: 1px solid #fff;height: 100%;float: left;;">
+							<p style="padding-top: 12px;margin-bottom: 0;">生日</p>
+							<p>2017-02-22</p>
+						</div>
+						<div style="width: 33%;height: 100%;float: left;;">
+							<p style="padding-top: 12px;margin-bottom: 0;">销售额</p>
+							<p></p>
+						</div>
+					</div>
+
+					<div style="height: 56px;line-height: 50px;text-align: center;background: #F8F7F7;border-bottom: 1px solid #e5e5e5;">
+						<button class="btn btn-danger">信息</button>
+						<button class="btn btn-danger">头像</button>
+						<button class="btn btn-danger">图纸</button>
+					</div>
+					<div style="background: #F8F7F7;">
+						<div style="height: 150px;">
+							<div style="float: left;width: 33%;height: 100%;">
+								<div class="six" style="width: 80px;height: 40px;background: #ececec;margin: 50px auto 0;position: relative;">
+									<span style="display: block;width: 30px;height: 30px;margin:0 auto;padding-top: 5px;font-size: 30px;" class="glyphicon glyphicon-picture" aria-hidden="true"></span>
+								</div>
+								<p style="text-align: center;padding-top:30px;">产品图片</p>
+							</div>
+							<div style="float: left;width: 34%;height: 100%;">
+								<div class="six" style="width: 80px;height: 40px;background: #ececec;margin: 50px auto 0;position: relative;">
+									<span style="display: block;width: 30px;height: 30px;margin:0 auto;padding-top: 5px;font-size: 30px;" class="glyphicon glyphicon-yen" aria-hidden="true"></span>
+								</div>
+								<p style="text-align: center;padding-top:30px;">成本核算</p>
+							</div>
+							<div style="float: left;width: 33%;height: 100%;">
+								<div class="six" style="width: 80px;height: 40px;background: #ececec;margin: 50px auto 0;position: relative;">
+									<span style="display: block;width: 30px;height: 30px;margin:0 auto;padding-top: 5px;font-size: 30px;" class="glyphicon glyphicon-plane" aria-hidden="true"></span>
+								</div>
+								<p style="text-align: center;padding-top:30px;">设置运费</p>
+							</div>
+						</div>
+						<div style="height: 150px;">
+							<div style="float: left;width: 33%;height: 100%;">
+								<div class="six" style="width: 80px;height: 40px;background: #ececec;margin: 50px auto 0;position: relative;">
+									<span style="display: block;width: 30px;height: 30px;margin:0 auto;padding-top: 5px;font-size: 30px;" class="glyphicon glyphicon-book" aria-hidden="true"></span>
+								</div>
+								<p style="text-align: center;padding-top:30px;">库存管理</p>
+							</div>
+							<div style="float: left;width: 34%;height: 100%;">
+								<div class="six" style="width: 80px;height: 40px;background: #ececec;margin: 50px auto 0;position: relative;">
+									<span style="display: block;width: 30px;height: 30px;margin:0 auto;padding-top: 5px;font-size: 30px;" class="glyphicon glyphicon-oil" aria-hidden="true"></span>
+								</div>
+								<p style="text-align: center;padding-top:30px;">供应商</p>
+							</div>
+							<div style="float: left;width: 33%;height: 100%;">
+								<div class="six" style="width: 80px;height: 40px;background: #ececec;margin: 50px auto 0;position: relative;">
+									<span style="display: block;width: 30px;height: 30px;margin:0 auto;padding-top: 5px;font-size: 30px;" class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+								</div>
+								<p style="text-align: center;padding-top:30px;">订单管理</p>
+							</div>
+						</div>
+						<div style="height: 150px;">
+							<div style="float: left;width: 33%;height: 100%;">
+								<div class="six" style="width: 80px;height: 40px;background: #ececec;margin: 50px auto 0;position: relative;">
+									<span style="display: block;width: 30px;height: 30px;margin:0 auto;padding-top: 5px;font-size: 30px;" class="glyphicon glyphicon-signal" aria-hidden="true"></span>
+								</div>
+								<p style="text-align: center;padding-top:30px;">销售分析</p>
+							</div>
+							<div style="float: left;width: 34%;height: 100%;">
+								<div class="six" style="width: 80px;height: 40px;background: #ececec;margin: 50px auto 0;position: relative;">
+									<span style="display: block;width: 30px;height: 30px;margin:0 auto;padding-top: 5px;font-size: 30px;" class="glyphicon glyphicon-user" aria-hidden="true"></span>
+								</div>
+								<p style="text-align: center;padding-top:30px;">客户</p>
+							</div>
+							<div style="float: left;width: 33%;height: 100%;">
+								<div class="six" style="width: 80px;height: 40px;background: #ececec;margin: 50px auto 0;position: relative;">
+									<span style="display: block;width: 30px;height: 30px;margin:0 auto;padding-top: 5px;font-size: 30px;" class="glyphicon glyphicon-file" aria-hidden="true"></span>
+								</div>
+								<p style="text-align: center;padding-top:30px;">质量报告</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div style="width: 60%;float: right;">
+					<div>
+						<div id="headline-chart" class="ct-chart" style="margin-bottom: 30px;"></div>
+					</div>
+					<ul id="myTab" class="nav nav-tabs">
+						<li class="active">
+							<a href="#home" data-toggle="tab">
+								技术参数
+
+							</a>
+						</li>
+						<li>
+							<a href="#payment" data-toggle="tab">
+								执行中的订单
+								<span class="badge" style="margin-left: 4px;float: right;">4</span>
+							</a>
+						</li>
+					</ul>
+					<div id="myTabContent" class="tab-content">
+						<div class="tab-pane fade in active" id="home">
+							<table class="table">
+								<thead>
+									<tr>
+										<td colspan="3" style="text-align: center;">
+											<div style="height: 34px;width: 65px;display: inline-block;">
+												<span class="glyphicon glyphicon-plus-sign" style="font-size: 30px;float: left;cursor: pointer;" onclick="onm(3)"></span>
+												<span style="font-size: 30px;line-height: 34px;float: left;">3</span>
+											</div>
+											<div style="height: 34px;width: 65px;display: inline-block;">
+												<span class="glyphicon glyphicon-plus-sign" style="font-size: 30px;float: left;cursor: pointer;" onclick="onm(5)"></span>
+												<span style="font-size: 30px;line-height: 34px;float: left;">5</span>
+											</div>
+											<div style="height: 34px;width: 70px;display: inline-block;">
+												<span class="glyphicon glyphicon-plus-sign" style="font-size: 30px;float: left;cursor: pointer;" onclick="onm(10)"></span>
+												<span style="font-size: 30px;line-height: 34px;float: left;">10</span>
+											</div>
+											<div style="height: 34px;width: 160px;display: inline-block;margin-left: 20px;">
+												<span class="glyphicon glyphicon-file" style="font-size: 30px;float: left;cursor: pointer;"></span>
+												<span style="font-size: 24px;line-height: 34px;float: left;">下载图纸</span>
+											</div>
+										</td>
+									</tr>
+								</thead>
+								<tr>
+									<td style="width: 33%;">1</td>
+									<td style="width: 33%;">2</td>
+									<td style="width: 34%;">
+										<button class="btn btn-primary btn-xs">查看</button>
+										<button class="btn btn-danger btn-xs">删除</button>
+									</td>
+								</tr>
+								<tr>
+									<td style="width: 33%;">1</td>
+									<td style="width: 33%;">2</td>
+									<td style="width: 34%;"><button class="btn btn-primary btn-xs">查看</button>
+										<button class="btn btn-danger btn-xs">删除</button>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div class="tab-pane fade" id="payment" style="height: 400px;overflow-y: scroll;">
+							应收货款
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+
+<div id="node_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">
+					添加技术参数
+				</h4>
+			</div>
+			<form class="form-horizontal" action="{:U('My/saveuserinfo')}" method="POST">
+				<div class="modal-body" style="line-height: 34px;">
+					<input type="hidden" name="id" value="{$vo.id}">
+
+					<div class="row" style="margin-left: 0;margin-right: 0;" id="parameter">
+						<div class="input-group" style="padding-top: 20px;">
+							<span class="input-group-addon">参数</span>
+							<input type="text" name="namezh" class="form-control" value="{$vo.namezh}" placeholder="" style="width: 40%;">
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon">参数</span>
+							<input type="text" name="remarks" class="form-control" placeholder="" style="width: 40%;">
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" type="submit">保存</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</form>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<script src="__PUBLIC__/FirstEdition/assets/shu/boot/chartist.min.js"></script>
+<script>
+	function onm(num) {
+		$('#parameter').empty();
+		for(var i=0;i<num;i++){
+			var list ='<div class="input-group" style="padding-top: 20px;"><span class="input-group-addon">参数</span><input type="text" name="namezh' +
+			i+'" class="form-control"  placeholder="参数" style="width: 40%;"></div>'
+			+'<div class="input-group"><span class="input-group-addon">参数</span><input type="text" name="remarks'+
+			i+'" class="form-control" placeholder="" style="width: 40%;"></div>'
+			$('#parameter').append(list)
+		}
+		$('#node_modal').modal('toggle')
+	}
+	var data, options;
+
+	// headline charts
+	data = {
+		labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+		series: [
+			[23, 29, 24, 40, 25, 24, 35],
+			[14, 25, 18, 34, 29, 38, 44],
+		]
+	};
+
+	options = {
+		height: 300,
+		showArea: true,
+		showLine: false,
+		showPoint: false,
+		fullWidth: true,
+		axisX: {
+			showGrid: false
+		},
+		lineSmooth: false,
+	};
+
+	new Chartist.Line('#headline-chart', data, options);
+</script>

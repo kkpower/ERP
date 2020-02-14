@@ -1,0 +1,1508 @@
+<!--<script src="../../../../Public/FirstEdition/assets/shu/boot/bootstrap-treeview.js"></script>-->
+<script src="__PUBLIC__/FirstEdition/assets/shu/boot/bootstrap-treeview.js">
+</script>
+<!--高亮显示当前标签目录-->
+<script>
+	$('#262').parents('li').addClass('nav-active')
+	$('#262').parents('li').addClass('nav-expanded')
+</script>
+<style>
+	#staff span {
+		display: inline-block;
+		width: 74px;
+		padding-left: 5px;
+	}
+	
+	#staff div {
+		margin-bottom: 10px;
+	}
+</style>
+<input type="hidden" id="getplatformurl" value="{:U('Organizationt/getOrganizationAjax','','')}">
+<input type="hidden" id="getCompany" value="{:U('Organizationt/getUser','','')}">
+<!--新建节点-->
+<input type="hidden" id="addCompany" value="{:U('Organizationt/addCompany','','')}">
+<!--新建职位-->
+<input type="hidden" id="addPosition" value="{:U('Organizationt/addPosition','','')}">
+<!--删除节点-->
+<input type="hidden" id="dellCompany" value="{:U('Organizationt/dellCompany','','')}">
+<!--获取节点所有父级-->
+<input type="hidden" id="getCompanyPath" value="{:U('Organizationt/getCompanyPath','','')}">
+<!--修改信息-->
+<input type="hidden" id="saveEmployee" value="{:U('Organizationt/saveEmployee','','')}">
+<!--父节点ID-->
+<input type="hidden" id="nodeid" value="3" />
+<!--调动员工-->
+<input type="hidden" id="gettransfer" value="{:U('Organizationt/gettransfer','','')}">
+<input type="hidden" id="getOrganized" value="{:U('Organizationt/getOrganized','','')}">
+<input type="hidden" id="transferDo" value="{:U('Organizationt/transferDo','','')}">
+<!--修改部门-->
+<input type="hidden" id="getDepartment" value="{:U('Organizationt/getDepartment','','')}">
+<!--移除员工-->
+<input type="hidden" id="getremoveUser" value="{:U('Organizationt/removeUser','','')}">
+<!--获取公司下员工姓名-->
+<input type="hidden" id="getUname" value="{:U('Organizationt/getUname','','')}">
+<!--获取所有员工-->
+<input type="hidden" id="getStaffs" value="{:U('Organizationt/getStaffs','','')}">
+<!--添加公司-->
+<input type="hidden" id="addCompanys" value="{:U('Organizationt/addCompanys','','')}">
+<!--获取职位-->
+<input type="hidden" id="getPosition" value="{:U('Organizationt/getPosition','','')}">
+<!--修改职位-->
+<input type="hidden" id="updatePosition" value="{:U('Organizationt/updatePosition','','')}">
+<!--删除职位-->
+<input type="hidden" id="delPosition" value="{:U('Organizationt/delPosition','','')}">
+<div class="row">
+	<div class="col-md-12">
+		<header class="">
+			<h3 class="">
+				{$Think.lang.Organization}
+			</h3>
+		</header>
+		<section class="panel">
+			<div class="panel-body" style="float: left;width: 38%;">
+				<input type="hidden" id="subdivisions" value="{$Think.lang.Subdivisions}">
+				<input type="hidden" id="subordinateposition" value="{$Think.lang.Subordinateposition}">
+				<input type="text" id="search" style="display: inline-block;width: 40%;margin-bottom: 20px;float: left;" class="form-control" placeholder="{$Think.lang.Pleaseenterthequerycontent}">
+				<button class="btn btn-success" onclick="search()" style="float: left;margin-left: 10px;">{$Think.lang.Search}</button>
+				<button class="btn btn-primary" onclick="addcompanyo()" style="float: left;margin-left: 10px;">{$Think.lang.Newcompany}</button>
+				<br style="clear: both;" />
+				<div id="treeview1" class="" style="width:100%;"></div>
+				<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+			</div>
+			<div id="org_modal" class="panel-body" style="width: 60%;float: right;display: none;">
+				<h4 style="margin-top: 0;margin-bottom: 20px;">
+					<ol id="parent_level1" class="breadcrumb" style="background: #fff;margin-bottom: 0;">
+					</ol>
+				</h4>
+				<input type="hidden" id="positiondid" value="">
+				<input type="hidden" value="" id="lavel2">
+				<input type="hidden" value="" id="companyc">
+				<div class="row" style="line-height: 34px;">
+					<div class="col-md-2 text-right" style="padding: 0;">{$Think.lang.chinese_name}：</div>
+					<div class="col-md-4">
+						<div id="ch_name" style="margin-bottom: 10px;height: 34px;color: #222;"></div>
+					</div>
+					<div class="col-md-2 text-right" style="padding: 0;">{$Think.lang.english_name}：</div>
+					<div class="col-md-4">
+						<div id="en_name" style="margin-bottom: 10px;height: 34px;color: #222;"></div>
+					</div>
+					<div id="form_choose">
+						<div class="col-md-2 text-right" style="padding: 0;">{$Think.lang.Principal}：</div>
+						<div class="col-md-4">
+							<a href="" id="linkman"></a>
+							<!--<div id="linkman" style="margin-bottom: 10px;height: 34px;color: #222;"></div>-->
+						</div>
+						<div class="col-md-2 text-right" style="padding: 0;">{$Think.lang.Phone}：</div>
+						<div class="col-md-4">
+							<div id="tel" style="margin-bottom: 10px;height: 34px;color: #222;"></div>
+						</div>
+						<div class="col-md-2 text-right" style="padding: 0;" id="country1">{$Think.lang.Country}：</div>
+						<div class="col-md-10">
+							<div id="country2" style="margin-bottom: 10px;height: 34px;color: #222;"></div>
+						</div>
+						<div class="col-md-2 text-right" style="padding: 0;" id="addess">{$Think.lang.Address}：</div>
+						<div class="col-md-10">
+							<div id="address" style="margin-bottom: 10px;height: 34px;color: #222;"></div>
+						</div>
+					</div>
+				</div>
+				<table id="table_s1" class="table" style="text-align: center;">
+					<thead>
+						<tr>
+							<th style="text-align: center;width: 20%;">{$Think.lang.n_ame}</th>
+							<th style="text-align: center;width: 25%;">{$Think.lang.Position}</th>
+							<th style="text-align: center;width: 25%;">{$Think.lang.Phone}</th>
+							<th style="text-align: center;width: 30%;">{$Think.lang.Operation}</th>
+						</tr>
+					</thead>
+					<tbody id="staff">
+
+					</tbody>
+				</table>
+				<div id="underling" style="border-bottom: 1px solid #e5e5e5;margin-bottom: 16px;margin-left: 15px;font-size: 16px;line-height: 30px;">{$Think.lang.Subordinateposition}：</div>
+				<div id="puisne" style="margin: 0 0 20px 0;">
+				</div>
+				<div style="text-align: right;">
+					<button id="create_child1" class="btn btn-success" onclick="getCompanyPath(1)">{$Think.lang.Newdepartment}</button>
+					<button id="create_child2" class="btn btn-success" onclick="getCompanyPath(2)">{$Think.lang.Newposition}</button>
+					<button id="table_s" class="btn btn-info">{$Think.lang.JobResponsibilities}</button>
+					<button class="btn btn-primary" onclick="getCompanyPath2()">{$Think.lang.Modify}</button>
+					<button class="btn btn-danger" onclick="dellCompany()">{$Think.lang.Delete}</button>
+					<button type="button" class="btn btn-default" onclick="$('#org_modal').css('display','none');">{$Think.lang.Cancel}</button>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+<div id="code_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">
+					{$Think.lang.Newcompany}
+				</h4>
+			</div>
+			<div class="modal-body" style="line-height: 34px;">
+				<div class="row">
+					<div class="input-group col-md-6" style="float: left;padding: 0 15px;margin-bottom: 12px;">
+						<span class="input-group-addon">{$Think.lang.Chinesename}</span>
+						<input id="china_n" class="form-control" />
+					</div>
+					<div class="input-group col-md-6" style="float: left;padding: 0 15px;margin-bottom: 12px;">
+						<span class="input-group-addon">{$Think.lang.Engname}</span>
+						<input id="eng_n" class="form-control" />
+					</div>
+					<div id="form_choose5">
+						<div class="input-group col-md-6" style="float: left;padding: 0 15px;margin-bottom: 12px;">
+							<span class="input-group-addon">{$Think.lang.Principal}</span>
+							<select id="contact_uu" class="form-control" onchange="personAjax()">
+							</select>
+						</div>
+						<div class="input-group col-md-6" style="float: left;padding: 0 15px;margin-bottom: 12px;">
+							<span class="input-group-addon">{$Think.lang.Employeecode}</span>
+							<input class="form-control" id="numbering" readonly="readonly" />
+						</div>
+						<div class="input-group col-md-6" style="float: left;padding: 0 15px;margin-bottom: 12px;">
+							<span class="input-group-addon">{$Think.lang.Phone}</span>
+							<select id="tel_uu" class="form-control">
+							</select>
+						</div>
+						<input id="persname" type="hidden" />
+					</div>
+					<div class="input-group col-md-6" style="float: left;padding: 0 15px;margin-bottom: 12px;">
+						<span class="input-group-addon">{$Think.lang.Country}</span>
+						<select id="country" class="form-control">
+							<foreach name="countrylist" item="or">
+								<option value="{$or.id}">{$or.countryzh}</option>
+							</foreach>
+						</select>
+					</div>
+					<div class="input-group col-md-6" style="float: left;padding: 0 15px;">
+						<span class="input-group-addon">{$Think.lang.Address}</span>
+						<input id="address_uu" class="form-control" />
+					</div>
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" onclick="addCompanyuu()">{$Think.lang.Save}</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cancel}</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+
+<!--修改弹框-->
+<div id="change_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">
+					<ol id="parent_level2" class="breadcrumb" style="background: #fff;margin-bottom: 0;">
+					</ol>
+				</h4>
+			</div>
+			<div class="modal-body" style="line-height: 34px;">
+				<div class="row">
+					<div class="input-group col-md-6" style="float: left;padding: 0 15px;margin-bottom: 12px;">
+						<span class="input-group-addon">{$Think.lang.Chinesename}</span>
+						<input id="change_ch_name" class="form-control" />
+					</div>
+					<div class="input-group col-md-6" style="float: left;padding: 0 15px;margin-bottom: 12px;">
+						<span class="input-group-addon">{$Think.lang.Engname}</span>
+						<input id="change_en_name" class="form-control" />
+					</div>
+					<div id="form_choose2">
+						<input type="hidden" id="contactsd" value="">
+						<div class="input-group col-md-6" style="float: left;padding: 0 15px;margin-bottom: 12px;">
+							<span class="input-group-addon">{$Think.lang.Principal}</span>
+							<select id="contacts" class="form-control" onchange="utelAjax()">
+							</select>
+						</div>
+						<div class="input-group col-md-6" style="float: left;padding: 0 15px;margin-bottom: 12px;">
+							<span class="input-group-addon">{$Think.lang.Employeecode}</span>
+							<input class="form-control" id="numberin" readonly="readonly" />
+						</div>
+						<div class="input-group col-md-6" style="float: left;padding: 0 15px;">
+							<span class="input-group-addon">{$Think.lang.Phone}</span>
+							<select id="change_tel" class="form-control">
+							</select>
+						</div>
+
+						<div id="address3">
+							<div class="input-group col-md-6" style="float: left;padding: 0 15px;">
+								<span class="input-group-addon">{$Think.lang.Address}</span>
+								<input id="change_address" class="form-control" />
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" onclick="saveEmployee()">{$Think.lang.Save}</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cancel}</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<div id="lode_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">
+					<ol id="parent_level3" class="breadcrumb" style="background: #fff;margin-bottom: 0;">
+					</ol>
+				</h4>
+			</div>
+			<div class="modal-body" style="line-height: 34px;">
+				<input type="hidden" id="" name="nodesid" value="">
+				<div class="row">
+					<div class="input-group col-md-6" style="float: left;padding: 0 15px;">
+						<span class="input-group-addon">{$Think.lang.Chinesename}</span>
+						<input class="form-control" id="chname" />
+					</div>
+					<div class="input-group col-md-6" style="float: left;padding: 0 15px;">
+						<span class="input-group-addon">{$Think.lang.Engname}</span>
+						<input class="form-control" id="egname" />
+					</div>
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" onclick="addCompany(2)">{$Think.lang.Save}</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cancel}</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<div id="sode_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">
+					<ol id="parent_level5" class="breadcrumb" style="background: #fff;margin-bottom: 0;">
+					</ol>
+				</h4>
+			</div>
+			<div class="modal-body" style="line-height: 34px;">
+				<input type="hidden" id="userid" value="">
+				<div class="row">
+					<div class="input-group col-md-6" style="float: left;padding: 0 15px;margin-bottom: 12px;">
+						<span class="input-group-addon">{$Think.lang.n_ame}</span>
+						<input class="form-control" id="username" readonly="readonly" />
+					</div>
+					<div class="input-group col-md-6" style="float: left;padding: 0 15px;margin-bottom: 12px;">
+						<span class="input-group-addon">{$Think.lang.Employeecode}</span>
+						<input class="form-control" id="codenumber" readonly="readonly" />
+					</div>
+					<div class="input-group col-md-6" style="float: left;padding: 0 15px;margin-bottom: 12px;">
+						<span class="input-group-addon">{$Think.lang.Company}</span>
+						<select id="company" type="text" class="form-control" onchange="searchAjax()">
+						</select>
+					</div>
+					<div class="input-group col-md-6" style="float: left;padding: 0 15px;margin-bottom: 12px;">
+						<span class="input-group-addon">{$Think.lang.Department}</span>
+						<select id="bumen" type="text" onchange="bumenAjax()" class="form-control">
+						</select>
+					</div>
+					<div class="input-group col-md-6" style="float: left;padding: 0 15px;">
+						<span class="input-group-addon">{$Think.lang.position}</span>
+						<select id="position" type="text" class="form-control">
+						</select>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" onclick="dotransFer()">{$Think.lang.Save}</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cancel}</button>
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+	</div>
+</div>
+<div id="node_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">
+					<ol id="parent_level" class="breadcrumb" style="background: #fff;margin-bottom: 0;">
+					</ol>
+				</h4>
+			</div>
+			<div class="modal-body" style="line-height: 34px;">
+				<div class="row">
+					<div class="input-group col-md-6" style="float: left;padding: 0 15px;margin-bottom: 12px;">
+						<span class="input-group-addon">{$Think.lang.Chinesename}</span>
+						<input id="child_ch_name" class="form-control" />
+					</div>
+					<div class="input-group col-md-6" style="float: left;padding: 0 15px;margin-bottom: 12px;">
+						<span class="input-group-addon">{$Think.lang.Engname}</span>
+						<input id="child_en_name" class="form-control" />
+					</div>
+					<div id="form_choose1">
+						<div class="input-group col-md-6" style="float: left;padding: 0 15px;">
+							<span class="input-group-addon">{$Think.lang.Principal}</span>
+							<select id="child_linkman" class="form-control" onchange="unameAjax()">
+							</select>
+						</div>
+						<div class="input-group col-md-6" style="float: left;padding: 0 15px;">
+							<span class="input-group-addon">{$Think.lang.Phone}</span>
+							<select id="child_tel" class="form-control">
+							</select>
+						</div>
+						<input id="child_nameuu" type="hidden" />
+					</div>
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" onclick="addCompany(1)">{$Think.lang.Save}</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cancel}</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<script>
+	var type_change = "";
+	var id_change = "";
+	var that = "";
+	//添加分公司弹框
+	function addcompanyo() {
+		$('#numbering').val('');
+		$('#china_n').val('');
+		$('#tel_uu').val('');
+		$('#eng_n').val('');
+		$('#address_uu').val('');
+		var url = $('#getStaffs').val();
+		$.ajax({
+			url: url,
+			type: 'post',
+			data: {
+				status: 1
+			},
+			async: true,
+			dataType: 'JSON',
+			success: function(data) {
+				var p = "<option id='fulcontact' value=''>{$Think.lang.Pleasechoose}</option>"
+				$("#contact_uu").html(p);
+				//将获取到的数据赋值
+				for(var i = 0; i < data.length; i++) {
+					//拼接option标签的 name value 等属性
+					var p = "<option value='" +
+						data[i]['uid'] +
+						"'" +
+						">" +
+						data[i]['lastnamezh'] +
+						data[i]['namezh'] +
+						"</option>";
+					$("#fulcontact").after(p);
+				}
+
+				$('#code_modal').modal('toggle');
+			}
+		})
+	}
+	//搜索
+	$('#search').on('keyup', function(event) {
+		if(event.keyCode == '13') {
+			search()
+		}
+	})
+	//获取联系电话
+	function personAjax() {
+		var url = $('#getUname').val();
+		var uid = $('#contact_uu').val();
+		$.ajax({
+			url: url,
+			type: 'post',
+			data: {
+				id: uid
+			},
+			dataType: 'JSON',
+			async: true,
+			success: function(data) {
+				$('#numbering').val(data['info'].numbering);
+				$('#persname').val(data['info'].lastnamezh + data['info'].namezh);
+				var p = "<option id='Fuldphone' value=''>{$Think.lang.Pleasechoose}</option>"
+				$("#tel_uu").html(p);
+				//将获取到的数据赋值
+				for(var i = 0; i < data['contact'].length; i++) {
+					//拼接option标签的 name value 等属性
+					var p = "<option value='" +
+						data['contact'][i]['phone'] +
+						"'" +
+						">" +
+						data['contact'][i]['phone'] +
+						"</option>";
+					$("#Fuldphone").after(p);
+				}
+			}
+		})
+	}
+	//添加分公司
+	function addCompanyuu() {
+		var url = $('#addCompanys').val();
+		$.ajax({
+			url: url, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				uid: $('#contact_uu').val(),
+				namezh: $('#china_n').val(),
+				country: $('#country').val(),
+				nameus: $('#eng_n').val(),
+				address: $('#address_uu').val(),
+				phone: $('#tel_uu').val()
+			},
+			dataType: "JSON",
+			async: true,
+			success: function(data) {
+				if(t) {
+					clearTimeout(t)
+				};
+				if(data == 'OK') {
+					$('#node_message').html('{$Think.lang.Createdsuccessfully}');
+					$('#code_modal').modal('toggle');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none'", 2000);
+					platformurl();
+				} else if(data == 'NO') {
+					$('#node_message').html('{$Think.lang.Cannotbeempty}');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none'", 2000);
+				}
+			}
+		})
+	}
+	//获取员工姓名
+	function unameAjax() {
+		var url = $('#getUname').val();
+		var uid = $('#child_linkman').val();
+		$.ajax({
+			url: url,
+			type: 'post',
+			data: {
+				id: uid
+			},
+			async: true,
+			dataType: 'JSON',
+			success: function(data) {
+				$('#child_nameuu').val(data['info'].lastnamezh + data['info'].namezh);
+				var p = "<option id='Fulphone' value=''>{$Think.lang.Pleasechoose}</option>"
+				$("#child_tel").html(p);
+				//将获取到的数据赋值
+				for(var i = 0; i < data['contact'].length; i++) {
+					//拼接option标签的 name value 等属性
+					var p = "<option value='" +
+						data['contact'][i]['phone'] +
+						"'" +
+						">" +
+						data['contact'][i]['phone'] +
+						"</option>";
+					$("#Fulphone").after(p);
+				}
+			}
+		})
+	}
+
+	function utelAjax() {
+		var url = $('#getUname').val();
+		var uid = $('#contacts').val();
+		$.ajax({
+			url: url,
+			type: 'post',
+			data: {
+				id: uid
+			},
+			async: true,
+			dataType: 'JSON',
+			success: function(data) {
+				$('#numberin').val(data['info'].numbering);
+				$('#contactsd').val(data['info'].lastnamezh + data['info'].namezh);
+				var p = "<option id='Fulphonea' value=''>{$Think.lang.Pleasechoose}</option>"
+				$("#change_tel").html(p);
+				//将获取到的数据赋值
+				for(var i = 0; i < data['contact'].length; i++) {
+					//拼接option标签的 name value 等属性
+					var p = "<option value='" +
+						data['contact'][i]['phone'] +
+						"'" +
+						">" +
+						data['contact'][i]['phone'] +
+						"</option>";
+					$("#Fulphonea").after(p);
+				}
+			}
+		})
+	}
+	//调动员工
+	function dotransFer() {
+		var url = $("#transferDo").val();
+		var company = $('#company').val();
+		var bumen = $('#bumen').val();
+		var position = $('#position').val();
+		var uid = $('#userid').val();
+		$.ajax({
+			url: url, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				uid: uid,
+				company: company,
+				bumen: bumen,
+				position: position
+			},
+			async: true,
+			dataType: "JSON",
+			success: function(data) {
+				if(t) {
+					clearTimeout(t)
+				};
+				if(data > 0) {
+					$('#node_message').html('{$Think.lang.Successfultransfer}');
+					$('#sode_modal').modal('toggle');
+					$('#org_modal').css('display', 'none');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none'", 2000);
+					platformurl();
+
+				} else if(data == 'NO') {
+					$('#node_message').html('{$Think.lang.Transferfailure}');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none'", 2000);
+				}
+
+			}
+		})
+	}
+
+	function searchAjax() //点击第一个搜索框
+	{
+		var company = $("#company").val(); //获取选择id
+		var url = $("#getOrganized").val();
+		$.ajax({
+			url: url, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				type: 1,
+				id: company
+			},
+			dataType: "JSON",
+			async: false,
+			success: function(data) {
+				console.log(data);
+				var p = "<option id='Fulcrum' value=''>{$Think.lang.Pleaseselectdepartment}</option>"
+				$("#bumen").html(p);
+				//将获取到的数据赋值
+				for(var i = 0; i < data.length; i++) {
+					//拼接option标签的 name value 等属性
+					var p = "<option value='" +
+						data[i]['id'] +
+						"'" +
+						">" +
+						data[i]['namezh'] +
+						"</option>";
+					$("#Fulcrum").after(p);
+				}
+
+			}
+		})
+
+	}
+
+	// function staffAjax() //修改部门
+	// {
+	//     var company_id = $("#company_id").val(); //获取选择id
+	//     var url = $("#getDepartment").val();
+	//     $.ajax({
+	//         url: url, //通过页面元素的ID来获取设备ID
+	//         type: "post", //选择传值方式
+	//         data: {
+	//             id: company_id
+	//         },
+	//         dataType: "JSON",
+	//         success: function(data) {
+	//             console.log(data);
+	//             var p = "<option id='staffbm' value=''>请选择</option>"
+	//             $("#bumen").html(p);
+	//             //将获取到的数据赋值
+	//             for(var i = 0; i < data.length; i++) {
+	//                 //拼接option标签的 name value 等属性
+	//                 var p = "<option value='" +
+	//                     data[i]['namezh'] +
+	//                     "'" +
+	//                     ">" +
+	//                     data[i]['namezh'] +
+	//                     "</option>";
+	//                 $("#staffbm").after(p);
+	//             }
+	//
+	//         }
+	//     })
+	//
+	// }
+
+	function bumenAjax() //点击第二个搜索框
+	{
+		var bumen = $("#bumen").val(); //获取选择id
+		var url = $("#getOrganized").val();
+		$.ajax({
+			url: url, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				type: 2,
+				id: bumen
+			},
+			dataType: "JSON",
+			async: false,
+			success: function(data) {
+				console.log(data);
+				var p = "<option id='element' value=''>{$Think.lang.Pleaseselectposition}</option>"
+				$("#position").html(p);
+				//将获取到的数据赋值
+				for(var i = 0; i < data.length; i++) {
+					//拼接option标签的 name value 等属性
+					var p = "<option value='" +
+						data[i]['id'] +
+						"'" +
+						">" +
+						data[i]['namezh'] +
+						"</option>";
+					$("#element").after(p);
+				}
+
+			}
+		})
+	}
+	var all_child = [];
+	//查询子节点
+	function search() {
+		var arr = [];
+		var search = $('#search').val()
+		if(search == "") {
+			return false;
+		}
+		for(var i = 0; i < all_child.length; i++) {
+			if(all_child[i].text.indexOf(search) > -1) {
+				$('#treeview1').treeview('revealNode', [all_child[i].nodeId, {
+					silent: true
+				}]);
+				console.log($("[data-nodeid=" + all_child[i].nodeId + "]"))
+				arr.push(all_child[i].nodeId);
+				//				$('#treeview1').treeview('selectNode', [ all_child[i].nodeId, { silent:true } ]);
+				//				$("[data-nodeid="+all_child[i].nodeId+"]").css('fontSize','20px');
+			}
+		}
+		console.log(arr)
+		if(arr.length == 0) {
+			if(t) {
+				clearTimeout(t)
+			};
+			$('#node_message').text('{$Think.lang.Didnotfindthisinformation}');
+			node_message.style.display = 'block';
+			var t = setTimeout("node_message.style.display='none'", 2000);
+		}
+		for(var i = 0; i < arr.length; i++) {
+			$("[data-nodeid=" + arr[i] + "]").css('color', 'red');
+		}
+
+	}
+	//树状图数据
+	function platformurl() {
+		var platformurl = $("#getplatformurl").val();
+		$.ajax({
+			url: platformurl, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			dataType: "JSON",
+			async: true,
+			success: function(data) {
+				console.log(data);
+				$('#treeview1').treeview({
+					data: data,
+					enableLinks: true
+				});
+				all_child = $('#treeview1').treeview('getCollapsed', 0);
+				console.log(all_child)
+			},
+			error: function(data) {
+				if(t) {
+					clearTimeout(t)
+				};
+				$('#node_message').html('{$Think.lang.Creationfailed}');
+				node_message.style.display = 'block';
+				var t = setTimeout("node_message.style.display='none'", 2000);
+			}
+		})
+	}
+	platformurl();
+	//增加节点
+	function addCompany(type) {
+		var addCompany = $("#addCompany").val();
+		console.log(addCompany);
+		if($('#child_ch_name').val() == '' && type == 1) {
+			if(tt) {
+				clearTimeout(tt)
+			};
+			$('#node_message').html('{$Think.lang.Chinesenamecannotbeempty}');
+			node_message.style.display = 'block';
+			var tt = setTimeout("node_message.style.display='none'", 2000);
+			return false;
+		}
+		if($('#child_en_name').val() == '' && type == 1) {
+			if(tt) {
+				clearTimeout(tt)
+			};
+			$('#node_message').html('{$Think.lang.Englishnamecannotbeempty}');
+			node_message.style.display = 'block';
+			var tt = setTimeout("node_message.style.display='none'", 2000);
+			return false;
+		}
+		if($('#chname').val() == '' && type == 2) {
+			if(tt) {
+				clearTimeout(tt)
+			};
+			$('#node_message').html('{$Think.lang.Chinesenamecannotbeempty}');
+			node_message.style.display = 'block';
+			var tt = setTimeout("node_message.style.display='none'", 2000);
+			return false;
+		}
+		$.ajax({
+			url: addCompany, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				type: type,
+				nodesid: $('#nodeid').val(),
+				chname: $('#chname').val(),
+				egname: $('#egname').val(),
+				namezh: $('#child_ch_name').val(),
+				nameus: $('#child_en_name').val(),
+				// address: $('#child_address').val(),
+				phone: $('#child_tel').val(),
+				uid: $('#child_linkman').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				if(t) {
+					clearTimeout(t)
+				};
+				$('#node_message').html('{$Think.lang.Createdsuccessfully}');
+				if(type == 1) {
+					$('#node_modal').modal('toggle');
+					itemOnclick(that);
+				} else {
+					$('#lode_modal').modal('toggle');
+					itemOnclick(that);
+				}
+				// $('#org_modal').css('display', 'none');
+				node_message.style.display = 'block';
+				var t = setTimeout("node_message.style.display='none'", 2000);
+				platformurl();
+			}
+		})
+	}
+	//删除节点
+	function dellCompany() {
+		if($('#positiondid').val() == '') {
+			var dellCompany = $("#dellCompany").val();
+		} else {
+			var dellCompany = $("#delPosition").val();
+		}
+		console.log(dellCompany);
+		var r = confirm("{$Think.lang.Confirmdelete}")
+		if(r == true) {
+			$.ajax({
+				url: dellCompany, //通过页面元素的ID来获取设备ID
+				type: "post", //选择传值方式
+				data: {
+					nodesid: $('#nodeid').val(),
+					positionid: $('#positiondid').val()
+				},
+				async: true,
+				dataType: "JSON",
+				success: function(data) {
+					if(t) {
+						clearTimeout(t)
+					};
+					if(data == 'OK') {
+						$('#node_message').html('{$Think.lang.Successfullydeleted}');
+						$('#org_modal').css('display', 'none');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none'", 2000);
+						platformurl();
+					} else if(data == 'NO') {
+						$('#node_message').html('{$Think.lang.cannotdeleteit}');
+						$('#org_modal').css('display', 'none');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none'", 2000);
+						platformurl();
+					} else if(data == 'SO') {
+						$('#node_message').html('{$Think.lang.cannotbedeleted}');
+						$('#org_modal').css('display', 'none');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none'", 2000);
+						platformurl();
+					}
+					//				console.log(data)
+				}
+			})
+		} else {
+			return false;
+		}
+	}
+	//修改信息
+	function saveEmployee() {
+		if($('#positiondid').val() == '') {
+			var saveEmployee = $("#saveEmployee").val();
+		} else {
+			var saveEmployee = $("#updatePosition").val();
+		}
+		if($('#change_ch_name').val() == '') {
+			if(tt) {
+				clearTimeout(tt)
+			};
+			$('#node_message').html('{$Think.lang.Chinesenamecannotbeempty}');
+			node_message.style.display = 'block';
+			var tt = setTimeout("node_message.style.display='none'", 2000);
+			return false;
+		}
+		$.ajax({
+			url: saveEmployee, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				level: $('#lavel2').val(),
+				uid: $('#contacts').val(),
+				nodesid: $('#nodeid').val(),
+				position_id: $('#positiondid').val(),
+				namezh: $('#change_ch_name').val(),
+				nameus: $('#change_en_name').val(),
+				address: $('#change_address').val(),
+				phone: $('#change_tel').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				if(t) {
+					clearTimeout(t)
+				};
+				$('#node_message').html('{$Think.lang.Successfullymodified}');
+				$('#org_modal').css('display', 'none');
+				$('#change_modal').modal('toggle');
+				node_message.style.display = 'block';
+				var t = setTimeout("node_message.style.display='none'", 2000);
+				platformurl();
+				//				$('#node_modal').modal('toggle');
+			}
+		})
+	}
+	//导航条
+	function getCompanyPath(type) {
+		var getCompanyPath = $("#getCompanyPath").val();
+		console.log(getCompanyPath);
+		$('#chname').val('');
+		$('#egname').val('');
+		$('#parent_level').empty();
+		$('#parent_level3').empty();
+		$('#child_ch_name').val('');
+		$('#child_en_name').val('');
+		$('#child_address').val('');
+		$('#child_tel').val('');
+		$('#child_linkman').val('');
+		$.ajax({
+			url: getCompanyPath, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				nodesid: $('#nodeid').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data)
+				if(type == 1) {
+					$('#form_choose1').css('display', 'block');
+					for(var i = data.length - 1; i > -1; i--) {
+						var list = '<li>' + data[i].text + '</li>';
+						$('#parent_level').append(list)
+					}
+					var departmenta = $("#nodeid").val(); //获取选择id
+					var urla = $("#getDepartment").val();
+					var companyca = $('#companyc').val();
+					var type1 = $('#lavel2').val();
+					$.ajax({
+						url: urla, //通过页面元素的ID来获取设备ID
+						type: "post", //选择传值方式
+						data: {
+							type: type1,
+							id: departmenta,
+							company: companyca
+						},
+						dataType: "JSON",
+						success: function(data) {
+							console.log(data);
+							var p = "<option id='staffbmc' value=''>{$Think.lang.Pleasechoose}</option>"
+							$("#child_linkman").html(p);
+							//将获取到的数据赋值
+							for(var i = 0; i < data.length; i++) {
+								//拼接option标签的 name value 等属性
+								var p = "<option value='" +
+									data[i]['uid'] +
+									"'" +
+									">" +
+									data[i]['lastnamezh'] +
+									data[i]['namezh'] +
+									"</option>";
+								$("#staffbmc").after(p);
+							}
+							$('#node_modal').modal('toggle');
+						}
+					})
+
+				} else if(type == 2) {
+					for(var i = data.length - 1; i > -1; i--) {
+						var list = '<li>' + data[i].text + '</li>'
+						$('#parent_level3').append(list)
+					}
+					$('#lode_modal').modal('toggle');
+				}
+			}
+		})
+	}
+	//导航条
+	function getCompanyPath2() {
+		$('#numberin').val('');
+		var data_change = {};
+		if(type_change == 3) {
+			data_change = {
+				type: type_change,
+				oid: $('#nodeid').val(),
+				nodesid: id_change
+			}
+		} else {
+			data_change = {
+				nodesid: $('#nodeid').val()
+			}
+		}
+		var getCompanyPath = $("#getCompanyPath").val();
+		console.log(getCompanyPath);
+		$('#parent_level2').empty();
+		$('#change_ch_name').val($('#ch_name').text());
+		$('#change_en_name').val($('#en_name').text());
+		$('#change_address').val($('#address').text());
+		$('#change_tel').val($('#tel').text());
+		$('#change_linkman').val($('#linkman').text());
+		$.ajax({
+			url: getCompanyPath, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: data_change,
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data)
+				// $('#company_id').val(data[0].id);
+				for(var i = data.length - 1; i > -1; i--) {
+					var list = '<li>' + data[i].text + '</li>'
+					$('#parent_level2').append(list)
+				}
+				var department = $("#nodeid").val(); //获取选择id
+				var url = $("#getDepartment").val();
+				var companyc = $('#companyc').val();
+				var type = $('#lavel2').val();
+				$.ajax({
+					url: url, //通过页面元素的ID来获取设备ID
+					type: "post", //选择传值方式
+					data: {
+						type: type,
+						id: department,
+						company: companyc
+					},
+					dataType: "JSON",
+					success: function(data) {
+						console.log(data);
+						var p = "<option id='staffbm' value=''>{$Think.lang.Pleasechoose}</option>"
+						$("#contacts").html(p);
+						//将获取到的数据赋值
+						for(var i = 0; i < data.length; i++) {
+							//拼接option标签的 name value 等属性
+							var p = "<option value='" +
+								data[i]['uid'] +
+								"'" +
+								">" +
+								data[i]['lastnamezh'] +
+								data[i]['namezh'] +
+								"</option>";
+							$("#staffbm").after(p);
+						}
+						$('#change_modal').modal('toggle');
+					}
+				})
+			}
+		})
+	}
+	//展开折叠事件
+	function itemli(target) {
+		$('#positiondid').val('');
+		//找到当前节点id
+		var nodeid = $(target).attr('data-nodeid');
+		console.log(nodeid)
+		$("[data-nodeid=" + nodeid + "]").addClass('expand-icon');
+		//		$('#treeview1').treeview('toggleNodeExpanded', [ nodeid, { silent:true } ]);
+	}
+	//树节点弹出框
+	function itemOnclick(target) {
+		var subdivisions = $('#subdivisions').val();
+		var subordinateposition = $('#subordinateposition').val();
+		that = target;
+		$('#positiondid').val('');
+		document.documentElement.scrollTop = 0;
+		var getCompany = $("#getCompany").val();
+		var getCompanyPath = $("#getCompanyPath").val();
+		//找到当前节点id
+		var nodeid = $(target).parent().attr('data-nodeid');
+		console.log(nodeid)
+		var tree = $('#treeview1');
+		//获取当前节点对象
+		var node = tree.treeview('getNode', nodeid);
+		$('#nodeid').val(node.id)
+		console.log(node.id)
+		$('#staff').empty();
+		$('#puisne').empty();
+		console.log(node);
+		var type = "";
+		$.ajax({
+			url: getCompanyPath, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				nodesid: $('#nodeid').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data)
+				if(data[0].level == 1) {
+					$('#underling').text(subdivisions + ':')
+					type = 1;
+					type_change = 1;
+				} else if(data[0].level > 1) {
+					$('#underling').text(subordinateposition + ':')
+					type = 2;
+					type_change = 2;
+				}
+				$('#parent_level1').empty();
+				for(var i = data.length - 1; i > -1; i--) {
+					var list = '<li>' + data[i].text + '</li>'
+					$('#parent_level1').append(list)
+				}
+				$.ajax({
+					url: getCompany, //通过页面元素的ID来获取设备ID
+					type: "post", //选择传值方式
+					data: {
+						type: type,
+						nodesid: node.id
+					},
+					async: false,
+					dataType: "JSON",
+					success: function(data) {
+						console.log(data);
+						if(data.firm[0].level == 1) {
+							$('#create_child1').css('display', 'inline-block');
+							$('#create_child2').css('display', 'none');
+							$('#table_s').css('display', 'none');
+						} else {
+							$('#create_child1').css('display', 'none');
+							$('#create_child2').css('display', 'inline-block');
+							$('#table_s').css('display', 'inline-block');
+						}
+						if(type == 1) {
+							$('#puisne').empty();
+							$('#table_s1').css('display', 'none')
+							$('#address').css('display', 'block');
+							$('#addess').css('display', 'block');
+							$('#form_choose').css('display', 'block');
+							$('#form_choose2').css('display', 'block');
+							$('#address3').css('display', 'block');
+							$('#country1').css('display', 'block');
+							$('#country2').css('display', 'block');
+							if(data.branch.length == 0) {
+								var list = '<p style="text-align: center;">{$Think.lang.NO}</p>'
+								$('#puisne').append(list)
+							} else {
+								for(var i = 0; i < data.branch.length; i++) {
+									var list = '<button onclick="underling(2' + ',' + data.branch[i].id + ')" class="btn btn-default" style="margin-left:15px;">' + data.branch[i].namezh + '</button>'
+									$('#puisne').append(list)
+								}
+							}
+							if(data.country == null) {
+								$('#country2').text('');
+							} else {
+								$('#country2').text(data.country.countryzh);
+							}
+							if(data.company.length == 0) {
+//								$('#linkman').text('');
+//								$('#tel').text('');
+								$('#address').text('');
+							}else {
+								$('#address').text(data.company[1].value);
+							}
+							if(data.user == null) {
+								$('#linkman').text('');
+								$("#linkman").attr("target", "_blank");
+								$('#tel').text('');
+							}else{
+								$('#tel').text(data.company[0].value);
+								$('#linkman').text(data.user.lastnamezh + data.user.namezh);
+								$('#linkman').attr('href', "{:U('My/me')}?nosdid=" + data.company[0].uid);
+								$("#linkman").attr("target", "_blank");
+							}
+
+							$('#create_child').css('display', 'inline-block');
+							$('#underling').css('display', 'block');
+							$('#puisne').css('display', 'block');
+						} else {
+							$('#table_s1').css('display', 'table');
+							$('#form_choose').css('display', 'block');
+							$('#address').css('display', 'none');
+							$('#addess').css('display', 'none');
+							$('#form_choose2').css('display', 'block');
+							$('#address3').css('display', 'none');
+							$('#puisne').empty();
+							$('#country1').css('display', 'none');
+							$('#country2').css('display', 'none');
+							if(data.position.length == 0) {
+								var list = '<p style="text-align: center;">{$Think.lang.NO}</p>'
+								$('#puisne').append(list)
+							} else {
+								for(var i = 0; i < data.position.length; i++) {
+									var list = '<button onclick="underling(3' + ',' + data.position[i].id + ',' + data.position[i].oid + ')" class="btn btn-default" style="margin-left:15px;">' + data.position[i].namezh + '</button>'
+									$('#puisne').append(list)
+								}
+							}
+							if(data.staff.length == 0) {
+								var list = '<tr style="text-align: center;"><td colspan="4">{$Think.lang.NO}<td></tr>'
+								$('#staff').append(list)
+							} else {
+								for(var i = 0; i < data.staff.length; i++) {
+									var list = '<tr style="text-align: center;"><td>' + data.staff[i].lastnamezh + data.staff[i].namezh + '</td>' +
+										'<td>' + data.staff[i].namezw + '</td>' +
+										'<td>' + data.staff[i].phone + '</td>' +
+										'<td><button class="btn btn-primary btn-xs"  onclick="option(' + data.staff[i].uid + ')">{$Think.lang.Details}</button> <button class="btn btn-primary btn-xs" onclick="transfer(' + data.staff[i].uid + ')">{$Think.lang.Transfer}</button></td></tr>'
+									$('#staff').append(list)
+								}
+							}
+							if(data.company.length == 0) {
+								$('#linkman').text('');
+								$('#tel').text('');
+								$('#address').text('');
+							} else if(data.user == null) {
+
+								$('#linkman').text('');
+								$("#linkman").attr("target", "_blank");
+								$('#tel').text('');
+							} else {
+								$('#linkman').text(data.user.lastnamezh + data.user.namezh);
+								$('#linkman').attr('href', "{:U('My/me')}?nosdid=" + data.company[0].uid);
+								$("#linkman").attr("target", "_blank");
+								$('#tel').text(data.company[0].value);
+							}
+							$('#create_child').css('display', 'inline-block');
+							$('#underling').css('display', 'block');
+							$('#puisne').css('display', 'block');
+						}
+						$('#ch_name').text(data.firm[0].namezh);
+						$('#en_name').text(data.firm[0].nameus);
+						$('#lavel2').val(data.firm[0].level);
+						$('#companyc').val(data.firm[0].fatherid);
+						$('#org_modal').css('display', 'block');
+					}
+				})
+			}
+		})
+
+	}
+
+	function option(a) {
+		// window.location.href = "/InternalSystem/index.php/Home/my/me?nosdid=" + a
+		// window.open("/InternalSystem/index.php/Home/my/me?nosdid=" + a, "_blank");
+		var form = $("<form method='post' target='_blank'></form>");
+		var url = "{:U('My/me')}";
+		form.attr({
+			"action": url
+		});
+
+		var input = $("<input type='hidden' name='nosdid'>");
+		input.val(a);
+		form.append(input);
+		console.log(input.val());
+		$("html").append(form);
+		form.submit();
+	}
+	//移除员工
+	function removeUser(id) {
+		var r = confirm("确定移除吗？");
+		var url = $('#getremoveUser').val();
+		if(r == true) {
+			$.ajax({
+				url: url,
+				type: 'post',
+				data: {
+					id: id
+				},
+				async: true,
+				dataType: 'JSON',
+				success: function(data) {
+					if(t) {
+						clearTimeout(t)
+					};
+					console.log(data)
+					if(data > 0) {
+						$('#node_message').html('移除成功');
+						$('#org_modal').css('display', 'none');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none'", 2000);
+						platformurl();
+					}
+				}
+			})
+		}
+	}
+	//调动员工
+	function transfer(id) {
+		$('#company').val('');
+		$('#bumen').val('');
+		$('#position').val('');
+		var getCompanyPath3 = $('#getCompanyPath').val();
+		var getOrganized = $('#getOrganized').val();
+		$('#userid').val(id);
+		$.ajax({
+			url: getCompanyPath3, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				nodesid: $('#nodeid').val(),
+			},
+			async: true,
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data)
+				$('#parent_level5').empty();
+				for(var i = data.length - 1; i > -1; i--) {
+					var list = '<li>' + data[i].text + '</li>'
+					$('#parent_level5').append(list)
+				}
+				$.ajax({
+					url: getOrganized, //通过页面元素的ID来获取设备ID
+					type: "post", //选择传值方式
+					data: {
+						id: id,
+						type: 3
+					},
+					async: true,
+					dataType: "JSON",
+					success: function(data) {
+						console.log(data)
+						$('#username').val(data['one'].lastnamezh + data['one'].namezh);
+						$('#positionu').val(data['one'].nameuh);
+						$('#codenumber').val(data['one'].numbering);
+						var p = "<option id='fulcompany' value=''>{$Think.lang.Pleaseselectacompany}</option>"
+						$("#company").html(p);
+						//将获取到的数据赋值
+						for(var i = 0; i < data['company'].length; i++) {
+							//拼接option标签的 name value 等属性
+							var p = "<option value='" +
+								data['company'][i]['id'] +
+								"'" +
+								">" +
+								data['company'][i]['namezh'] +
+								"</option>";
+							$("#fulcompany").after(p);
+						}
+						$('#sode_modal').modal('toggle');	
+						$('#company').val(data['one'].company_id);
+						searchAjax();
+						$('#bumen').val(data['one'].organization_id);
+						bumenAjax();
+						$('#position').val(data['one'].position_id);	
+					}
+
+				})
+			}
+
+		})
+	}
+
+	function underling(type1, id, oid) {
+		var subdivisions = $('#subdivisions').val();
+		var subordinateposition = $('#subordinateposition').val();
+		if(type1 == 2) {
+			$('#nodeid').val(id);
+		} else if(type1 == 3) {
+			$('#positiondid').val(id);
+		}
+		var data1 = "";
+		if(oid == undefined) {
+			data1 = {
+				type: type1,
+				nodesid: id
+			}
+		} else {
+			data1 = {
+				type: type1,
+				id: id,
+				oid: oid
+			}
+		}
+		console.log(oid);
+		$('#staff').empty();
+		$('#puisne').empty();
+		var getCompanyPath = $("#getCompanyPath").val();
+		var getCompany = $("#getCompany").val();
+		$.ajax({
+			url: getCompanyPath, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				nodesid: id,
+				type: type1,
+				oid: oid
+			},
+			async: true,
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data)
+				if(data[0].level == 1) {
+					$('#underling').text(subdivisions + ':');
+					type = 1;
+					type_change = 1;
+				} else if(data[0].level > 1) {
+					$('#underling').text(subordinateposition + ':');
+					type = 2;
+					type_change = 2;
+				}
+				$('#parent_level1').empty();
+				for(var i = data.length - 1; i > -1; i--) {
+					var list = '<li>' + data[i].text + '</li>'
+					$('#parent_level1').append(list)
+				}
+				$.ajax({
+					url: getCompany, //通过页面元素的ID来获取设备ID
+					type: "post", //选择传值方式
+					data: data1,
+					dataType: "JSON",
+					async: true,
+					success: function(data) {
+						console.log(data);
+						if(data.firm[0].level == 1) {
+							$('#create_child1').css('display', 'inline-block');
+							$('#create_child2').css('display', 'none');
+							$('#table_s').css('display', 'none');
+						} else {
+							$('#create_child1').css('display', 'none');
+							$('#create_child2').css('display', 'inline-block');
+							$('#table_s').css('display', 'inline-block');
+						}
+						if(type1 == 2) {
+							$('#table_s1').css('display', 'table')
+							$('#form_choose').css('display', 'block');
+							$('#form_choose2').css('display', 'block');
+							$('#address3').css('display', 'none');
+							$('#puisne').empty();
+							if(data.position.length == 0) {
+								var list = '<p style="text-align: center;">{$Think.lang.NO}</p>'
+								$('#puisne').append(list)
+							} else {
+								for(var i = 0; i < data.position.length; i++) {
+									var list = '<button onclick="underling(3' + ',' + data.position[i].id + ',' + data.position[i].oid + ')" class="btn btn-default" style="margin-left:15px;">' + data.position[i].namezh + '</button>'
+									$('#puisne').append(list)
+								}
+							}
+							if(data.staff.length == 0) {
+								var list = '<tr style="text-align: center;"><td colspan="4">{$Think.lang.NO}<td></tr>'
+								$('#staff').append(list)
+							} else {
+								for(var i = 0; i < data.staff.length; i++) {
+									var list = '<tr style="text-align: center;"><td>' + data.staff[i].lastnamezh + data.staff[i].namezh + '</td>' +
+										'<td>' + data.staff[i].namezw + '</td>' +
+										'<td>' + data.staff[i].phone + '</td>' +
+										'<td><button class="btn btn-primary btn-xs"  onclick="option(' + data.staff[i].uid + ')">{$Think.lang.Details}</button> <button class="btn btn-primary btn-xs" onclick="transfer(' + data.staff[i].uid + ')">{$Think.lang.Transfer}</button></td></tr>'
+									$('#staff').append(list)
+								}
+							}
+							$('#linkman').text(data.company[1].value);
+							$('#tel').text(data.company[0].value);
+							// $('#address').text(data.company[1].value);
+							$('#create_child').css('display', 'inline-block');
+							$('#underling').css('display', 'block');
+							$('#puisne').css('display', 'block');
+						} else {
+							type_change = 3;
+							id_change = id;
+							$('#create_child').css('display', 'none');
+							$('#create_child2').css('display', 'none');
+							$('#underling').css('display', 'none');
+							$('#puisne').css('display', 'none');
+							$('#form_choose').css('display', 'none');
+							$('#form_choose2').css('display', 'none');
+							if(data.staff.length == 0) {
+								var list = '<tr style="text-align: center;"><td colspan="4">{$Think.lang.NO}<td></tr>'
+								$('#staff').append(list)
+							} else {
+								for(var i = 0; i < data.staff.length; i++) {
+									var list = '<tr style="text-align: center;"><td>' + data.staff[i].lastnamezh + data.staff[i].namezh + '</td>' +
+										'<td>' + data.staff[i].namezw + '</td>' +
+										'<td>' + data.staff[i].phone + '</td>' +
+										'<td><button class="btn btn-primary btn-xs"  onclick="option(' + data.staff[i].uid + ')">{$Think.lang.Details}</button> <button class="btn btn-primary btn-xs" onclick="transfer(' + data.staff[i].uid + ')">{$Think.lang.Transfer}</button></td></tr>'
+									$('#staff').append(list)
+								}
+							}
+						}
+						$('#ch_name').text(data.firm[0].namezh);
+						$('#en_name').text(data.firm[0].nameus);
+						$('#lavel2').val(data.firm[0].level);
+						$('#companyc').val(data.firm[0].fatherid);
+						$('#org_modal').css('display', 'block');
+					}
+				})
+			}
+		})
+	}
+
+	//  function underling1(id, oid){
+	//  	var getCompanyPath = $("#getCompanyPath").val();
+	//      var getCompany = $("#getCompany").val();
+	//  	var data1 = {
+	//              type: '3',
+	//              id: id,
+	//              oid: oid
+	//         };
+	//         $.ajax({
+	//          url: getCompanyPath, //通过页面元素的ID来获取设备ID
+	//          type: "post", //选择传值方式
+	//          data: {
+	//              nodesid: id,
+	//              type: '3',
+	//              oid: oid
+	//          },
+	//          dataType: "JSON",
+	//          success: function(data) {
+	//              console.log(data)
+	//              $.ajax({
+	//                  url: getCompany, //通过页面元素的ID来获取设备ID
+	//                  type: "post", //选择传值方式
+	//                  data: data1,
+	//                  dataType: "JSON",
+	//                  success: function(data) {
+	//                      console.log(data);
+	//                     }
+	//               })
+	//              }
+	//          })
+	//  	
+	//  }
+</script>

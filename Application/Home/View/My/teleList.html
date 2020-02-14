@@ -1,0 +1,158 @@
+<script>
+    $('#157').parents('li').addClass('nav-active')
+    $('#157').parents('li').addClass('nav-expanded')
+</script>
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+                    <a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+                </div>
+
+                <h2 class="panel-title">{$Think.lang.Addressbook}</h2>
+            </header>
+            <div class="panel-body">
+                <div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+                <form class="" action="{:U('My/teleList')}" method="get" style="display: inline-block;float: left;margin-right:15px ;">
+                    <input type="hidden" value="{$pid}" name="id">
+                    <div class="input-group" style="width: 500px;">
+                        <input name="search" type="text" value="" class="form-control" placeholder="{$Think.lang.Pleasecheck}">
+                    	<span class="input-group-btn">
+		                    <button type="submit" class="btn btn-success" style="white-space: nowrap;">{$Think.lang.Search}</button>
+		                </span>
+                    </div>
+                    <input type="hidden" id="" name='' value="">
+                    <input type="hidden" name='' value="">
+                </form>
+                <br style="clear: both;" />
+                <table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+                    <thead>
+                    <tr>
+                        <th>{$Think.lang.Id}</th>
+                        <th>{$Think.lang.Chinesename}</th>
+                        <th>{$Think.lang.Engname}</th>
+                        <th>{$Think.lang.Sex}</th>
+                        <th>{$Think.lang.Phone}</th>
+                        <th>{$Think.lang.More}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <volist name="list" id="vo" key="k">
+                        <tr>
+                            <td>{$k}</td>
+                            <td>{$vo.lastnamezh}{$vo.namezh}</td>
+                            <td>{$vo.name}</td>
+                            <td>{$vo[sex]=='1'?'男':'女'}</td>
+                            <td class="ovse">
+                                <if condition="$vo.phone eq '' ">
+                                    {$Think.lang.NO}
+                                </if>
+                                {$vo.phone}
+                            </td>
+                            <if condition="$vo.phone eq '' ">
+                                <td>
+                                    <button style="border: 0px;" title="{$Think.lang.Viewphonenumber}" type="button"data-toggle="modal" disabled="disabled" class="btn btn-primary btn-xs" >
+                                        <span class="glyphicon glyphicon-phone"></span>
+                                    </button>
+                                </td>
+                            </if>
+                            <if condition="$vo.phone neq '' ">
+                                <td>
+                                    <button title="{$Think.lang.Viewphonenumber}" onclick="phoneshow('{$vo.uid}','{$vo.lastnamezh}','{$vo.namezh}','{$vo.sex}')" style="border: 0px;" type="button"data-toggle="modal" class="btn btn-primary btn-xs" >
+                                        <span class="glyphicon glyphicon-phone"></span>
+                                    </button>
+                                </td>
+                            </if>
+                        </tr>
+                    </volist>
+                    </tbody>
+                </table>
+                <ul class="pager" style="width: 100%;">
+                    <!-- 分页显示 -->{$page}</ul>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div id="edit_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document" style="width: 60%;">
+        <div class="modal-content">
+        	<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">
+					  姓名:<span id="uname" style="margin-right: 50px;"></span>
+                        性别:<span id="sexx"></span>
+				</h4>
+			</div>
+            <div class="modal-body" style="line-height: 34px;">
+                <div class="row" style="margin-left: 0;margin-right: 0;">
+                    <table class="table table-hover table-striped table-bordered" style="border-collapse: collapse;margin-bottom: 0;">
+                        <thead>
+                        <tr>
+                            <td>序号</td>
+                            <td>手机号</td>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody-result">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			</div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script>
+
+    $(document).ready(function() {
+        $('#table1').DataTable({
+            "paging": false,
+            "lengthChange": false,
+            "info": false,
+            "searching": false
+        });
+    });
+    //查看手机号
+    function phoneshow(id,lastname,namezh,sex){
+        $('#uname').text(lastname+namezh);
+        if (sex=='1') {
+            $('#sexx').text('男');
+        }else{
+            $('#sexx').text('女');
+        }
+        var tbody=window.document.getElementById("tbody-result");
+        $.ajax({
+            url:"{:U('My/teleShow')}",
+            type:'post',
+            dataType:"json",
+            async:true,
+            data:{
+                id:id
+            },
+            success:function(data){
+                console.log(data);
+                var str="";
+                var n=0;
+                for (i in data){
+                    n++;
+                    str +="<tr>"+
+                        "<td class='muc'>"+ n + "</td>" +
+                        "<td>"+ data[i].phone + "</td>" +
+                        "</tr>";
+                }
+                tbody.innerHTML = str;
+                $('#edit_modal').modal('toggle');
+            }
+        });
+    }
+
+</script>

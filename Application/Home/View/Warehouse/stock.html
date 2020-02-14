@@ -1,0 +1,242 @@
+﻿<script src="__ROOT__/Public/js/zen.js"></script>
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<!--ajax获取子目录的地址-->
+<input type="hidden" id="classaddurl" value="{:U('Product/getclassAjax','','')}">
+<style>
+	.modal-dialog {
+		margin: 60px auto !important;
+	}
+	
+	.bootstrap-select.btn-group .dropdown-toggle .filter-option {
+		padding-left: 5px;
+		padding-top: 3px;
+		color: #666;
+	}
+	.bootstrap-select>button {
+		height: 100%;
+		line-height: 100%;
+	}
+
+	.bootstrap-select>button:active {
+		background: #fff !important;
+	}
+
+	.bootstrap-select>button:hover {
+		background: #fff !important;
+	}
+
+	.bootstrap-select>button:focus {
+		background: #fff !important;
+	}
+	.caret {
+	    color: #333 !important;
+	}
+
+	select::-ms-expand {
+		display: none;
+	}
+</style>
+<script>
+	$('#250').parents('li').addClass('nav-active')
+	$('#250').parents('li').addClass('nav-expanded')
+</script>
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+				<h2 class="panel-title">库存管理</h2>
+			</header>
+
+			<div class="panel-body">
+				<form class="form-horizontal" action="{:U('Warehouse/stock','','')}" method="get">
+					<div class="row">
+						<!--<input type="text" value="{$zkid}" id="zkid">-->
+						<div class="col-md-5">
+							<div class="input-group">
+								<span class="input-group-addon">产品</span>
+								<input type="hidden" id="goodid" value="{$goodid}">
+								<select name="p_id" id="product" class="form-control" data-live-search="true" >
+									<option value="">请选择产品</option>
+									<volist name="product" id="pr">
+										<option value="{$pr.id}">{$pr.bclassc_number}.{$pr.sclassc_number}.{$pr.snumber_number}: {$pr.namezh}</option>
+									</volist>
+								</select>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="input-group">
+								<span class="input-group-addon">状态</span>
+								<input type="hidden" id="moldd" value="{$mold}">
+								<select name="mold" id="mold" class="form-control" data-live-search="true" >
+									<option value="">全部</option>
+									<option value="2">运输中</option>
+									<option value="1">在库</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="input-group">
+								<span class="input-group-addon">仓库</span>
+								<input type="hidden" value="{$zkid}" id="dsd">
+								<select name="zk_id" id="father" class="form-control" onchange="getAjaxarea()">
+									<option value="">全部</option>
+									<foreach name="warehouse" item="wa">
+										<option value="{$wa.id}">{$wa.name}</option>
+									</foreach>
+								</select>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="input-group">
+								<span class="input-group-addon">所在库区</span>
+								<input type="hidden" value="{$warehouse_id}" id="msd">
+								<select class="form-control" id="eara" name="warehouse_id">
+								</select>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<button type="submit" style="margin-top: 15px;" class="btn btn-primary" id="seare">{$Think.lang.Search}</button>
+						</div>
+					</div>
+
+				</form>
+				<div>
+					<table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+						<thead>
+							<tr>
+								<th>产品料号</th>
+								<th>产品名称</th>
+								<th>单价</th>
+								<th>货币简称</th>
+								<th>数量</th>
+								<th>金额</th>
+								<th>状态</th>
+								<th>仓库</th>
+								<th>库区</th>
+								<!--<th>状态</th>-->
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<input type="hidden" name='getSupplier' value="{:U('Warehouse/getWarehouse','','')}">
+							<foreach name="list" item="vo">
+								<tr>
+									<td><a href="{:U('Product/homeProduct',array('pid'=>$vo['cid']))}" target="_blank">{$vo.bclassc_number}.{$vo.sclassc_number}.{$vo.snumber_number}</a></td>
+									<td><a href="{:U('Product/homeProduct',array('pid'=>$vo['cid']))}" target="_blank">{$vo.namezh}</a></td>
+									<td><span name="cb">{$vo.price}</span></td>
+									<td>{$vo.monetary_unit}</td>
+									<td>{$vo.number}</td>
+									<td></td>
+									<td>
+										<eq name="vo.mold" value="1">在库</eq>
+										<eq name="vo.mold" value="2">运输中</eq>
+									</td>
+									<td><if condition="$vo.mold eq 2 ">发往-></if>{$vo.zkname}</td>
+									<td>{$vo.name}</td>
+									<!--<td>-->
+									<!--<eq name="vo.mold" value="2">在库</eq>-->
+									<!--<eq name="vo.type" value="land">陆运</eq>-->
+									<!--<eq name="vo.type" value="sea">海运</eq>-->
+									<!--<eq name="vo.type" value="aircraft">空运</eq>-->
+									<!--</td>-->
+									<td>
+										<button onclick='stockshow("{$vo.pid}","{$vo.warehouse_id}")' style="border: 0px;" type="button" class="btn btn-primary btn-xs">
+                                        详情
+                                    </button>
+									</td>
+								</tr>
+							</foreach>
+						</tbody>
+					</table>
+					<div style="text-align: right;display:none;" id="total_prices">总价: <span id="total_price" style="color: red;font-size: 16px;"></span><span>RMB</span></div>
+					<ul class="pager" style="width: 100%;">
+						<!-- 分页显示 -->{$page}</ul>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+
+<script>
+	var sum = 0;
+	$("span[name='cb']").each(function () {
+        sum+=+$(this).text();
+    });
+    $("#total_price").text(sum.toFixed(1));
+	var goodid = $('#goodid').val();
+	$('#product').val(goodid);
+	var mold = $('#moldd').val();
+	$('#mold').val(mold);
+	var dsd = $('#dsd').val();
+	$('#father').val(dsd);
+	if(dsd != "") {
+		getAjaxarea()
+	}
+	var msd = $('#msd').val();
+	$(document).ready(function() {
+		$('#table1').DataTable({
+			"paging": false,
+			"lengthChange": false,
+			"info": false,
+			"searching": false
+		});
+	});
+    $('#product').selectpicker('refresh');
+	function stockshow(pid, kid) {
+		var form = $("<form method='get'  target='_blank'></form>");
+		var url = "{:U('Warehouse/stockShow')}";
+		form.attr({
+			"action": url
+		});
+
+		var input = $("<input type='hidden' name='pid'>");
+		input.val(pid);
+		form.append(input);
+		console.log(input.val());
+		var input1 = $("<input type='hidden' name='kid'>");
+		input1.val(kid);
+		form.append(input1);
+		console.log(input1.val());
+
+		$("html").append(form);
+		form.submit();
+	}
+
+	function getAjaxarea() //仓库下的库位
+	{
+		$.ajax({
+			url: "{:U('Warehouse/getAjaxarea')}", //通过页面元素的ID来获取产品ID
+			type: "post", //选择传值方式
+			data: {
+				area: $('#father').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				var p = "<option class='area' value=''>请选择库位</option>";
+				var q = "";
+				$("#eara").html(p);
+				//将获取到的数据赋值
+				for(var i = 0; i < data.length; i++) {
+					//拼接option标签的 name value 等属性
+					q += "<option value='" +
+						data[i]['id'] +
+						"'" +
+						">" +
+						data[i]['name'] +
+						"</option>";
+
+				}
+				$(".area").after(q);
+				$('#eara').val(msd);
+			}
+		})
+	}
+</script>

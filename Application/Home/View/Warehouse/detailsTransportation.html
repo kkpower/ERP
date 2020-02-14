@@ -1,0 +1,118 @@
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-spinner.css" />
+<script>
+	$('#315').parents('li').addClass('nav-active')
+	$('#315').parents('li').addClass('nav-expanded')
+</script>
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+				<h2 class="panel-title">{$Think.lang.Receivingwarehouse}&nbsp;--&nbsp;<eq name="Think.cookie.think_language" value="zh-cn">{$list[0]['zkname']}</eq>
+					<eq name="Think.cookie.think_language" value="en-us">{$list[0]['englishname']}</eq></h2>
+			</header>
+
+
+			<div class="panel-body">
+				<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+				<form class="" action="{:U('Warehouse/detailsTransportation')}" method="get" style="display: inline-block;float: left;margin-right:15px ;">
+					<input type="hidden" name="pid" value="{$pid}">
+					<input type="hidden" name="kid" value="{$kid}">
+					<div class="input-group" style="width: 500px;">
+						<input name="o_id" type="text" value="{$oid}" class="form-control" placeholder="{$Think.lang.Pleaseordernumber}">
+						<span class="input-group-btn">
+                    <button type="submit" class="btn btn-success" style="white-space: nowrap;">{$Think.lang.Search}</button>
+                </span>
+					</div>
+				</form>
+				<!--<input type="hidden" value="{$mold}" id="mold">-->
+
+				<br style="clear: both;" />
+				<!--<form onsubmit="return onm(this)">-->
+					<!--<volist name="list" id="vo">-->
+						<!--<input type="hidden" value="{$vo.number}" name="number[]">-->
+						<!--<input type="hidden" value="{$vo.o_id}" name="oid[]">-->
+						<!--<input type="hidden" value="{$vo.g_id}" name="gid[]">-->
+					<!--</volist>-->
+					<!--<input type="hidden" value="{$pid}" name="pid">-->
+					<!--<input type="hidden" value="{$mold}" name="mold">-->
+					<!--<input type="hidden" value="{$kid}" name="warehouse_id">-->
+				<!--</form>-->
+				<table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+					<thead>
+					<h5 style="font-weight: bold;"><span style="margin-right: 10px;color: #DC143C;">{$Think.lang.product_number}:</span><a href="{:U('Product/homeProduct',array('pid'=>$list[0]['pid']))}" target="_blank">{$list[0].bclassc_number}.{$list[0].sclassc_number}.{$list[0].snumber_number}</a></h5>
+						<h5 style="font-weight: bold;"><span style="margin-right: 10px;color: #DC143C;">{$Think.lang.Productname}:</span><a href="{:U('Product/homeProduct',array('pid'=>$list[0]['pid']))}" target="_blank">{$list[0].namezh}</a></h5>
+						<h5 style="font-weight: bold;"><span style="margin-right: 10px;color: #DC143C;">{$Think.lang.unitpriceofproduct}:</span>{$list[0].price}&nbsp;&nbsp;RMB</h5>
+						<tr>
+							<th>{$Think.lang.order_type}</th>
+							<th>{$Think.lang.ordernumber}</th>
+							<th>{$Think.lang.Number}</th>
+							<th>{$Think.lang.delivery_time}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<volist name="list" id="vo" key="k">
+							<tr>
+								<td>{$vo.order_type}</td>
+								<td>
+									<if condition="$vo.order_type eq 采购订单 ">
+										<a href="{:U('PurchaseOrder/completedDetails',array('id'=>$vo['o_id']))}" target="_blank">PO{$vo.order_number}</a>
+									</if>
+								</td>
+								<td class="nums">{$vo.number}</td>
+								<td>{$vo.creationtime}</td>
+							</tr>
+						</volist>
+					</tbody>
+				</table>
+				<ul class="pager" style="width: 100%;">
+					<!-- 分页显示 -->{$page}</ul>
+			</div>
+		</section>
+
+	</div>
+</div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/jquery.spinner.min.js"></script>
+<script>
+	$(".spinner").spinner({
+		max: $('.nums').text(),
+		min: 0,
+		step: 1
+	});
+	$(document).ready(function() {
+		$('#table1').DataTable({
+			"paging": false,
+			"lengthChange": false,
+			"info": false,
+			"searching": false
+		});
+	});
+	var bar = [];
+	$('.bar').each(function () {
+        bar.push($(this).val());
+    });
+	$('#sl').val(bar.pop());
+    var boo = [];
+    $('.bar').each(function () {
+        boo.push($(this).val());
+    });
+    $('#bof').val(boo.pop());
+
+
+
+	if($('#mold').val() == 1) {
+		$('#qbsh').show();
+	} else {
+		$('#qbsh').hide();
+	}
+	var sum = 0;
+	$("span[name='xj']").each(function() {
+		sum += +$(this).text();
+	});
+	$("#total_price").text(sum.toFixed(1));
+</script>

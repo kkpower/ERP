@@ -1,0 +1,348 @@
+<script>
+	$('#320').parents('li').addClass('nav-active')
+	$('#320').parents('li').addClass('nav-expanded')
+</script>
+<style>
+	.input-group{
+		width: 70%;
+		float: left;
+	}
+</style>
+<!-- ZUI 标准版压缩后的 JavaScript 文件 -->
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+<div id="edit_modal" class="modal fade" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">
+                    	修改国家
+                </h4>
+			</div>
+			<input id="hld" value="" type="hidden" name="id">
+			<input type="hidden" value="{$pid}" name="pid">
+			<div class="modal-body">
+				<div class="input-group">
+					<span class="input-group-addon">国家中文名称<span style="color: red;">*</span></span>
+					<input type="text" name="countryzh" placeholder="" class="form-control" id="countryzh1" onblur="change_check(this)">
+				</div>
+				<div id="countryzh1_check" style="float: left;margin-left: 20px;line-height: 34px;"></div>
+				<div class="input-group" style="padding-top: 12px;">
+					<span class="input-group-addon">国家英文名称<span style="color: red;">*</span></span>
+					<input type="text" name="countryus" placeholder="" class="form-control" id="countryus1" onblur="change_check(this)">
+				</div>
+				<div id="countryus1_check" style="float: left;padding-top: 12px;margin-left: 20px;line-height: 34px;"></div>
+				<div class="input-group" style="padding-top: 12px;">
+					<span class="input-group-addon">国家简写<span style="color: red;">*</span></span>
+					<input type="text" name="spelling" placeholder="" class="form-control" id="spelling1" onblur="change_check(this)">
+				</div>
+				<div id="spelling1_check" style="float: left;padding-top: 12px;margin-left: 20px;line-height: 34px;"></div>
+				<div class="input-group" style="padding-top: 12px;">
+					<span class="input-group-addon">货币缩写<span style="color: red;">*</span></span>
+					<input type="text" name="currency" placeholder="" class="form-control" id="currency1" onblur="change_check(this)">
+				</div>
+				<div id="currency1_check" style="float: left;padding-top: 12px;margin-left: 20px;line-height: 34px;"></div>
+				<div class="input-group" style="padding-top: 12px;">
+					<span class="input-group-addon">货币符号<span style="color: red;">*</span></span>
+					<input type="text" name="symbol" placeholder="" class="form-control" id="symbol1" onblur="change_check(this)">
+				</div>
+				<div id="symbol1_check" style="float: left;padding-top: 12px;margin-left: 20px;line-height: 34px;"></div>
+				<div class="input-group" style="padding-top: 12px;">
+					<span class="input-group-addon">1人民币&nbsp;&nbsp;&nbsp;=</span>
+					<input type="text" name="rate" class="form-control" style="width: 100%;" value="" id="exchange_rate1">
+					<span class="input-group-addon" id="monj">美元</span>
+				</div>
+				<br style="clear: both;height: 0;"/>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" id="add_pr" type="submit" onclick="doupdate()">{$Think.lang.Save}</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Close}</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+				<h2 class="panel-title">国家管理</h2>
+			</header>
+			<div class="panel-body">
+				<button class="btn btn-primary" data-toggle="modal" data-target="#myModal" onclick="showarehouse(1)">
+                    	添加国家
+                </button>
+
+				<div>
+					<table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+						<thead>
+							<tr>
+								<th>国家中文名称</th>
+								<th>国家英文名称</th>
+								<th>国家简写</th>
+								<th>货币缩写</th>
+								<th>货币符号</th>
+								<th>汇率</th>
+								<th>{$Think.lang.Operation}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<input type="hidden" name='getSupplier' value="{:U('Systemconfiguration/getWarehouse','','')}">
+							<foreach name="list" item="vo">
+								<tr>
+									<td>
+										{$vo.countryzh}
+									</td>
+									<td>
+										{$vo.countryus}
+									</td>
+									<td>{$vo.spelling}</td>
+									<td>{$vo.currency}</td>
+									<td>{$vo.symbol}</td>
+									<td>{$vo.exchange_rate}</td>
+									<td>
+										<button type="button" class="btn btn-primary btn-xs" title="{$Think.lang.Modify}" data-toggle="modal" onclick="ckedit('{$vo.id}','{$vo.countryzh}','{$vo.countryus}','{$vo.spelling}','{$vo.currency}','{$vo.symbol}','{$vo.exchange_rate}')">
+                                     	<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                    </button>
+										<!--<button onclick="option_del('{$vo.id}')" class="btn btn-xs btn-danger">删除</button>-->
+									</td>
+								</tr>
+							</foreach>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+		</section>
+	</div>
+</div>
+
+<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+				<h4 class="modal-title">添加国家</h4>
+			</div>
+			<div class="modal-body">
+				<div class="input-group">
+					<span class="input-group-addon">国家中文名称<span style="color: red;">*</span></span>
+					<input type="text" name="countryzh" placeholder="" class="form-control" id="countryzh" onblur="add_check(this)">
+				</div>
+				<div id="countryzh_check" style="float: left;margin-left: 20px;line-height: 34px;"></div>
+				<div class="input-group" style="padding-top: 12px;">
+					<span class="input-group-addon">国家英文名称<span style="color: red;">*</span></span>
+					<input type="text" name="countryus" placeholder="" class="form-control" id="countryus" onblur="add_check(this)">
+				</div>
+				<div id="countryus_check" style="float: left;padding-top: 12px;margin-left: 20px;line-height: 34px;"></div>
+				<div class="input-group" style="padding-top: 12px;">
+					<span class="input-group-addon">国家简写<span style="color: red;">*</span></span>
+					<input type="text" name="spelling" placeholder="" class="form-control" id="spelling" onblur="add_check(this)">
+				</div>
+				<div id="spelling_check" style="float: left;padding-top: 12px;margin-left: 20px;line-height: 34px;"></div>
+				<div class="input-group" style="padding-top: 12px;">
+					<span class="input-group-addon">货币缩写<span style="color: red;">*</span></span>
+					<input type="text" name="currency" placeholder="" class="form-control" id="currency" onblur="add_check(this)">
+				</div>
+				<div id="currency_check" style="float: left;padding-top: 12px;margin-left: 20px;line-height: 34px;"></div>
+				<div class="input-group" style="padding-top: 12px;">
+					<span class="input-group-addon">货币符号<span style="color: red;">*</span></span>
+					<input type="text" name="symbol" placeholder="" class="form-control" id="symbol" onblur="add_check(this)">
+				</div>
+				<div id="symbol_check" style="float: left;padding-top: 12px;margin-left: 20px;line-height: 34px;"></div>
+				<div class="input-group" style="padding-top: 12px;">
+					<span class="input-group-addon">汇率<span style="color: red;">*</span></span>
+					<input type="text" name="exchange_rate" placeholder="" class="form-control" id="exchange_rate">
+				</div>
+				<br style="clear: both;height: 0;"/>
+			</div>
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-primary" onclick="doadd()">确认</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Close}</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal -->
+</div>
+
+</div>
+
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script>
+	$(document).ready(function() {
+		$('#table1').DataTable({
+			"paging": false,
+			"lengthChange": false,
+			"info": false,
+			"searching": false
+		});
+	});
+
+	function option_del(id) {
+		var r = confirm("确认删除吗？")
+		if(r) {
+			$.ajax({
+				url: "{:U('Systemconfiguration/exchangerateDel')}",
+				type: "post", //选择传值方式
+				data: {
+					id: id
+				},
+				dataType: "JSON",
+				success: function(data) {
+					if(t) {
+						clearTimeout(t)
+					};
+					if(data == 'OK') {
+						$('#node_message').html('删除成功');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none'", 2000);
+						location.reload();
+					} else if(data == 'NO') {
+						$('#node_message').html('删除失败');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none'", 2000);
+					}
+
+					//				console.log(data)
+				}
+			})
+		} else {
+			return false;
+		}
+	}
+	//修改汇率弹框(赋值)
+	function ckedit(id, namezh, nameus, country_logogram,currency,currency_symbol,exchange_rate) {
+		$('#hld').val(id);
+		$('#monj').text(currency);
+		$('#countryzh1').val(namezh),
+		$('#countryus1').val(nameus),
+		$('#spelling1').val(country_logogram),
+		$('#exchange_rate1').val(exchange_rate),
+		$('#currency1').val(currency),
+		$('#symbol1').val(currency_symbol)
+		$('#edit_modal').modal('toggle');
+	}
+
+	//修改
+	function doupdate() {
+		$.ajax({
+			url: "{:U('Systemconfiguration/saveCountryAjax')}",
+			type: "post",
+			data: {
+				c_id: $('#hld').val(),
+				namezh: $('#countryzh1').val(),
+				nameus: $('#countryus1').val(),
+				country_logogram: $('#spelling1').val(),
+				exchange_rate: $('#exchange_rate1').val(),
+				currency: $('#currency1').val(),
+				currency_symbol: $('#symbol1').val()
+			},
+			dataType: "json",
+			async: true,
+			success: function(data) {
+				console.log(data);
+				if(data==1) {
+					$('#node_message').html('修改成功');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload()", 1500);
+				} else{
+					$('#node_message').html('修改失败');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 1500);
+				}
+			}
+		});
+		return false;
+	}
+	//添加仓库
+	function doadd() {
+		if($('#countryzh').val() == "" || $('#countryus').val() == "" || $('#spelling').val() == "" || $('#exchange_rate').val() == "" || $('#currency').val() == "" || $('#symbol').val() == "") {
+			$('#node_message').html('请输入必填项');
+			node_message.style.display = 'block';
+			var t = setTimeout("node_message.style.display='none';", 1500);
+			return false;
+		}
+		$.ajax({
+			url: "{:U('Systemconfiguration/addCountry')}",
+			type: "post",
+			data: {
+				namezh: $('#countryzh').val(),
+				nameus: $('#countryus').val(),
+				country_logogram: $('#spelling').val(),
+				exchange_rate: $('#exchange_rate').val(),
+				currency: $('#currency').val(),
+				currency_symbol: $('#symbol').val()
+			},
+			dataType: "json",
+			async: true,
+			success: function(data) {
+				console.log(data);
+				if(data == 'ok') {
+					$('#node_message').html('添加成功');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload()", 1500);
+				} else {
+
+				}
+			}
+		});
+		return false;
+	}
+	
+	//添加名称检测
+	function add_check(obj) {
+		console.log($(obj).attr('id'));
+		console.log($(obj).val());
+		$.ajax({
+			url: "{:U('Systemconfiguration/checkCountryAjax')}", //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				key:$(obj).attr('id'),
+				value:$(obj).val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				if(data == 'ok') {
+					$('#'+$(obj).attr('id')+'_check').html('<span style="color:#5cb85c;">可以使用</span>');
+				} else {
+					$('#'+$(obj).attr('id')+'_check').html('<span style="color:red;">重复</span>');
+				}
+			}
+		})
+	}
+	
+	//修改名称检测
+	function change_check(obj) {
+		console.log($(obj).attr('id'));
+		console.log($(obj).val());
+		$.ajax({
+			url: "{:U('Systemconfiguration/checkCountryAjax')}", //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				key:$(obj).attr('id').split('1')[0],
+				value:$(obj).val(),
+				c_id: $('#hld').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				if(data == 'ok') {
+					$('#'+$(obj).attr('id')+'_check').html('<span style="color:#5cb85c;">可以使用</span>');
+				} else {
+					$('#'+$(obj).attr('id')+'_check').html('<span style="color:red;">重复</span>');
+				}
+			}
+		})
+	}
+</script>

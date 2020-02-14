@@ -1,0 +1,52 @@
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+                    <a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+                </div>
+                <h2 class="panel-title">订单详情</h2>
+            </header>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-none">
+                        <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>订单号</th>
+                            <th>产品名称</th>
+                            <th>产品数量</th>
+                            <th>收件人</th>
+                            <th>国家</th>
+                            <th>收件电话</th>
+                            <th>邮箱</th>
+                            <th>收件地址</th>
+                            <th>下单时间</th>
+                            <th>订单状态</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <foreach name="list" item="vo">
+                            <tr>
+                                <td>{$key+1}</td>
+                                <td>{$vo.o_number}</td>
+                                <td>{$vo.shortname}</td>
+                                <td>{$vo.number}</td>
+                                <td>{$vo.buyer_last_name} {$vo.buyer_first_name}</td>
+                                <td>{$vo.country}</td>
+                                <td>{$vo.buyer_phone}</td>
+                                <td>{$vo.buyer_email}</td>
+                                <td>{$vo.street_1}</td>
+                                <td>{$vo.create_time}</td>
+                                <td>{$vo.processing_status}</td>
+                            </tr>
+                        </foreach>
+                        </tbody>
+                    </table>
+                    <div class="pager">{$page}</div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

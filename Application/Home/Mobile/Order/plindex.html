@@ -1,0 +1,251 @@
+<script>
+	$('#156').parents('li').addClass('nav-active')
+	$('#156').parents('li').addClass('nav-expanded')
+</script>
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+                    <a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+                </div>
+
+                <h2 class="panel-title">{$Think.lang.Platformlist}</h2>
+            </header>
+            <div class="panel-body">
+                <div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+                <button class="btn btn-primary" onclick="onm()" style="float: left;">{$Think.lang.Addplatform}</button>
+                <br style="clear: both;" />
+                <table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+                    <thead>
+                    <tr>
+                        <th>{$Think.lang.Id}</th>
+                        <th>{$Think.lang.Name}</th>
+                        <th>{$Think.lang.Type}</th>
+                        <th>{$Think.lang.Operation}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <volist name="list" id="vo" key="k">
+                        <tr>
+                            <td>{$k}</td>
+                            <td>
+                                <a href="{:U('Order/plShow',array('id'=>$vo['id']))}"  target="_blank">{$vo.name}
+                                </a>
+                            </td>
+                            <td>{$vo.type}</td>
+                            <td>
+                                <button onclick="pledit('{$vo.id}','{$vo.name}','{$vo.type}')" style="border: 0px;" type="button"data-toggle="modal" class="btn btn-primary btn-xs" onclick="adclass(2,'{$vo.id}')" >
+                                    {$Think.lang.Modify}
+                                </button>
+                                <button onclick='pldel(this,"{$vo.id}")' style="background: #EE0000; border: 0px;" type="button"data-toggle="modal" class="btn btn-primary btn-xs" onclick="adclass(2,'{$vo.id}')" >
+                                    {$Think.lang.Delete}
+                                </button>
+                            </td>
+                        </tr>
+                        </volist>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </div>
+</div>
+<form onsubmit="return doadd(this)">
+<div id="node_modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">
+                    {$Think.lang.Addplatform}
+                </h4>
+            </div>
+            <div class="modal-body" style="line-height: 34px;">
+                <div class="row" style="margin-left: 0;margin-right: 0;">
+                    <div class="input-group">
+                        <span class="input-group-addon">{$Think.lang.Platformname}<span style="color: red;">*</span></span>
+                        <input type="text" name="name" class="form-control" placeholder="">
+                    </div>
+                    <div class="input-group" style="padding-top: 1.2rem;">
+                        <span class="input-group-addon">{$Think.lang.Platformtype}<span style="color: red;">*</span></span>
+                        <select class="form-control" name="type">
+                            <option value="">{$Think.lang.Pplatform}</option>
+                            <option value="eday">eday</option>
+                            <option value="amazon">amazon</option>
+                        </select>
+                        <!--<input type="text" name="type" class="form-control" placeholder="" style="width: 30%;">-->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="add_pr" type="submit">{$Think.lang.Save}</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cancel}</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+</form>
+<div id="edit_modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="width: 500px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">
+                    {$Think.lang.Modifyplatform}
+                </h4>
+            </div>
+            <form onsubmit="return doupdate(this)">
+                <input id="pld" value="" type="hidden" name="id">
+            <div class="modal-body" style="line-height: 34px;">
+                <div class="row" style="margin-left: 0;margin-right: 0;">
+                    <div class="input-group">
+                        <span class="input-group-addon">{$Think.lang.Platformname}<span style="color: red;">*</span></span>
+                        <input id="plname" type="text" name="name" class="form-control" placeholder="" value="">
+                    </div>
+                    <div class="input-group" style="padding-top: 20px;">
+                        <span class="input-group-addon">{$Think.lang.Platformtype}<span style="color: red;">*</span></span>
+                        <input type="hidden" id="pltype" value="">
+                        <select class="form-control"  name="type">
+                            <option value="ebay" id="ebay">ebay</option>
+                            <option value="amazon" id="amazon">amazon</option>
+                        </select>
+                        <!--<input id="pltype" type="text" name="type" class="form-control" placeholder="" style="width: 30%;" value="">-->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="add_pr" type="submit">{$Think.lang.Save}</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cancel}</button>
+            </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#table1').DataTable({
+            "paging": false,
+            "lengthChange": false,
+            "info": false,
+            "searching": false
+        });
+    });
+    //添加新平台弹框
+    function onm() {
+
+        $('#node_modal').modal('toggle');
+    }
+    //修改平台(赋值)
+    function pledit(id,name,type){
+        $('#pld').val(id);
+        $('#plname').val(name);
+        $('#pltype').val(type);
+        $('#edit_modal').modal('toggle');
+        if(type=='ebay'){
+            $('#ebay').attr('selected','selected');
+            $('#amazon').removeAttr('selected');
+        }else{
+            $('#amazon').attr('selected','selected');
+            $('#ebay').removeAttr('selected');
+        }
+    }
+    //添加新平台
+    function doadd(form){
+        $.ajax({
+            url:"{:U('Order/plAdd')}",
+            type:"post",
+            data:$(form).serialize(),
+            dataType:"json",
+            async:true,
+            success:function(data){
+                if (data.status==0){
+                    $('#node_message').html('{$Think.lang.Operationauthority}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if (data=="KO"){
+                    $('#node_message').html('{$Think.lang.Platforminformationcannotbeempty}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if (data=="NO"){
+                    $('#node_message').html('{$Think.lang.Theplatformalreadyexists}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if(data=="OK"){
+                    $('#node_message').html('{$Think.lang.Addsuccessfully}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+                }
+            }
+        });
+        return false;
+    }
+    //修改平台
+    function doupdate(form){
+        $.ajax({
+            url:"{:U('Order/plupdate')}",
+            type:"post",
+            data:$(form).serialize(),
+            dataType:"json",
+            async:true,
+            success:function(data){
+                console.log(data);
+                if (data.status==0){
+                    $('#node_message').html('{$Think.lang.Operationauthority}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if (data=="KO") {
+                    $('#node_message').html('{$Think.lang.Platformnamecannotbeempty}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if (data=="NO"){
+                    $('#node_message').html('{$Think.lang.Theplatformalreadyexists}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if(data=="OK"){
+                    $('#node_message').html('{$Think.lang.Successfullymodified}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+                }
+            }
+        });
+        return false;
+    }
+    //删除平台
+    function pldel(obj,id){
+        var r = confirm("{$Think.lang.Confirm delete}？");
+        if (r){
+            $.ajax({
+                url:"{:U('Order/pldelete')}",
+                type:'post',
+                dataType:"json",
+                data:{
+                    id:id
+                },
+                success:function(data){
+                    if (data.status==0){
+                        $('#node_message').html('{$Think.lang.Operationauthority}');
+                        node_message.style.display = 'block';
+                        var t = setTimeout("node_message.style.display='none';", 2000);
+                    }else if (data>0) {
+                        $(obj).parents("tr").remove();
+                        $('#node_message').html('{$Think.lang.Successfullydeleted}');
+                        node_message.style.display = 'block';
+                        var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+                    }else{
+                        $('#node_message').html('{$Think.lang.Failedtodelete}');
+                        node_message.style.display = 'block';
+                    }
+                }
+            });
+        }
+    }
+
+</script>

@@ -1,0 +1,71 @@
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/FirstEdition/assets/shu/boot/bootstrap-fileinput.css" />
+<script src="__PUBLIC__/FirstEdition/assets/shu/boot/bootstrap-fileinput.js"></script>
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+				<input type="hidden" name='getRoleAuthority' value="{:U('System/getRoleAuthority','','')}">
+				<h2 class="panel-title">{$Think.lang.product_thumbnail_upload}</h2>
+			</header>
+			<div class="panel-body">
+				<form action="{:U('Product/productthmup')}" enctype="multipart/form-data" method="post">
+					<input type="hidden" name="pid" value="{$pid}">
+					<div class="form-group" id="uploadForm" enctype='multipart/form-data'>
+						<div class="h4">{$Think.lang.picture_preview}</div>
+						<div class="fileinput fileinput-new" data-provides="fileinput" id="exampleInputUpload">
+							<div class="fileinput-new thumbnail" style="width: 200px;height: auto;max-height:150px;">
+								<img id='picImg' style="width: 100%;height: auto;max-height: 140px;" src="__PUBLIC__/img/noimage.png" alt="" />
+							</div>
+							<div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
+							<div>
+								<span class="btn btn-primary btn-file">
+                            <span class="fileinput-new">{$Think.lang.Document}</span>
+								<span class="fileinput-exists">{$Think.lang.changeone}</span>
+								<input type="file" name="pic1" id="picID" accept="image/gif,image/jpeg,image/x-png" />
+								</span>
+								<a href="javascript:;" class="btn btn-warning fileinput-exists" data-dismiss="fileinput" style="color: #fff;">{$Think.lang.remove}</a>
+							</div>
+						</div>
+
+					</div>
+					<button type="submit"  class="btn btn-info">{$Think.lang.Sub}</button>
+				</form>
+			</div>
+		</section>
+
+	</div>
+</div>
+<script>
+	$(function () {
+    $('#uploadSubmit').click(function () {
+        var data = new FormData($('#uploadForm')[0]);
+		var url =
+//      console.log(data)
+        $.ajax({
+            url: 'xxx/xxx',
+            type: 'POST',
+            data: data,
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                console.log(data);
+                if(data.status){
+                    console.log('upload success');
+                }else{
+                    console.log(data.message);
+                }
+            },
+            error: function (data) {
+                console.log(data.status);
+            }
+        });
+    });
+})
+
+</script>

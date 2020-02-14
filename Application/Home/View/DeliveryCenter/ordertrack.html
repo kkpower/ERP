@@ -1,0 +1,875 @@
+{__NOLAYOUT__}
+<!-- ZUI 标准版压缩后的 CSS 文件 -->
+<!doctype html>
+<html class="fixed">
+
+	<head>
+		<title>订单处理</title>
+		<link rel="stylesheet" href="__ROOT__/Public/FirstEdition/assets/vendor/bootstrap/css/bootstrap.css" />
+		<link rel="stylesheet" href="__ROOT__/Public/FirstEdition/assets/stylesheets/theme.css" />
+		<link rel="stylesheet" href="__ROOT__/Public/FirstEdition/assets/stylesheets/skins/default.css" />
+		<link rel="stylesheet" href="__ROOT__/Public/FirstEdition/assets/vendor/font-awesome/css/font-awesome.css" />
+		<link rel="stylesheet" type="text/css" href="__PUBLIC__/vendor/bootstrap-timepicker/css/bootstrap-timepicker.css" />
+		<style type="text/css">
+			#details_body .col-md-6 {
+				padding-left: 0;
+			}
+			
+			#details_body .col-md-12 {
+				padding-left: 0;
+			}
+			
+			#details_img>div {
+				display: inline-block;
+				width: 30%;
+				position: relative;
+				margin: 0 1% 1%;
+				border: 1px solid #ccc;
+				box-sizing: border-box;
+				padding:0 10px;
+			}
+			
+			#details_img img {
+				width: 60%;
+				padding-top: 12px;
+				padding-bottom: 5px;
+			}
+			
+			#details_img p {
+				color: #333;
+				line-height: 18px;
+			}
+			
+			#details_img span {
+				position: absolute;
+				top: 50%;
+				left: 65%;
+				line-height: 36px;
+				margin-top: -18px;
+				text-align: center;
+				font-size: 36px;
+				color: red;
+				font-weight: bold;
+			}
+			
+			a {
+				color: #333 !important;
+			}
+			
+			.details span {
+				display: inline-block;
+				width: 80px;
+				float: left;
+				font-size: 14px;
+				line-height: 28px;
+			}
+			
+			.details div {
+				float: left;
+				font-weight: bold;
+				font-size: 14px;
+				line-height: 28px;
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<div class="row">
+			<div class="col-md-12">
+				<section class="panel">
+					<header class="panel-heading">
+						<a style="display: inline-block;float: left;font-size: 18px;line-height: 20px;margin-right: 15px;" href="{:U('Deliverycenter/deliveryList')}">
+							<i class="fa fa-home"></i>
+						</a>
+						<h2 class="panel-title">订单处理</h2>
+					</header>
+					<div class="panel-body">
+						<input id="tid" type="hidden" value="{$info.tid}"/>
+						<input id="mode_id" type="hidden" value="{$info.mode_id}"/>
+						<p id="status_id" style="display: none;">{$info.status_id}</p>
+						<p id="orderid" style="display: none;">{$info.id}</p>
+						<p id="cid" style="display: none;">{$info.cid}</p>
+						<p id="asin" style="display: none;">{$info.var}</p>
+						<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+						<div class="input-group" style="width: 30%;padding-right: 15px;margin-bottom: 10px;">
+							<input name="search" id="search_order" type="text" value="" class="form-control" placeholder="请扫描订单二维码" />
+							<span class="input-group-btn">
+                    	<button type="button" class="btn btn-success" style="white-space: nowrap;" onclick="order_details()">扫描订单</button>
+                	</span>
+						</div>
+						<div id="details_body" style="line-height: 28px;width: 30%;float: left;max-height: 80vh;overflow-y: auto;">
+							<div class="col-md-12">
+								<div class="details">
+									<span>订单号</span>
+									<div id="details_o_number">{$info.id}</div>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="details">
+									<span>订单状态</span>
+									<div id="details_status" style="color: red;">{$info.processing_status}</div>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="details">
+									<span>订单出处</span>
+									<div id="details_status">{$info.name} : {$info.account_number}</div>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="details">
+									<span>收货地址</span>
+									<!--<textarea readonly="readonly" style="background: #fff;" class="form-control" id="details_status">{$info.country} {$info.state} {$info.city} {$info.street_1} {$info.street_2} {$info.street_3}</textarea>-->
+									<div style="min-height: 34px;height: auto;line-height: 1.5em;padding-top: 8px;" id="details_status">{$info.recipient_first_name}<br />{$info.street_1} {$info.street_2} {$info.street_3}<br />{$info.city} {$info.state} <br /> {$info.zip} {$info.country}</div>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="details">
+									<span>运输要求</span>
+									<div id="details_status" style="color: red;"></div>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="details">
+									<span>包装重量</span>
+									<div id="details_status">{$weight}</div>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="input-group"  style="padding-top: 10px;">
+									<span class="input-group-addon">劳动时间<span style="color: red;">*</span></span>
+									<input type="text" id="labor_time" name="labor_time" readonly="readonly" class="form-control timepicker timepicker-default">
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="input-group" style="padding-top: 10px;">
+									<span class="input-group-addon">扫描产品编码</span>
+									<input class="form-control" id="order_list" placeholder="请确认选择输入框后，进行扫描产品编码" value="" />
+								</div>
+							</div>
+							<div style="display: none;" id="shipping">
+								<div class="col-md-12">
+									<div class="input-group" style="padding-top: 10px;">
+										<span class="input-group-addon">物流追踪号</span>
+										<input class="form-control" id="tracking_number" value="{$logistics.logistics_number}" />
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="input-group" style="padding-top: 10px;">
+										<span class="input-group-addon">运输商<span style="color: red;">*</span></span>
+										<input type="hidden" id="agent_hidden" value="{$transport.id}" />
+										<select class="form-control" id="transport_agent">
+											<option value="">请选择运输商</option>
+											<volist name="transporters" id="vo">
+												<option value="{$vo.id}">{$vo.transporters}</option>
+											</volist>
+										</select>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="input-group" style="padding-top: 10px;">
+										<span class="input-group-addon">运输方式<span style="color: red;">*</span></span>
+										<!--<input class="form-control" id="transport_way" />-->
+										<input type="hidden" id="mode_hidden" value="{$transport_mode.id}" />
+										<select id="transport_form" class="form-control"></select>
+
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="input-group" style="padding-top: 10px;">
+										<span class="input-group-addon">运输费用<span style="color: red;">*</span></span>
+										<input class="form-control" id="transport_costs" value="{$info.order_price}"/>
+									</div>
+								</div>
+							</div>
+							<div id="problem_order">
+								<div class="col-md-6">
+									<div class="input-group" style="padding-top: 10px;">
+										<span class="input-group-addon">问题类型</span>
+										<div class="form-control" />{$info.problemtype}</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="input-group" style="padding-top: 10px;">
+									<span class="input-group-addon">问题描述</span>
+									<div class="form-control" />{$info.problem}</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12" style="padding: 0;" id="order_products">
+						<table class="table table-hover table-bordered table-striped" style="margin-top: 10px;border-collapse: collapse;text-align: center;">
+							<thead>
+								<tr>
+									<th style="text-align: center;">料号</th>
+									<th style="text-align: center;">产品名称</th>
+									<th style="text-align: center;">产品数量</th>
+									<th style="text-align: center;">已扫描数量</th>
+									<th style="text-align: center;width: 98px;">操作</th>
+								</tr>
+							</thead>
+							<tbody id="details_tbody">
+								<volist name="list" id="vo">
+									<tr id="tr_{$vo.pid}">
+										<td>
+											<a target="_blank" href="{:U('Product/homeProduct','','')}/pid/{$vo.pid}">{$vo.bclass}.{$vo.sclass}.{$vo.num}</a>
+										</td>
+										<td>
+											<a target="_blank" href="{:U('Product/homeProduct','','')}/pid/{$vo.pid}">{$vo.namezh}</a>
+										</td>
+										<td>{$vo.number}</td>
+										<td id="input_{$vo.pid}" style="color:red;">0</td>
+										<td>
+											<button class="btn btn-primary btn-xs" onclick="hand_scan(this)">None</button>
+										</td>
+									</tr>
+								</volist>
+							</tbody>
+						</table>
+					</div>
+					<br style="clear: both;" />
+					<button id="Packaging" class="btn btn-primary" disabled="disabled" style="display: none;" onclick="Packaging()">打包完成</button>
+					<button id="confirm_ship" class="btn btn-primary" disabled="disabled" style="display: none;" onclick="confirm_ship()">确认发货</button>
+					<button class="btn btn-primary" id="change_order">修改</button>
+					<button class="btn btn-info" id="photograph" onclick="photograph()">拍照</button>
+					<button class="btn btn-danger" id="report_problem" onclick="report_problem()">报告问题</button>
+					<p style="font-size: 14px;font-weight: bold;margin: 0;">订单流程记录：</p>
+					<ul id="process_record" style="line-height: 24px;">
+						<volist name="process" id="vo">
+							<li>{$vo.time} {$vo.lastnamezh}{$vo.namezh} {$vo.textzh} {$vo.variable}</li>
+						</volist>
+					</ul>
+			</div>
+			<div style="width: 70%;float: left;max-height: 80vh;overflow-y: auto;position: relative;" id="details_img">
+				<button id="arrow_down" style="position: fixed;z-index: 2;display: none;top: 85vh;right: 50px;" type="button" class="btn btn-primary" aria-label="Left Align">
+				  <b class="glyphicon glyphicon-arrow-down" aria-hidden="true"></b>
+				</button>
+				<volist name="list" id="vo">
+					<div id="div_{$vo.pid}">
+						<img src="__ROOT__{$vo.thumb}" /><span>x{$vo.number}</span>
+						<p>
+							<a target="_blank" href="{:U('Product/homeProduct','','')}/pid/{$vo.pid}">{$vo.namezh}</a>
+						</p>
+						<p>
+							<a target="_blank" href="{:U('Product/homeProduct','','')}/pid/{$vo.pid}">料号:{$vo.bclass}.{$vo.sclass}.{$vo.num} </a>货架:</p>
+						<p>库存:</p>
+					</div>
+				</volist>
+			</div>
+		</div>
+		</section>
+
+		</div>
+		</div>
+
+		<div id="problem_modal" class="modal fade" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">
+					报告问题
+				</h4>
+					</div>
+					<div class="modal-body" style="line-height: 34px;">
+						<div class="input-group">
+							<span class="input-group-addon">问题类型</span>
+							<select class="form-control" id="problem_type">
+								<option value="">请选择问题类型</option>
+								<option value="11">库存不足</option>
+								<option value="12">地址不清</option>
+								<option value="13">其他</option>
+							</select>
+						</div>
+
+						<div class="input-group" style="padding-top: 20px;">
+							<span class="input-group-addon">问题描述</span>
+							<input class="form-control" id="problem_ds" />
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn no-print btn-primary" onclick="sickorder()">提交</button>
+						<!--<button type="button" class="btn btn-primary" onclick="change_message(num)">修改</button>-->
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+		</div>
+		
+		<div id="photograph_modal" class="modal fade" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">
+					拍照
+				</h4>
+					</div>
+					<div class="modal-body" style="line-height: 34px;">
+						<p style="width: 480px;margin: 0 auto;">摄像头：</p>
+						<video style="margin: 0 auto;display: block;" id="video" width="480" height="320" controls>
+						</video>
+						<div style="width: 480px;margin: 0 auto;padding: 12px 0;">
+						    <button class="btn btn-primary" id="capture">拍照</button>
+						</div>
+						<p style="width: 480px;margin: 0 auto;">照片：</p>
+						<canvas style="margin: 0 auto;display: block;" id="canvas" width="480" height="320"></canvas>
+						<img id="img" style="width: 480px;height: 320px;" src=""/>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" onclick="uploadImage()">上传</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+		</div>
+	</body>
+
+</html>
+<script src="__ROOT__/Public/login/assets/js/jquery-1.11.1.min.js"></script>
+<script src="__PUBLIC__/FirstEdition/assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="__PUBLIC__/vendor/bootstrap-timepicker/bootstrap-timepicker.js"></script>
+
+<script>
+	if($('#status_id').text() <= 6){
+		$('#transport_agent').val($('#tid').val());
+		$.ajax({
+				url: "{:U('Deliverycenter/getAjaxMode')}", //通过页面元素的ID来获取设备ID
+				type: "post", //选择传值方式
+				data: {
+					id: $('#tid').val()
+				},
+				dataType: "JSON",
+				success: function(data) {
+					console.log(data);
+					var p = "<option id='second_op' value=''>请选择</option>"
+					$("#transport_form").html(p);
+					//将获取到的数据赋值
+					for(var i = 0; i < data.length; i++) {
+						//拼接option标签的 name value 等属性
+						var p = "<option value='" +
+							data[i]['id'] +
+							"'" +
+							">" +
+							data[i].mode +
+							"</option>";
+						$("#second_op").after(p);
+					}
+					$('#transport_form').val($('#mode_id').val());
+				}
+		})
+	}		
+	console.log($('#details_img').css('height'));
+	console.log($('#details_img').css('max-height'));
+	if($('#details_img').css('height')>=$('#details_img').css('max-height')){
+		$('#arrow_down').css('display','block');
+	}
+	$('#arrow_down').on('click',function(){
+		console.log($('#details_img').css('height'))
+		$('#details_img').scrollTop(2000);
+	})
+	$("#labor_time").timepicker({
+		showSeconds: true,
+		secondStep: 1,
+		minuteStep: 1,
+		showMeridian: false,
+		defaultTime: "{$time.time}"
+	});
+	var pid_arr = [],
+		pid_length = $('#details_tbody').find('tr').length,
+		pid_arr1 = [];
+	for(var i = 0; i < $('#details_tbody').find('tr').length; i++) {
+		var pid = $('#details_tbody').find('tr')[i].id.split('_')[1];
+		pid_arr1.push(pid);
+	}
+	//判断是否有订单
+	if(pid_arr1.length == 0 || $('#status_id').text() == 6 || $('#status_id').text() == 7 || $('#status_id').text() == 9) {
+		$('#search_order').focus();
+	} else {
+		$('#order_list').focus();
+	}
+	//状态判断
+	if($('#status_id').text() == 5) {
+		$('#Packaging').css('display', 'inline-block');
+		$('#confirm_ship').css('display', 'inline-block');
+		$('#shipping').css('display', 'inline-block');
+		$('#transport_agent').on('change', function() {
+			$.ajax({
+				url: "{:U('Deliverycenter/getAjaxMode')}", //通过页面元素的ID来获取设备ID
+				type: "post", //选择传值方式
+				data: {
+					id: $('#transport_agent').val()
+				},
+				dataType: "JSON",
+				success: function(data) {
+					console.log(data);
+					var p = "<option id='second_op' value=''>请选择</option>"
+					$("#transport_form").html(p);
+					//将获取到的数据赋值
+					for(var i = 0; i < data.length; i++) {
+						//拼接option标签的 name value 等属性
+						var p = "<option value='" +
+							data[i]['id'] +
+							"'" +
+							">" +
+							data[i].mode +
+							"</option>";
+						$("#second_op").after(p);
+					}
+
+				}
+			})
+		});
+	} else if($('#status_id').text() == 6) {
+		$('#Packaging').css('display', 'none');
+		$('#confirm_ship').css('display', 'inline-block');
+		$('#shipping').css('display', 'inline-block');
+		$('#order_products').css('display', 'none');
+		$('#order_list').attr('readonly', true);
+		$('#confirm_ship').attr('disabled', false);
+		console.log($('#transport_agent').val());
+		$('#transport_agent').on('change', function() {
+			$.ajax({
+				url: "{:U('Deliverycenter/getAjaxMode')}", //通过页面元素的ID来获取设备ID
+				type: "post", //选择传值方式
+				data: {
+					id: $('#transport_agent').val()
+				},
+				dataType: "JSON",
+				success: function(data) {
+					console.log(data);
+					var p = "<option id='second_op' value=''>请选择运输方式</option>"
+					$("#transport_form").html(p);
+					//将获取到的数据赋值
+					for(var i = 0; i < data.length; i++) {
+						//拼接option标签的 name value 等属性
+						var p = "<option value='" +
+							data[i]['id'] +
+							"'" +
+							">" +
+							data[i].mode +
+							"</option>";
+						$("#second_op").after(p);
+					}
+
+				}
+			})
+		});
+	} else {
+		$('#Packaging').css('display', 'none');
+		$('#confirm_ship').css('display', 'none');
+		$('#shipping').css('display', 'none');
+	}
+
+	if($('#status_id').text() == 7) {
+		$('#shipping').css('display', 'inline-block');
+		$('#order_products').css('display', 'none');
+		$('#change_order').css('display', 'none');
+		$('#order_list').attr('readonly', true);
+		$('#labor_time').attr('readonly', true);
+		$('#shipping').find('input').attr('readonly', true);
+		$('#shipping').find('select').attr('disabled', true);
+		$('#report_problem').css('display', 'none');
+		$('#transport_agent').val($('#agent_hidden').val());
+		$.ajax({
+			url: "{:U('Deliverycenter/getAjaxMode')}", //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				id: $('#transport_agent').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				var p = "<option id='second_op' value=''>请选择运输方式</option>"
+				$("#transport_form").html(p);
+				//将获取到的数据赋值
+				for(var i = 0; i < data.length; i++) {
+					//拼接option标签的 name value 等属性
+					var p = "<option value='" +
+						data[i]['id'] +
+						"'" +
+						">" +
+						data[i].mode +
+						"</option>";
+					$("#second_op").after(p);
+				}
+				$("#transport_form").val($('#mode_hidden').val());
+			}
+		})
+	}
+
+	if($('#status_id').text() == 9) {
+		$('#report_problem').css('display', 'none');
+		$('#problem_order').css('display', 'block');
+	} else {
+		$('#problem_order').css('display', 'none');
+	}
+
+	if($('#status_id').text() == 2) {
+		$('#change_order').css('display', 'inline-block');
+	} else {
+		$('#change_order').css('display', 'none');
+	}
+
+	function order_details() {
+		$.ajax({
+			url: "{:U('Deliverycenter/getAjaxPermission')}", //通过页面元素的ID来获取设备ID
+			type: "get", //选择传值方式
+			data: {
+				id: $('#search_order').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				if(data == 0) {
+					if(t) {
+						clearTimeout(t)
+					};
+					$('#node_message').html('没有这个订单');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+					return false;
+				}
+				location.href = "{:U('Deliverycenter/ordertrack')}?id=" + $('#search_order').val();
+			}
+		})
+	}
+
+	$('#search_order').on('keyup', function(event) {
+		if(event.keyCode == '13') {
+			order_details();
+		}
+	})
+
+	//扫描产品
+	$('#order_list').on('keyup', function(event) {
+		if(event.keyCode == '13') {
+			console.log(pid_arr1);
+			var pid_input = $('#order_list').val().split('-')[1];
+			if(pid_arr1.indexOf(pid_input) == -1) {
+				if(t) {
+					clearTimeout(t)
+				};
+				$('#node_message').text('没有这个产品');
+				node_message.style.display = 'block';
+				var t = setTimeout("node_message.style.display='none'", 2000);
+				return false;
+			}
+			var oid_input = $('#order_list').val().split('-')[3];
+			scan_product(pid_input, oid_input)
+		}
+	})
+
+	var pr_arr = {};
+	//扫描产品码
+	function scan_product(pid, oid) {
+		$.ajax({
+			url: "{:U('Order/getAjaxPid','','')}", //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				pid: pid
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				if(pid_arr.indexOf(data) != -1) {
+					if(t) {
+						clearTimeout(t)
+					};
+					$('#node_message').html('该产品已扫描完毕');
+					node_message.style.display = 'block';
+					$('#order_list').val('');
+					var t = setTimeout("node_message.style.display='none';", 2000);
+					return false;
+				}
+				if(pr_arr[pid]) {
+					if(pr_arr[pid][oid]) {
+						pr_arr[pid][oid]++
+					} else {
+						pr_arr[pid][oid] = 1;
+					}
+				} else {
+					pr_arr[pid] = {};
+					pr_arr[pid][oid] = 1;
+				}
+				console.log(pr_arr);
+				console.log('#tr_' + data)
+				//				$('#tr_'+data).css('background','#47a447');
+				var tr_text = $('#tr_' + data).find('td').eq(3).text() - 0 + 1;
+				var tr_text1 = $('#tr_' + data).find('td').eq(2).text();
+				$('#tr_' + data).css('background', '#ecc71f');
+				$('#tr_' + data).find('td').eq(3).text(tr_text);
+				console.log($('#tr_' + data).find('td').eq(2).text());
+				$('#order_list').val('');
+				if(tr_text == tr_text1) {
+					pid_arr.push(data);
+					$('#tr_' + data).css('background', '#47a447');
+					$('#div_' + data).css('background', '#47a447');
+					console.log(pid_arr);
+					if(pid_arr.length == pid_length) {
+						$('#Packaging').attr('disabled', false);
+						$('#confirm_ship').attr('disabled', false);
+					}
+				}
+
+			}
+		})
+	}
+	//清空
+	//	function clear_scan(obj){
+	//		var pid = $(obj).parents('tr').attr('id').split('_')[1];
+	//		$('#input_'+pid).prop('disabled',false);
+	//		$('#input_'+pid).val('0');
+	//		pr_arr[pid] = null;
+	//		console.log(pr_arr);
+	//	}
+	//手动扫描
+	function hand_scan(obj) {
+		var pid = $(obj).parents('tr').attr('id').split('_')[1];
+		var tr_text = $(obj).parents('tr').find('td').eq(3).text() - 0 + 1;
+		var tr_text1 = $(obj).parent().siblings('td').eq(2).text();
+		if(tr_text - 1 == tr_text1) {
+			if(t) {
+				clearTimeout(t)
+			};
+			$('#node_message').html('该产品已扫描完毕');
+			node_message.style.display = 'block';
+			$('#order_list').val('');
+			var t = setTimeout("node_message.style.display='none';", 2000);
+			return false;
+		}
+		if(pr_arr[pid]) {
+			if(pr_arr[pid][1]) {
+				pr_arr[pid][1]++
+			} else {
+				pr_arr[pid][1] = 1;
+			}
+		} else {
+			pr_arr[pid] = {};
+			pr_arr[pid][1] = 1;
+		}
+		console.log(pr_arr);
+		$(obj).parents('tr').css('background', '#ecc71f');
+		$(obj).parents('tr').find('td').eq(3).text(tr_text);
+		if(tr_text == tr_text1) {
+			var pr_pid = $(obj).parents('tr').attr('id').split('_')[1];
+			pid_arr.push(pr_pid);
+			$(obj).parents('tr').css('background', '#47a447');
+			$('#div_' + pr_pid).css('background', '#47a447');
+			console.log(pid_arr);
+			if(pid_arr.length == pid_length) {
+				$('#Packaging').attr('disabled', false);
+				$('#confirm_ship').attr('disabled', false);
+			}
+		}
+	}
+	//报告问题
+	function report_problem() {
+		$('#problem_modal').modal('toggle');
+	}
+
+	//打包完成
+	function Packaging() {
+		var r = confirm("确定打包完成吗？");
+		if(r == true) {
+			$.ajax({
+				url: "{:U('Deliverycenter/waitship')}", //通过页面元素的ID来获取设备ID
+				type: "post", //选择传值方式
+				data: {
+					cid: $('#cid').text(),
+					id: $('#orderid').text(),
+					labor_time: $('#labor_time').val(),
+					asin: $('#asin').text()
+				},
+				dataType: "JSON",
+				success: function(data) {
+					console.log(data)
+					if(t) {
+						clearTimeout(t)
+					};
+					$('#node_message').text('打包完成');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+				}
+			})
+		} else {
+			return false;
+		}
+	}
+	//确认发货
+	function confirm_ship() {
+		if($('#transport_costs').val() == "" || $('#transport_agent').val() == "" || $('#transport_form').val() == "") {
+			if(t) {
+				clearTimeout(t)
+			};
+			$('#node_message').text('请输入必填项');
+			node_message.style.display = 'block';
+			var t = setTimeout("node_message.style.display='none';", 2000);
+			return false;
+		}
+		var r = confirm("确定发货吗？");
+		if(r == true) {
+			$.ajax({
+				url: "{:U('Deliverycenter/shipped')}", //通过页面元素的ID来获取设备ID
+				type: "post", //选择传值方式
+				data: {
+					id: $('#orderid').text(),
+					labor_time: $('#labor_time').val(),
+					logistics: $('#tracking_number').val(),
+					transporters_id: $('#transport_agent').val(),
+					transport_mode_id: $('#transport_form').val(),
+					cid: $('#cid').text(),
+					map: pr_arr,
+					price:$('#transport_costs').val()
+					//					oid:  采购订单号  1 1 3
+					//					number:   产品数量1 1 3
+				},
+				dataType: "JSON",
+				success: function(data) {
+					console.log(data)
+					if(t) {
+						clearTimeout(t)
+					};
+					$('#node_message').text('发货成功');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+				}
+			})
+		} else {
+			return false;
+		}
+	}
+	//修改
+	$('#change_order').on('click', function() {
+		location.href = "{:U('Deliverycenter/updateOrder')}?id=" + $('#orderid').text();
+	})
+	//问题订单
+	function sickorder() {
+		if($('#problem_type').val() == "") {
+			if(t) {
+				clearTimeout(t)
+			};
+			$('#node_message').text('请选择问题类型');
+			node_message.style.display = 'block';
+			var t = setTimeout("node_message.style.display='none'", 2000);
+			return false;
+		}
+		if($('#problem_type').val() == "13" && $('#problem_ds').val() == "") {
+			if(t) {
+				clearTimeout(t)
+			};
+			$('#node_message').text('请输入问题描述');
+			node_message.style.display = 'block';
+			var t = setTimeout("node_message.style.display='none'", 2000);
+			return false;
+		}
+		$.ajax({
+			url: "{:U('Deliverycenter/sickorder')}", //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				id: $('#orderid').text(),
+				ptype: $('#problem_type').val(),
+				problem: $('#problem_ds').val(),
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data)
+				if(t) {
+					clearTimeout(t)
+				};
+				$('#node_message').text('转为问题订单');
+				node_message.style.display = 'block';
+				var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+			}
+		})
+	}
+	//拍照
+	function photograph(){
+		$('#photograph_modal').modal('toggle');
+	}
+	//访问用户媒体设备的兼容方法
+    function getUserMedia(constraints, success, error) {
+        if (navigator.mediaDevices.getUserMedia) {
+            //最新的标准API
+            navigator.mediaDevices.getUserMedia(constraints).then(success).catch(error);
+        } else if (navigator.webkitGetUserMedia) {
+            //webkit核心浏览器
+            navigator.webkitGetUserMedia(constraints,success, error)
+        } else if (navigator.mozGetUserMedia) {
+            //firfox浏览器
+            navigator.mozGetUserMedia(constraints, success, error);
+        } else if (navigator.getUserMedia) {
+            //旧版API
+            navigator.getUserMedia(constraints, success, error);
+        }
+    }
+
+    let video = document.getElementById('video');
+    let canvas = document.getElementById('canvas');
+    let context = canvas.getContext('2d');
+
+    function success(stream) {
+        //兼容webkit核心浏览器
+        let CompatibleURL = window.URL || window.webkitURL;
+        //将视频流设置为video元素的源
+        console.log(stream);
+
+        //video.src = CompatibleURL.createObjectURL(stream);
+        video.srcObject = stream;
+        video.play();
+    }
+
+    function error(error) {
+        console.log(error);
+        console.log('访问用户媒体设备失败'+error.name+error.message);
+    }
+
+    if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
+        //调用用户媒体设备, 访问摄像头
+        getUserMedia({video : {width: 480, height: 320}}, success, error);
+    } else {
+        alert('不支持访问用户媒体');
+    }
+
+    document.getElementById('capture').addEventListener('click', function () {
+        context.drawImage(video, 0, 0, 480, 320);
+        var imgData = canvas.toDataURL();
+//      console.log(imgData);
+//      console.log(JSON.stringify({"imgData": imgData}));
+    })
+    //上传图片
+    function uploadImage(){
+    var imgData = canvas.toDataURL();
+    $('#img').attr('src',imgData);
+    console.log(imgData);
+    console.log(JSON.stringify({"imgData": imgData}));
+    //上传到后台。
+    var uploadAjax = $.ajax({
+        type: "post",
+        //后端需要调用的地址
+        url:"test",
+        data: JSON.stringify({"imgData": imgData}),
+		contentType:"json/application",
+		//设置超时
+        timeout:10000,
+        async: true,
+        success: function (htmlVal) {
+        	//成功后回调
+		},
+        error: function(data) {
+        },
+        //调用执行后调用的函数
+        complete: function (XMLHttpRequest, textStatus) {
+            if(textStatus == 'timeout'){
+                uploadAjax.abort(); //取消请求
+                //超时提示：请求超时，请重试
+                alert("请求超时，请重试")
+                //请求超时返回首页
+                closeCard();
+            }
+        }
+    });
+}
+</script>

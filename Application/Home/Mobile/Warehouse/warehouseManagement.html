@@ -1,0 +1,243 @@
+﻿<script>
+    $('#81').parents('li').addClass('nav-active')
+    $('#81').parents('li').addClass('nav-expanded')
+</script>
+<!-- ZUI 标准版压缩后的 JavaScript 文件 -->
+<script src="//cdn.bootcss.com/zui/1.8.1/js/zui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+<div id="edit_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">
+					修改库位
+				</h4>
+			</div>
+			<form onsubmit="return doupdate(this)">
+				<input id="pld" value="" type="hidden" name="id">
+				<input type="hidden" value="{$pid}" name="pid">
+				<div class="modal-body" style="line-height: 34px;">
+					<div class="row" style="margin-left: 0;margin-right: 0;">
+						<div class="input-group" style="padding-top: 20px;">
+							<span class="input-group-addon">名称<span style="color: red;">*</span></span>
+							<input id="Account" type="text" name="name" class="form-control" placeholder="" style="width: 30%;" value="">
+						</div>
+						<div class="input-group" style="padding-top: 20px;">
+							<span class="input-group-addon">类型<span style="color: red;">*</span></span>
+							<select  name="type">
+								<option value="1" id="dj">待检仓</option>
+								<option value="2" id="zc">主仓</option>
+								<option value="3" id="dcl">待处理</option>
+								<option value="4" id="fp">废品仓</option>
+							</select>
+							<!--<input id="pltype" type="text" name="type" class="form-control" placeholder="" style="width: 30%;" value="">-->
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" id="add_pr" type="submit">{$Think.lang.Save}</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cantel}</button>
+				</div>
+			</form>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+				<h2 class="panel-title">{$physical}库位管理</h2>
+			</header>
+			<div class="panel-body">
+				<button class="btn btn-primary"  onclick="showarehouse(1)">
+					添加库位
+				</button>
+				<div style="padding-top: 20px;">
+					<table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+						<thead>
+						<tr>
+							<th>{$physical}库位名称</th>
+							<th>类型</th>
+							<th>{$Think.lang.Operation}</th>
+						</tr>
+						</thead>
+						<tbody>
+						<input type="hidden" name='getSupplier' value="{:U('Warehouse/getWarehouse','','')}">
+						<foreach name="warehouse" item="vo" key="k">
+							<tr>
+								<input type="hidden" value="{$k}" name="type1">
+								<td>
+									{$vo.name}
+
+								</td>
+								<td>
+									<eq name="vo.type" value="1">待检仓</eq>
+									<eq name="vo.type" value="2">主仓</eq>
+									<eq name="vo.type" value="3">待处理</eq>
+									<eq name="vo.type" value="4">废品仓</eq>
+									<eq name="vo.type" value='"+vo.type+"'>{$vo.type}</eq>
+								</td>
+								<td>
+									<button type="button" class="btn btn-primary btn-xs"  onclick="ckedit('{$vo.id}','{$vo.name}','{$vo.type}')">{$Think.lang.Modify}</button>
+
+								</td>
+							</tr>
+						</foreach>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+		</section>
+	</div>
+</div>
+
+<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="">添加库位</h4>
+			</div>
+			<form class="form-horizontal" onsubmit="return doadd(this)">
+				<div class="modal-body">
+					<div class="input-group" style="padding: 0 20px 0;">
+						<input type="hidden" value="{$kid}" name="ku_id">
+						<span class="input-group-addon">库位名称:</span>
+						<input type="text" class="form-control" name="name" id="name">
+					</div>
+						<input type="hidden" class="form-control" name="type" id="badge2" value="">
+					<input type="hidden" id="id" name="id" value="">
+				</div>
+				<div class="modal-body">
+					<div class="input-group" style="padding: 0 20px 0;">
+						<span class="input-group-addon">类型:</span>
+						<input type="text" class="form-control" name="type">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary">{$Think.lang.Sub}</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Close}</button>
+					<!-- <button type="button" class="btn btn-primary">
+                         提交更改
+                     </button>-->
+				</div>
+			</form>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal -->
+</div>
+
+</div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#table1').DataTable({
+            "paging": false,
+            "lengthChange": false,
+            "info": false,
+            "searching": false
+        });
+    });
+    var arr1=[];
+    for(var i=0;i<$('[name="type1"]').length;i++){
+        arr1.push($('[name="type1"]')[i].defaultValue)
+    }
+    var arr2=parseInt(arr1.pop());
+    var arr3 = $("#badge2").val(arr2+2);
+    console.log(arr3);
+    //修改外部账号弹框(赋值)
+    function ckedit(id,name,type){
+        $('#pld').val(id);
+        $('#Account').val(name);
+        if(type=='1'){
+            $('#dj').attr('selected','selected');
+            $('#zc').removeAttr('selected');
+            $('#dcl').removeAttr('selected');
+            $('#fp').removeAttr('selected');
+        }else if (type=='2') {
+            $('#zc').attr('selected','selected');
+            $('#dj').removeAttr('selected');
+            $('#dcl').removeAttr('selected');
+            $('#fp').removeAttr('selected');
+        }else if (type=='3') {
+            $('#dcl').attr('selected','selected');
+            $('#dj').removeAttr('selected');
+            $('#zc').removeAttr('selected');
+            $('#fp').removeAttr('selected');
+        }else if (type=='4') {
+            $('#fp').attr('selected');
+            $('#dj').removeAttr('selected');
+            $('#zc').removeAttr('selected');
+            $('#dcl').removeAttr('selected','selected');
+        }
+        $('#edit_modal').modal('toggle');
+    }
+
+    //修改仓库
+    function doupdate(form){
+        $.ajax({
+            url:"{:U('Warehouse/warehouseAdd')}",
+            type:"post",
+            data:$(form).serialize(),
+            dataType:"json",
+            async:true,
+            success:function(data){
+                console.log(data);
+                if (data.status==0){
+                    $('#node_message').html('您没有该操作权限');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if(data=="OK"){
+                    $('#node_message').html('修改成功');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+                }
+            }
+        });
+        return false;
+    }
+    //添加库位
+    function doadd(form){
+        $.ajax({
+            url:"{:U('Warehouse/warehouseplaceAdd')}",
+            type:"post",
+            data:$(form).serialize(),
+            dataType:"json",
+            async:true,
+            success:function(data){
+                if (data.status==0){
+                    $('#node_message').html('您没有该操作权限');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if (data=="KO"){
+                    $('#node_message').html('平台信息不能为空');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if (data=="NO"){
+                    $('#node_message').html('该平台已存在');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if(data=="OK"){
+                    $('#node_message').html('添加成功');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+                }
+            }
+        });
+        return false;
+    }
+</script>

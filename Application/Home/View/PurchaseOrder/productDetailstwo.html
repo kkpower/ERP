@@ -1,0 +1,123 @@
+
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<script>
+    $('#201').parents('li').addClass('nav-active')
+    $('#201').parents('li').addClass('nav-expanded')
+</script>
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+                    <a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+                </div>
+
+            </header>
+            <div class="panel-body">
+                <div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+                <form class="" action="{:U('PurchaseOrder/productDetailstwo',array('id'=>$gid))}" method="get" style="display: inline-block;float: left;margin-right:15px ;">
+                    <div class="input-group" style="width: 500px;">
+                        <input name="search" type="text" value="{$productname}" class="form-control" placeholder="{$Think.lang.Pleaseinputtheproductname}">
+						<span class="input-group-btn">
+                            <button type="submit" class="btn btn-success">Search</button>
+                        </span>
+                    </div>
+                    <input type="hidden" id="" name='' value="">
+                    <input type="hidden" name='' value="">
+                </form>
+                <br style="clear: both;" />
+                <br style="clear: both;" />
+                <table id="table" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+                    <thead>
+                    <tr>
+                        <th>{$Think.lang.supplier}</th>
+                        <th>{$Think.lang.Receivingwarehouse}</th>
+                        <td>{$Think.lang.Transporters}</td>
+                        <th>{$Think.lang.Modeoftransport}</th>
+                        <th>{$Think.lang.Freight}</th>
+                        <th>{$Think.lang.Remarks}</th>
+                        <th>{$Think.lang.Estimateddeliverydate}</th>
+                        <th>{$Think.lang.Process}</th>
+                        <th>{$Think.lang.Applicant}</th>
+                        <th>{$Think.lang.Applicationtime}</th>
+                        <th>{$Think.lang.firstinstance}</th>
+                        <th>{$Think.lang.initial_review_time}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{$orderPurchase.suppliername}</td>
+                        <td>{$orderPurchase.name}</td>
+                        <td>{$orderPurchase.transporters}</td>
+                        <td>
+                           {$orderPurchase.mode}
+                        </td>
+                        <td>{$orderPurchase.freight}</td>
+                        <td>{$orderPurchase.remarks}</td>
+                        <input type="hidden" value="{$orderPurchase.delivery_date}" id="date">
+                        <td id="datec"></td>
+                        <td>
+                           {$orderPurchase.lcname}
+                        </td>
+                        <td>{$orderPurchase.lastnamea}{$orderPurchase.namezha}</td>
+                        <td>{$orderPurchase.creationtime}</td>
+                        <td>{$orderPurchase.lastname}{$orderPurchase.namezhs}</td>
+                        <td>{$orderPurchase.examine_time}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+                    <thead>
+                    <tr>
+                        <th>{$Think.lang.product_number}</th>
+                        <th>{$Think.lang.Productname}</th>
+                        <th>{$Think.lang.UnitPrice}({$productlist[0]['currency']})</th>
+                        <th>{$Think.lang.Number}</th>
+                        <th>{$Think.lang.Amount}({$productlist[0]['currency']})</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <volist name="productlist" id="vo" key="k">
+                        <tr>
+                            <td><a href="{:U('Product/homeProduct',array('pid'=>$vo['pid']))}" target="_blank">{$vo.bclassc_number}.{$vo.sclassc_number}.{$vo.snumber_number}</a></td>
+                            <td><a href="{:U('Product/homeProduct',array('pid'=>$vo['pid']))}" target="_blank">{$vo.namezh}</a></td>
+                            <td>{$vo.price}</td>
+                            <td>{$vo.num}</td>
+                            <td><span></span><span name="xj">{$vo.total}</span></td>
+                        </tr>
+                    </volist>
+                    </tbody>
+                </table>
+                <div style="float: right;">
+                    <span>{$Think.lang.Total}:</span>
+                    <span id="total_price" style="color: #DC143C;font-size: 16px;font-weight: bold;"></span>
+                    <span style="font-weight: bold;">{$productlist[0]['currency']}</span>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script>
+    var date=$('#date').val();
+    var sub = date.substring(0,10);
+    //    alert(sub);
+    $('#datec').text(sub);
+    $(document).ready(function() {
+        $('#table1').DataTable({
+            "paging": false,
+            "lengthChange": false,
+            "info": false,
+            "searching": false
+        });
+    });
+    var sum=0;
+    $("span[name='xj']").each(function(){
+        sum+=+$(this).text();
+    });
+    $("#total_price").text(sum.toFixed(1));
+</script>

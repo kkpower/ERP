@@ -1,0 +1,346 @@
+<script src="__ROOT__/Public/login/assets/js/jquery-1.11.1.min.js">
+</script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+</head>
+
+<style>
+	.six:before {
+		content: "";
+		position: absolute;
+		top: -25px;
+		left: 0;
+		width: 0;
+		height: 0;
+		border-left: 50px solid transparent;
+		border-right: 50px solid transparent;
+		border-bottom: 25px solid #ececec;
+	}
+	
+	.six:after {
+		content: "";
+		position: absolute;
+		bottom: -25px;
+		left: 0;
+		width: 0;
+		height: 0;
+		border-left: 50px solid transparent;
+		border-right: 50px solid transparent;
+		border-top: 25px solid #ececec;
+	}
+	
+	.dropdown-toggle {
+		height: 34px;
+	}
+</style>
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+				<input type="hidden" name='getRoleAuthority' value="{:U('System/getRoleAuthority','','')}">
+				<h2 class="panel-title">供应商信息</h2>
+			</header>
+			<!--<div class="panel-body">
+                <button class="btn btn-primary" onclick=""> </button>
+            </div>-->
+			<input type="hidden" name='getRoleAuthority' value="{:U('System/getRoleAuthority','','')}">
+			<input type="hidden" name='delRole' value="{:U('System/delRole','','')}">
+			<div class="panel-body">
+				<div style="width: 30%;float: left;">
+					<div style="width: 100%;height: 160px;background: url('__ROOT__/Public/img/bg.jpg');background-size: cover;">
+						<div style="width: 80px;margin: 0 auto;">
+
+							<img style="width: 80px;display: block;height: 80px;margin: 0 auto;padding-top: 20px;padding-bottom: 5px;cursor: pointer;box-sizing: content-box;" src="__ROOT__{$list.thumb}" onclick="onthum('{$list.id}')"/>
+							
+						</div>
+						<p style="text-align: center;font-size: 16px;margin-bottom: 0;">{$list.name}</p>
+							<p style="text-align: center;">asd</p>
+					</div>
+					<div style="height: 70px;background: deepskyblue;color: #fff;text-align: center;line-height: 24px;">
+						<div style="width: 33%;border-right: 1px solid #fff;height: 100%;float: left;">
+							<p style="padding-top: 12px;margin-bottom: 0;">状态</p>
+							<p>合作中</p>
+						</div>
+						<div style="width: 34%;border-right: 1px solid #fff;height: 100%;float: left;;">
+							<p style="padding-top: 12px;margin-bottom: 0;">等级</p>
+							<p>黄金</p>
+						</div>
+						<div style="width: 33%;height: 100%;float: left;;">
+							<p style="padding-top: 12px;margin-bottom: 0;">积分</p>
+							<p>96</p>
+						</div>
+					</div>
+					<div style="background: #f6f6f6;padding:0 20px;line-height: 28px;">
+						<h4 style="padding-top: 20px;margin-top: 0;">基本信息</h4>
+						<div style="width: 30%;float: left;">编码</div>
+						<div style="width: 70%;float: right;text-align: right;height:28px;">{$list.snumber}</div>
+						<div style="width: 30%;float: left;">公司名</div>
+						<div style="width: 70%;float: right;text-align: right;height:28px;">{$list.name}</div>
+						<div style="width: 30%;float: left;">类型</div>
+						<div style="width: 70%;float: right;text-align: right;height:28px;">{$list.type}</div>
+						<div style="width: 30%;float: left;">电子邮箱</div>
+						<div style="width: 70%;float: right;text-align: right;height:28px;">{$list.email}</div>
+						<div style="width: 30%;float: left;">公司网站</div>
+						<div style="width: 70%;float: right;text-align: right;height:28px;">{$list.weburl}</div>
+						<div style="width: 30%;float: left;">付款方式</div>
+						<div style="width: 70%;float: right;text-align: right;height:28px;">{$list.payment}</div>
+						<div style="width: 30%;float: left;">开户银行</div>
+						<div style="width: 70%;float: right;text-align: right;height:28px;">{$list.bank}</div>
+						<div style="width: 30%;float: left;">账户姓名</div>
+						<div style="width: 70%;float: right;text-align: right;height:28px;">{$list.bankname}</div>
+						<div style="width: 30%;float: left;">银行账号</div>
+						<div style="width: 70%;float: right;text-align: right;height:28px;">{$list.account}</div>
+						<br style="clear: both;" />
+						<h4 style="padding-top: 20px;margin-bottom: 0;">关于我</h4>
+						<div>哈哈哈哈</div>
+						<div style="padding-top: 20px;text-align: center;padding-bottom: 15px;">
+							<button class="btn btn-primary" onclick="onm('{$list.id}','{$list.snumber}','{$list.name}','{$list.type}','{$list.address}','{$list.contactnumber}','{$list.contacts}','{$list.payment}','{$list.weburl}','{$list.bank}','{$list.account}','{$list.state}','{$list.email}','{$list.bankname}','{$list.remarks}')">编辑资料</button>
+						</div>
+					</div>
+				</div>
+				<div style="width: 67%;float: right;">
+					<div style="line-height: 30px;border-bottom:1px solid #e5e5e5;">关注点</div>
+					<div style="height: 200px;">
+						<div style="float: left;width: 25%;height: 100%;">
+							<div class="six" style="width: 100px;height: 50px;background: #ececec;margin: 50px auto 0;position: relative;">
+								<span style="display: block;width: 30px;height: 30px;margin:0 auto;padding-top: 10px;font-size: 30px;" class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
+							</div>
+							<p style="text-align: center;padding-top:30px;">历史订单</p>
+						</div>
+						<div style="float: left;width: 25%;height: 100%;">
+							<div class="six" style="width: 100px;height: 50px;background: #ececec;margin: 50px auto 0;position: relative;">
+								<span style="display: block;width: 30px;height: 30px;margin:0 auto;padding-top: 10px;font-size: 30px;" class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>
+							</div>
+							<p style="text-align: center;padding-top:30px;">产品</p>
+						</div>
+						<div style="float: left;width: 25%;height: 100%;">
+							<div class="six" style="width: 100px;height: 50px;background: #ececec;margin: 50px auto 0;position: relative;">
+								<span style="display: block;width: 30px;height: 30px;margin:0 auto;padding-top: 10px;font-size: 30px;" class="glyphicon glyphicon-user" aria-hidden="true"></span>
+							</div>
+							<p style="text-align: center;padding-top:30px;">客户投诉</p>
+						</div>
+						<div style="float: left;width: 25%;height: 100%;">
+							<div class="six" style="width: 100px;height: 50px;background: #ececec;margin: 50px auto 0;position: relative;">
+								<span style="display: block;width: 30px;height: 30px;margin:0 auto;padding-top: 10px;font-size: 30px;" class="glyphicon glyphicon-stats" aria-hidden="true"></span>
+							</div>
+							<p style="text-align: center;padding-top:30px;">账户表现</p>
+						</div>
+					</div>
+					<ul id="myTab" class="nav nav-tabs">
+						<li class="active">
+							<a href="#home" data-toggle="tab">
+								站内信(待回复)
+								<span class="badge" style="margin-left: 4px;float: right;">4</span>
+							</a>
+						</li>
+						<li>
+							<a href="#payment" data-toggle="tab" onclick="aaa(2,'{$vo.uid}')">
+								应收货款
+							</a>
+						</li>
+						<li>
+							<a href="#order" data-toggle="tab" onclick="aaa(2,'{$vo.uid}')">
+								执行中订单
+							</a>
+						</li>
+						<li>
+							<a href="#complain" data-toggle="tab" onclick="aaa(2,'{$vo.uid}')">
+								未解决投诉
+							</a>
+						</li>
+					</ul>
+					<div id="myTabContent" class="tab-content">
+						<div class="tab-pane fade in active" id="home">
+							<div style="height: 80px;">
+								<p style="margin-bottom: 0;">Commented on post <span style="color: deepskyblue">Prototyping</span></p>
+								<p style="font-size: 12px;color: #999;">2 minutes ago</p>
+							</div>
+							<div style="height: 80px;">
+								<p style="margin-bottom: 0;">Commented on post <span style="color: deepskyblue">Prototyping</span></p>
+								<p style="font-size: 12px;color: #999;">2 minutes ago</p>
+							</div>
+							<div style="height: 80px;">
+								<p style="margin-bottom: 0;">Commented on post <span style="color: deepskyblue">Prototyping</span></p>
+								<p style="font-size: 12px;color: #999;">2 minutes ago</p>
+							</div>
+						</div>
+						<div class="tab-pane fade" id="payment" style="height: 400px;overflow-y: scroll;">
+							应收货款
+						</div>
+						<div class="tab-pane fade" id="order" style="height: 400px;overflow-y: scroll;">
+							执行中订单
+						</div>
+						<div class="tab-pane fade" id="complain" style="height: 400px;overflow-y: scroll;">
+							未解决投诉
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+<div id="node_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">
+					编辑供应商资料
+				</h4>
+			</div>
+			<form class="form-horizontal" onsubmit="return doupdate(this)">
+				<div class="modal-body" style="line-height: 34px;">
+					<input type="hidden" name="id" value="{$list.id}">
+
+					<div class="row" style="margin-left: 0;margin-right: 0;">
+						<div class="input-group">
+							<input type="hidden" name="id" id="pld" value="">
+							<span class="input-group-addon">供应商编码(自动生成)<span style="color: red;">*</span></span>
+							<input id="snumber" type="text" name="snumber" class="form-control" value="123" readonly="readonly" style="width: 30%;">
+						</div>
+						<div class="input-group" style="padding-top: 20px;">
+							<span class="input-group-addon">供应商类型<span style="color: red;">*</span></span>
+							<select type="text" name="type" class="form-control" style="width: 30%;" id="type">
+								<option value="">请选择供应商类型</option>
+								<option value="生产厂商" id="sccs">生产厂商</option>
+							</select>
+						</div>
+						<div class="input-group" style="padding-top: 20px;">
+							<span class="input-group-addon">供应商名称<span style="color: red;">*</span></span>
+							<input type="text" id="name" name="name" class="form-control" value="{$vo.namezh}" placeholder="" style="width: 40%;">
+						</div>
+						<div class="input-group" style="padding-top: 20px;">
+							<span class="input-group-addon">供应商地址</span>
+							<textarea type="text" id="address" name="address" class="form-control" placeholder="" style="width: 40%;">{$vo.remarks}</textarea>
+						</div>
+						<div class="input-group" style="padding-top: 20px;">
+							<span class="input-group-addon">联系人</span>
+							<input type="text" name="contacts" id="contacts" class="form-control" value="{$vo.email}" placeholder="" style="width: 30%;">
+						</div>
+						<div class="input-group" style="padding-top: 20px;">
+							<span class="input-group-addon">电话号码</span>
+							<input type="text" name="contactnumber" id="contactnumber" class="form-control" value="{$vo.email}" placeholder="" style="width: 30%;">
+						</div>
+						<div class="input-group" style="padding-top: 20px;">
+							<span class="input-group-addon">首选电子邮件</span>
+							<input type="text" name="email" id="email" class="form-control" value="{$vo.email}" placeholder="" style="width: 40%;">
+						</div>
+						<div class="input-group" style="padding-top: 20px;">
+							<span class="input-group-addon">公司网址</span>
+							<input type="text" name="weburl" id="weburl" class="form-control" value="{$vo.email}" placeholder="" style="width: 40%;">
+						</div>
+						<div class="input-group" style="padding-top: 20px;">
+							<span class="input-group-addon">开户行（请包含分行名称）</span>
+							<input type="text" name="bank" id="bank" value="{$vo.bank}" class="form-control" placeholder="" style="width: 40%;">
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon">银行账号只有人姓名</span>
+							<input type="text" name="bankname" id="bankname" value="{$vo.account}" class="form-control" placeholder="" style="width: 30%;">
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon">银行账号</span>
+							<input type="text" name="account" id="account" value="{$vo.account}" class="form-control" placeholder="" style="width: 40%;">
+						</div>
+						<input type="hidden" id="fkfs" value="">
+						<div class="input-group" style="padding-top: 20px;">
+							<span class="input-group-addon">付款方式</span>
+							<select type="text" name="payment" class="form-control" placeholder="Last Name" style="width: 30%;">
+								<option value="微信" id="wx">微信</option>
+								<option value="支付宝" id="zfb">支付宝</option>
+							</select>
+						</div>
+						<div class="input-group" style="padding-top: 20px;">
+							<span class="input-group-addon">公司简介（500字内）</span>
+							<textarea type="text" name="remarks" id="remarks" class="form-control" placeholder="" style="width: 40%;"></textarea>
+						</div>
+						<div class="input-group" style="padding-top: 20px;">
+							<span class="input-group-addon">状态</span>
+							<select type="text" name="state" id="state" class="form-control" style="width: 30%;">
+								<option value="1" id="on">启用</option>
+								<option value="2" id="off">禁用</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" type="submit">保存</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</form>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<script>
+		function onthum(){
+            window.location.href="{:U('Supplier/avatar',array('id'=>$list[id]))}";
+		}
+        //修改供应商赋值
+        function onm(id,snumber,name,type,address,contactnumber,contacts,payment,weburl,bank,account,state,email,bankname,remarks) {
+            $('#pld').val(id);
+            $('#snumber').val(snumber);
+            $('#name').val(name);
+            $('#type').val(type);
+            $('#address').val(address);
+            $('#contactnumber').val(contactnumber);
+            $('#contacts').val(contacts);
+            $('#fkfs').val(payment);
+
+            $('#weburl').val(weburl);
+            $('#bank').val(bank);
+            $('#account').val(account);
+            $('#state').val(state);
+            $('#email').val(email);
+            $('#bankname').val(bankname);
+            $('#remarks').val(remarks);
+            $('#edit_modal').modal('toggle');
+            if(payment=='微信'){
+                $('#wx').attr('selected','selected');
+                $('#zfb').removeAttr('selected');
+            }else{
+                $('#zfb').attr('selected','selected');
+                $('#wx').removeAttr('selected');
+            }
+            if (state=='1'){
+                $('#on').attr('selected','selected');
+                $('#off').removeAttr('selected');
+			}else{
+                $('#off').attr('selected','selected');
+                $('#on').removeAttr('selected');
+			}
+        	$('#node_modal').modal('toggle');
+        }
+        //修改供应商信息
+		function doupdate(form){
+            $.ajax({
+                url:"{:U('Supplier/updateSupplier')}",
+                type:"post",
+                data:$(form).serialize(),
+                dataType:"json",
+                async:true,
+                success:function(data){
+                    if (data.status==0) {
+                        $('#node_message').html('您没有该操作权限');
+                        node_message.style.display = 'block';
+                        var t = setTimeout("node_message.style.display='none';", 2000);
+                    }else if(data=='NO'){
+                        $('#node_message').html('修改失败');
+                        node_message.style.display = 'block';
+                        var t = setTimeout("node_message.style.display='none';", 2000);
+                    }else if (data=='OK'){
+                        $('#node_message').html('修改成功');
+                        node_message.style.display = 'block';
+                        var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+                    }
+                }
+            });
+            return false;
+		}
+	</script>

@@ -1,0 +1,186 @@
+<script>
+    $('#191').parents('li').addClass('nav-active')
+    $('#191').parents('li').addClass('nav-expanded')
+</script>
+<!--仓库名称 重复检测-->
+<input type="hidden" id="storehouse" name='' value="{:U('Warehouse/warehousename','','')}">
+<!-- ZUI 标准版压缩后的 JavaScript 文件 -->
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+<div id="edit_modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">
+                    修改仓库
+                </h4>
+            </div>
+            <form onsubmit="return doupdate(this)">
+                <input id="pld" value="" type="hidden" name="id">
+                <input type="hidden" value="{$pid}" name="pid">
+                <div class="modal-body">
+                    <div class="row" style="margin-left: 0;margin-right: 0;">
+                        <div class="input-group" style="padding:0 20px 0;float: left;">
+                            <span class="input-group-addon">中文名称<span style="color: red;">*</span></span>
+                            <input id="Account" type="text" name="name" class="form-control" placeholder=""  value="" onblur="warehousename1()">
+                        </div>
+                        <div id="name_check1" style="float: left;margin-left: 20px;"></div>
+                        <br style="clear: both;" />
+                        <div class="input-group" style="padding:20px 20px 0;">
+                            <span class="input-group-addon">英文名称<span style="color: red;">*</span></span>
+                            <input id="englishname" type="text" name="englishname" class="form-control" placeholder=""  value="">
+                        </div>
+                        <div class="input-group" style="padding: 20px 20px 0;">
+                            <span class="input-group-addon">国家:</span>
+                            <select name="country" class="form-control" id="country">
+                                <option value="">--{$Think.lang.Pleasechoose}--</option>
+                                <foreach name="country" item="vo">
+                                    <option value="{$vo.id}">{$vo.countryzh}</option>
+                                </foreach>
+                            </select>
+                        </div>
+                        <div class="input-group" style="padding:20px 20px 0;">
+                            <span class="input-group-addon">地址<span style="color: red;">*</span></span>
+                            <input id="addressd" type="text" name="addressd" class="form-control" placeholder=""  value="">
+                        </div>
+                        <div class="input-group" style="padding:20px 20px 0;">
+                            <span class="input-group-addon">状态<span style="color: red;">*</span></span>
+                            <select  name="state" class="form-control">
+                                <option value="1" id="ebay">正常</option>
+                                <option value="2" id="amazon">锁定</option>
+                            </select>
+                            <!--<input id="pltype" type="text" name="type" class="form-control" placeholder="" style="width: 30%;" value="">-->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="add_pr" type="submit">{$Think.lang.Save}</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cantel}</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+                    <a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+                </div>
+                <h2 class="panel-title">订单号:PO{$list[0]['order_number']}</h2>
+            </header>
+            <div><img id="bzimg" style="width: 100px;height: 100px;" src="{$img}" alt="" /></div>
+            <div class="panel-body">
+                <div>
+                    <table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+                        <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>产品料号</th>
+                            <th>产品名称</th>
+                            <th>箱内数量</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <foreach name="list" item="vo">
+                            <tr>
+                                <td>{$key+1}</td>
+                                <td><a href="{:U('Product/homeProduct',array('pid'=>$vo['pid']))}" target="_blank">{$vo.bclassc_number}.{$vo.sclassc_number}.{$vo.snumber_number}</a></td>
+                                <td><a href="{:U('Product/homeProduct',array('pid'=>$vo['pid']))}" target="_blank">{$vo.namezh}</a></td>
+                                <td>{$vo.num}</td>
+                            </tr>
+                        </foreach>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+    </div>
+</div>
+
+<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="userModalLabel"></h4>
+            </div>
+            <form class="form-horizontal" onsubmit="return doadd(this)">
+                <div class="modal-body">
+                    <input type="hidden" name="kqname[]" value="待检仓">
+                    <input type="hidden" name="kqname[]" value="主仓">
+                    <input type="hidden" name="kqname[]" value="待处理仓">
+                    <input type="hidden" name="kqname[]" value="废品仓">
+                    <input type="hidden" name="type[]" value="1">
+                    <input type="hidden" name="type[]" value="2">
+                    <input type="hidden" name="type[]" value="3">
+                    <input type="hidden" name="type[]" value="4">
+                    <div class="input-group" style="float: left;padding: 0 20px 0;">
+                        <span class="input-group-addon">中文名称:</span>
+                        <input type="text" name="ckname" class="form-control" value="" placeholder="" onblur="warehousename()">
+                    </div>
+                    <div id="name_check" style="float: left;margin-left: 20px;"></div>
+                    <br style="clear: both;" />
+                    <div class="input-group" style="padding:20px 20px 0;">
+                        <span class="input-group-addon">英文名称:</span>
+                        <input type="text" name="englishname" class="form-control" value="" placeholder="">
+                    </div>
+                    <div class="input-group" style="padding: 20px 20px 0;">
+                        <span class="input-group-addon">国家:</span>
+                        <select name="countryd" class="form-control">
+                            <option value="">--{$Think.lang.Pleasechoose}--</option>
+                            <foreach name="country" item="vo">
+                                <option value="{$vo.id}">{$vo.countryzh}</option>
+                            </foreach>
+                        </select>
+                    </div>
+                    <div class="input-group" style="padding: 20px 20px 0;">
+                        <span class="input-group-addon">{$Think.lang.Address}:</span>
+                        <input type="text" class="form-control" name="address" id="address">
+                    </div>
+                    <div class="input-group" style="padding: 20px 20px 0;">
+                        <span class="input-group-addon">{$Think.lang.state}:</span>
+                        <select name="state" id="state" class="form-control">
+                            <option value="">{$Think.lang.Pleasechoose}</option>
+                            <option value='1'  selected="selected">正常</option>
+                            <option value='2'>锁定</option>
+                        </select>
+                    </div>
+
+                    <input type="hidden" id="id" name="id" value="">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">{$Think.lang.Sub}</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Close}</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+
+</div>
+
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script>
+
+    $(document).ready(function() {
+        $('#table1').DataTable({
+            "paging": false,
+            "lengthChange": false,
+            "info": false,
+            "searching": false
+        });
+    });
+
+</script>

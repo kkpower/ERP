@@ -1,0 +1,116 @@
+<style>
+    .bootstrap-select.btn-group .dropdown-toggle .filter-option {
+        padding-left: 5px;
+        padding-top: 3px;
+        color: #666;
+    }
+
+    .bootstrap-select {
+        /*width: 50% !important;*/
+    }
+
+    .bootstrap-select>button {
+        height: 100%;
+        line-height: 100%;
+    }
+
+    .bootstrap-select>button:active {
+        background: #fff !important;
+    }
+
+    .bootstrap-select>button:hover {
+        background: #fff !important;
+    }
+
+    .bootstrap-select>button:focus {
+        background: #fff !important;
+    }
+
+    select {
+        appearance: none;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+    }
+
+    select::-ms-expand {
+        display: none;
+    }
+
+    .caret {
+        color: #333 !important;
+    }
+</style>
+<script>
+    $('#355').parents('li').addClass('nav-active')
+    $('#355').parents('li').addClass('nav-expanded')
+</script>
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+                    <a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+                </div>
+
+                <h2 class="panel-title">进度详情 : <span style="color: red;">PO{$ordernumber}</span></h2>
+            </header>
+            <div class="panel-body">
+                <div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+                <table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;margin-top: 20px;">
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>流程</th>
+                        <th>创建人</th>
+                        <th>创建时间</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tbody-resultd">
+                    <volist name="list" id="vo" key="k">
+                        <tr>
+                            <td>{$k}</td>
+                            <td>
+                                <eq name="vo.action" value="1">已申请</eq>
+                                <eq name="vo.action" value="2">已初审</eq>
+                                <eq name="vo.action" value="3">已复审,已发货</eq>
+                            </td>
+                            <td>{$vo.lastnamezh}{$vo.namezh}</td>
+                            <td>
+                               {$vo.creationtime}
+                            </td>
+                        </tr>
+                    </volist>
+                    <if condition="$info neq '' ">
+                        <tr>
+                            <td>4</td>
+                            <td>
+                                已收货
+                            </td>
+                            <td>{$info.lastnamezh}{$info.namezh}</td>
+                            <td>
+                                {$info.creationtime}
+                            </td>
+                        </tr>
+                    </if>
+
+                    </tbody>
+                </table>
+
+                <ul class="pager" style="width: 100%;">
+                    <!-- 分页显示 -->{$page}</ul>
+            </div>
+        </section>
+
+    </div>
+</div>
+
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+
+<script>
+
+</script>

@@ -1,0 +1,201 @@
+<style>
+	.bootstrap-select.btn-group .dropdown-toggle .filter-option {
+		padding-left: 5px;
+		padding-top: 3px;
+		color: #666;
+	}
+	
+	.bootstrap-select {
+		/*width: 50% !important;*/
+	}
+	
+	.bootstrap-select>button {
+		height: 100%;
+		line-height: 100%;
+	}
+	
+	.bootstrap-select>button:active {
+		background: #fff !important;
+	}
+	
+	.bootstrap-select>button:hover {
+		background: #fff !important;
+	}
+	
+	.bootstrap-select>button:focus {
+		background: #fff !important;
+	}
+	
+	select::-ms-expand {
+		display: none;
+	}
+	
+	.caret {
+		color: #333 !important;
+	}
+	
+	#binning .form-control {
+		border: 0;
+	}
+	
+	#binning_td td {
+		padding: 0;
+		line-height: 34px;
+	}
+</style>
+<script>
+	$('#347').parents('li').addClass('nav-active')
+	$('#347').parents('li').addClass('nav-expanded')
+</script>
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<input type="hidden" id="getAjaxdata" value="{:U('PurchaseOrder/getAjaxdata','','')}">
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+
+				<h2 class="panel-title">历史订单</h2>
+			</header>
+			<div class="panel-body">
+				<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+				<form class="" action="{:U('PurchaseOrder/historicalOrder')}" method="get" style="margin-right:15px ;">
+					<div class="input-group" style="width: 400px;float: left;">
+						<span class="input-group-addon">
+                    		订单号
+                		</span>
+						<input type="hidden" value="{$oid}" id="purchsearch">
+						<input id="ord" name="search" type="text" value="" class="form-control" placeholder="请输入订单号">
+						<!--<span class="input-group-addon">-->
+                    		<!--状态-->
+                		<!--</span>-->
+						<!--<input type="hidden" value="{$status}" id="status">-->
+						<!--<select class="form-control" name="status" id="orderall">-->
+							<!--<option value="">&#45;&#45;全部&#45;&#45;</option>-->
+							<!--<foreach name="status_ex" item="or">-->
+								<!--<option value="{$or.id}">{$or.namezh}</option>-->
+							<!--</foreach>-->
+						<!--</select>-->
+						
+
+					</div>
+					<div id="status_div" class="col-md-5">
+						<div class="input-group">
+							<span class="input-group-addon">供应商</span>
+							<input type="hidden" id="supid" value="{$supplierid}">
+							<select name="supplier_id" id="supplier" class="form-control" data-live-search="true">
+								<option value="">--全部--</option>
+								<volist name="supplier" id="pr">
+									<option value="{$pr.id}">{$pr.name}</option>
+								</volist>
+							</select>
+							<!--<select id="supplier" class="form-control" name="supplier_id">-->
+								<!--<option value="">&#45;&#45;请选择&#45;&#45;</option>-->
+								<!--<foreach name="supplier" item="wa">-->
+									<!--<option value="{$wa.id}">{$wa.name}</option>-->
+								<!--</foreach>-->
+							<!--</select>-->
+							<span class="input-group-btn">
+								<button type="submit" class="btn btn-success" style="white-space: nowrap;">搜索</button>
+							</span>
+						</div>
+					</div>
+					<input type="hidden" id="" name='' value="">
+					<input type="hidden" name='' value="">
+				</form>
+				<br style="clear: both;" />
+				<table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+					<thead>
+						<tr>
+							<th>序号</th>
+							<th>订单号</th>
+							<th>物流追踪号</th>
+							<th>供应商</th>
+							<th>收货仓库</th>
+							<th>运输商</th>
+							<th>运输方式</th>
+							<!--<th>运费</th>-->
+							<th>预计交货日期</th>
+							<th>申请人</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody id="tbody-resultd">
+						<volist name="purchaselist" id="vo" key="k">
+							<tr>
+								<td>{$k}</td>
+								<td>PO{$vo.order_number}</td>
+								<td>{$vo.tracking_number}</td>
+								<td><a href="{:U('Supplier/detail',array('id'=>$vo['supplier_id']))}" target="_blank">{$vo.suppliername}</a></td>
+								<td>{$vo.zkname}</td>
+								<td>{$vo.yssname}</td>
+								<td>
+									{$vo.ysfxname}
+								</td>
+								<!--<td>{$vo.freight}</td>-->
+								<td class="delive">{$vo.delivery_date}</td>
+								<td>{$vo.lastnamezh}{$vo.namezh}</td>
+								<td>
+										<button onclick='mpdf("{$vo.id}")' style="border: 0px;" type="button" class="btn btn-primary btn-xs">
+										pdf
+									</button>
+									<a href="{:U('PurchaseOrder/completedDetails',array('id'=>$vo['id']))}" target="_blank" style="border: 0px;color: #fff;" class="btn btn-primary btn-xs">详情</a>
+								</td>
+							</tr>
+						</volist>
+					</tbody>
+				</table>
+				<ul class="pager" style="width: 100%;">
+					<!-- 分页显示 -->{$page}</ul>
+			</div>
+		</section>
+
+	</div>
+</div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script>
+	var goodid = $('#supid').val();
+	$('#supplier').val(goodid);
+	$('#supplier').selectpicker('refresh');
+
+	for (var i=0;i<$('.delive').length;i++){
+		var delive = $('.delive')[i].innerText;
+		delive[i].substring(0,10);
+		console.log(delive);
+	}
+
+	var purchsearch = $('#purchsearch').val();
+	$('#ord').val(purchsearch);
+	var status = $('#status').val();
+	$('#orderall').val(status);
+
+
+	function mpdf(id) {
+		// window.open("/InternalSystem/index.php/Home/PurchaseOrder/mPdf?id="+id ,"_blank");
+		var form = $("<form method='post'  target='_blank'></form>");
+		var url = "{:U('PurchaseOrder/purchase_successOrderPdf')}";
+		form.attr({
+			"action": url
+		});
+		var input = $("<input type='hidden' name='id'>");
+		input.val(id);
+		form.append(input);
+		$("html").append(form);
+		form.submit();
+	}
+	$(document).ready(function() {
+		$('#table1').DataTable({
+			"paging": false,
+			"lengthChange": false,
+			"info": false,
+			"searching": false
+		});
+	});
+
+
+</script>

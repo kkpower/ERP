@@ -1,0 +1,223 @@
+<script>
+    $('#198').parents('li').addClass('nav-active')
+    $('#198').parents('li').addClass('nav-expanded')
+</script>
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+                    <a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+                </div>
+
+                <h2 class="panel-title">采购订单初审</h2>
+            </header>
+            <div class="panel-body">
+                <div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+                <form class="" action="{:U('PurchaseOrder/trialOrder')}" method="get" style="display: inline-block;float: left;">
+                    <div class="input-group">
+                        <input name="search" type="text" value="" class="form-control" placeholder="请输入订单号">
+                    	<span class="input-group-btn">
+		                    <button type="submit" class="btn btn-success" style="white-space: nowrap;">搜索</button>
+		                </span>
+                    </div>
+                    <input type="hidden" id="" name='' value="">
+                    <input type="hidden" name='' value="">
+                </form>
+                <br style="clear: both;" />
+                <table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>订单号</th>
+                        <th>供应商</th>
+                        <th>收货仓库</th>
+                        <th>运输方式</th>
+                        <th>运费</th>
+                        <th>申请人</th>
+                        <th>申请时间</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <volist name="purchaselist" id="vo" key="k">
+                        <tr>
+                            <td>{$k}</td>
+                            <td>{$vo.order_number}</td>
+                            <td>{$vo.suppliername}</td>
+                            <td>{$vo.name}</td>
+                            <td>
+                                <eq name="vo.transport" value="land">陆运</eq>
+                                <eq name="vo.transport" value="sea">海运</eq>
+                                <eq name="vo.transport" value="aircraft">空运</eq>
+                            </td>
+                            <td>{$vo.freight}</td>
+                            <td>{$vo.lastnamea}{$vo.namezha}</td>
+                            <td>{$vo.creationtime}</td>
+                            <td>
+                                <button onclick="toexamine('{$vo.id}','{$vo.order_number}')" style="border: 0px;" type="button"data-toggle="modal" class="btn btn-primary btn-xs" " >
+                                    审核
+                                </button>
+                                <a href="{:U('PurchaseOrder/productDetailsone',array('id'=>$vo['id']))}"  target="_blank" style="border: 0px;color: #fff;" class="btn btn-primary btn-xs">详情</a>
+                            </td>
+                        </tr>
+                    </volist>
+                    </tbody>
+                </table>
+                <ul class="pager" style="width: 100%;">
+                    <!-- 分页显示 -->{$page}</ul>
+            </div>
+        </section>
+
+    </div>
+</div>
+<form onsubmit="return doexamine(this)">
+    <div id="tode_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+        	
+            <div class="modal-content">
+            	<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">
+                                    订单号:<span id="order_number"></span>
+                                </h4>
+				</div>
+				<div class="modal-body">
+                <table class="table table-hover table-striped table-bordered" style="border-collapse: collapse;">
+                    <thead>
+                    <tr>
+                        <td>产品名</td>
+                        <td>单价</td>
+                        <td>数量</td>
+                        <td>现价</td>
+                    </tr>
+                    </thead>
+
+                    <tbody id="tbody-result">
+
+                    </tbody>
+                </table>
+                <center>
+                <div class="input-group">
+								<span class="input-group-addon">备注</span>
+								<input type="text" name="reason" class="form-control" style="width: 50%;">
+							</div>
+                        <!--备注:<input type="text" name="reason">-->
+                        <input type="hidden" name="id" id="mid">
+                    
+                        <input type="hidden" name="status" value="" id="status">
+                </center>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="add_pr" type="submit">同意</button>
+                    <button type="submit" class="btn btn-default" id="add_no">不同意</button>
+                </div>
+            </div>
+
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    </div>
+</form>
+
+
+
+<div id="show_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document" style="width: 50%;">
+        <div class="modal-content">
+            <div class="modal-body" style="line-height: 34px;">
+                <div class="row" style="margin-left: 0;margin-right: 0;">
+                    <table class="table table-hover table-striped" style="margin-top: 20px;">
+                        <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>用户</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody-result">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#table1').DataTable({
+            "paging": false,
+            "lengthChange": false,
+            "info": false,
+            "searching": false
+        });
+    });
+    //审核采购订单弹框
+    function toexamine(id,order_number){
+        $('#add_pr').click(function () {
+            $('#status').val(2);
+        })
+        $('#add_no').click(function () {
+            $('#status').val(3);
+        })
+        var tbody=window.document.getElementById("tbody-result");
+        $('#order_number').text(order_number);
+        $('#mid').val(id);
+        $('#tode_modal').modal('toggle');
+        $.ajax({
+            url: "{:U('PurchaseOrder/examineOrders')}",
+            type: "post",
+            data: {
+                id:id
+            },
+            dataType: "json",
+            async: true,
+            success: function(data) {
+                var str="";
+                for (i in data){
+                    str +="<tr>"+
+                        "<td>"+ data[i]['namezh'] +"</td>" +
+                        "<td>"+ data[i]['price']+"</td>" +
+                        "<td>"+ data[i]['num']+"</td>" +
+                        "<td>"+ data[i]['total']+"</td>" +
+                        "</tr>";
+                }
+                tbody.innerHTML = str;
+            }
+        });
+    }
+    //审核采购订单
+    function doexamine(form) {
+        $.ajax({
+            url: "{:U('PurchaseOrder/examineOrder')}",
+            type: "post",
+            data: $(form).serialize(),
+            dataType: "json",
+            async: true,
+            success: function(data) {
+                if(data.status == 0) {
+                    $('#node_message').html('您没有该操作权限');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                } else if(data=='OK') {
+                    $('#node_message').html('审核成功');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+                }else if(data=='NO') {
+                    $('#node_message').html('未审核');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }
+            }
+        });
+        return false;
+    }
+
+
+</script>

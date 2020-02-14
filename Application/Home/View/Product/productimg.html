@@ -1,0 +1,242 @@
+<script>
+	$('#271').parents('li').addClass('nav-active')
+	$('#271').parents('li').addClass('nav-expanded')
+</script>
+<style type="text/css">
+	.row1:after {
+		display: block;
+		content: " ";
+		clear: both;
+	}
+</style>
+<form id="form">
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<div id="img_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+			<div style="margin-bottom: 20px;">
+			<div class="btn btn-success" onclick="all_checked()">全选</div>
+			<div class="btn btn-primary" onclick="cancel_checked()" style="margin-left: 15px;">取消全选</div>
+				<div class="btn btn-info" onclick="resimg()" style="margin-left: 15px;">恢复</div>
+				<div class="btn btn-danger" onclick="delete_img()" style="margin-left: 15px;">删除</div>
+			</div>
+			<div class="tabs">
+				<ul class="nav nav-tabs nav-justify">
+					<li class="active">
+						<a href="#all_img" data-toggle="tab" class="text-center">
+							<span class="badge hidden-xs">1</span> All
+						</a>
+					</li>
+					<li>
+						<a href="#product_img" data-toggle="tab" class="text-center">
+							<span class="badge hidden-xs">2</span> Product
+						</a>
+					</li>
+					<li>
+						<a href="#bclass_img" data-toggle="tab" class="text-center">
+							<span class="badge hidden-xs">3</span> Bclass
+						</a>
+					</li>
+					<li>
+						<a href="#sclass_img" data-toggle="tab" class="text-center">
+							<span class="badge hidden-xs">4</span> Sclass
+						</a>
+					</li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane fade in active" id="all_img">
+						<div class="row1">
+							<volist name="product" id="vo">
+								<div class="col-sm-2" style="border: 1px solid #eee;margin-bottom: 10px;">
+									<div style="text-align: center;line-height: 30px;">{$vo.filename}</div>
+									<div style="width: 100%;height: 0;padding-bottom: 100%;position: relative;margin-bottom: 10px;" onclick="is_checked1('{$vo.id}')">
+										<img style="width: 100%;position: absolute;top: 0;left: 0;" src="__ROOT__{$vo.thumpath}{$vo.thumfile}" onclick="onm('__ROOT__{$vo.path}{$vo.filename}')" />
+									</div>
+									<div style="text-align: center;">
+										<input type="checkbox" name="check" id="allcheck{$vo.id}" value="{$vo.id}" style="width: 25px;height: 25px;"/>
+									</div>
+								</div>
+							</volist>
+							<volist name="bclass" id="vo">
+								<div class="col-sm-2" style="border: 1px solid #eee;margin-bottom: 10px;">
+									<div style="text-align: center;line-height: 30px;">{$vo.filename}</div>
+									<div style="width: 100%;height: 0;padding-bottom: 100%;position: relative;margin-bottom: 10px;" onclick="is_checked1('{$vo.id}')">
+										<img style="width: 100%;position: absolute;top: 0;left: 0;" src="__ROOT__{$vo.thumpath}{$vo.thumfile}" onclick="onm('__ROOT__{$vo.path}{$vo.filename}')" />
+									</div>
+									<div style="text-align: center;">
+										<input type="checkbox" name="check" id="allcheck{$vo.id}" value="{$vo.id}" style="width: 25px;height: 25px;"/>
+									</div>
+								</div>
+							</volist>
+							<volist name="sclass" id="vo">
+								<div class="col-sm-2" style="border: 1px solid #eee;margin-bottom: 10px;">
+									<div style="text-align: center;line-height: 30px;">{$vo.filename}</div>
+									<div style="width: 100%;height: 0;padding-bottom: 100%;position: relative;margin-bottom: 10px;" onclick="is_checked1('{$vo.id}')">
+										<img style="width: 100%;position: absolute;top: 0;left: 0;" src="__ROOT__{$vo.thumpath}{$vo.thumfile}" onclick="onm('__ROOT__{$vo.path}{$vo.filename}')" />
+									</div>
+									<div style="text-align: center;">
+										<input type="checkbox" name="check" id="allcheck{$vo.id}" value="{$vo.id}" style="width: 25px;height: 25px;"/>
+									</div>
+								</div>
+							</volist>
+						</div>
+					</div>
+					<div class="tab-pane fade" id="product_img">
+						<div class="row1">
+							<volist name="product" id="vo">
+								<div class="col-sm-2" style="border: 1px solid #eee;margin-bottom: 10px;">
+									<div style="text-align: center;line-height: 30px;">{$vo.filename}</div>
+									<div style="width: 100%;height: 0;padding-bottom: 100%;position: relative;margin-bottom: 10px;" onclick="is_checked('{$vo.id}')">
+										<img style="width: 100%;position: absolute;top: 0;left: 0;" src="__ROOT__{$vo.thumpath}{$vo.thumfile}" onclick="onm('__ROOT__{$vo.path}{$vo.filename}')" />
+									</div>
+									<div style="text-align: center;">
+										<input type="checkbox" name="check" id="check{$vo.id}" value="{$vo.id}" style="width: 25px;height: 25px;"/>
+									</div>
+								</div>
+							</volist>
+						</div>
+					</div>
+					<div class="tab-pane fade" id="bclass_img">
+						<div class="row1">
+							<volist name="bclass" id="vo">
+								<div class="col-sm-2" style="border: 1px solid #eee;margin-bottom: 10px;">
+									<div style="text-align: center;line-height: 30px;">{$vo.filename}</div>
+									<div style="width: 100%;height: 0;padding-bottom: 100%;position: relative;margin-bottom: 10px;" onclick="is_checked('{$vo.id}')">
+										<img style="width: 100%;position: absolute;top: 0;left: 0;" src="__ROOT__{$vo.thumpath}{$vo.thumfile}" onclick="onm('__ROOT__{$vo.path}{$vo.filename}')" />
+									</div>
+									<div style="text-align: center;">
+										<input type="checkbox" name="check" id="check{$vo.id}" value="{$vo.id}" style="width: 25px;height: 25px;"/>
+									</div>
+								</div>
+							</volist>
+						</div>
+					</div>
+					<div class="tab-pane fade" id="sclass_img">
+						<div class="row1">
+							<volist name="sclass" id="vo">
+								<div class="col-sm-2" style="border: 1px solid #eee;margin-bottom: 10px;">
+									<div style="text-align: center;line-height: 30px;">{$vo.filename}</div>
+									<div style="width: 100%;height: 0;padding-bottom: 100%;position: relative;margin-bottom: 10px;" onclick="is_checked('{$vo.id}')">
+										<img style="width: 100%;position: absolute;top: 0;left: 0;" src="__ROOT__{$vo.thumpath}{$vo.thumfile}" onclick="onm('__ROOT__{$vo.path}{$vo.filename}')" />
+									</div>
+									<div style="text-align: center;">
+										<input type="checkbox" name="check" id="check{$vo.id}" value="{$vo.id}" style="width: 25px;height: 25px;"/>
+									</div>
+								</div>
+							</volist>
+						</div>
+					</div>
+				</div>
+
+				<!--<div class="panel-footer">
+				<ul class="pager">
+					<li class="previous disabled">
+						<a><i class="fa fa-angle-left"></i> Previous</a>
+					</li>
+					<li class="finish hidden pull-right">
+						<a>Finish</a>
+					</li>
+					<li class="next">
+						<a>Next <i class="fa fa-angle-right"></i></a>
+					</li>
+				</ul>
+			</div>-->
+		</section>
+		</div>
+	</div>
+</form>
+	<script>
+		var arr = [];
+		//全选
+		function all_checked(){
+			var all=$('.in').find('input')
+				all.prop('checked','checked');
+				console.log($('.in').siblings())
+				$('.in').siblings().find('input').prop('checked',false);
+		}
+		//取消全选
+		function cancel_checked(){
+			var all=$('.in').find('input')
+				all.prop('checked',false);
+		}
+		//单独选择
+		function is_checked(num){
+			console.log($('#check'+num).is(':checked'))
+			if($('#check'+num).is(':checked')){
+				$('#check'+num).prop('checked',false);
+				$('#allcheck'+num).prop('checked',false);
+			}else{
+				$('#check'+num).prop('checked','checked');
+				$('#allcheck'+num).prop('checked','checked');
+			}
+			
+		}
+		//首页单独选择
+		function is_checked1(num){
+			console.log($('#allcheck'+num).is(':checked'))
+			if($('#allcheck'+num).is(':checked')){
+				$('#check'+num).prop('checked',false);
+				$('#allcheck'+num).prop('checked',false);
+			}else{
+				$('#check'+num).prop('checked','checked');
+				$('#allcheck'+num).prop('checked','checked');
+			}
+			
+		}
+		//恢复图片
+		function resimg(){
+			var arr1=$('#form').serializeArray();
+			var arr2 = [];
+			for(var i=0;i<arr1.length;i++){
+				arr2.push(arr1[i].value);
+			}
+			console.log(arr2);
+			arr = Array.from(new Set(arr2));
+			console.log(arr);
+			$.ajax({
+				url: "{:U('Product/resimg')}", //通过页面元素的ID来获取设备ID
+				type: "post", //选择传值方式
+				data: {
+					id: arr
+				},
+				dataType: "JSON",
+				success: function(data) {
+					console.log(data)
+					if(t) {
+							clearTimeout(t)
+						};
+						$('#img_message').html('删除成功');
+						img_message.style.display = 'block';
+						var t = setTimeout("img_message.style.display='none';location.reload()", 2000);
+				}
+			})
+		}
+		//删除图片
+		function delete_img() {
+			var arr1=$('#form').serializeArray();
+			var arr2 = [];
+			for(var i=0;i<arr1.length;i++){
+				arr2.push(arr1[i].value);
+			}
+			console.log(arr2);
+			arr = Array.from(new Set(arr2));
+			console.log("{:U('Product/delimage')}");
+			$.ajax({
+				url: "{:U('Product/delimage')}", //通过页面元素的ID来获取设备ID
+				type: "post", //选择传值方式
+				data: {
+					id: arr
+				},
+				dataType: "JSON",
+				success: function(data) {
+					//console.log(data)
+					if(t) {
+							clearTimeout(t)
+						};
+						$('#img_message').html('删除成功');
+						img_message.style.display = 'block';
+						var t = setTimeout("img_message.style.display='none';location.reload()", 2000);
+				}
+			})
+		}
+	</script>

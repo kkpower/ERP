@@ -1,0 +1,55 @@
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+                    <a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+                </div>
+
+                <h2 class="panel-title">ebay平台 x账号  asin的所有连接</h2>
+            </header>
+            <div class="panel-body">
+                <div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+                <form class="" action="{:U('','','')}" method="get" style="display: inline-block;float: left;margin-right:15px ;">
+                    <div class="input-group" style="width: 500px;">
+                        <input name="search" type="text" value="" class="form-control" placeholder="{$Think.lang.Queryproduct}">
+                        <span class="input-group-btn">
+		                    <button type="submit" class="btn btn-success" style="white-space: nowrap;">搜索</button>
+		                </span>
+                    </div>
+
+                </form>
+                <button class="btn btn-primary" onclick="onm()" style="float: left;">{$Think.lang.Addnewproduct}</button>
+                <br style="clear: both;" />
+                <table id="table1" class="table table-hover table-bordered table-striped" style="margin-top: 20px;border-collapse: collapse;">
+                    <thead>
+                    <tr>
+                        <th>k</th>
+                        <th>ASIN</th>
+                        <th>sku</th>
+                        <th>查看产品</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <volist name="list" id="vo">
+                        <tr>
+                            <td>{$key}</td>
+                            <td>{$vo.asin}</td>
+                            <td>{$vo.sku}</td>
+                            <td></td>
+                        </tr>
+                    </volist>
+
+                    </tbody>
+                </table>
+                <ul class="pager" style="width: 100%;">
+                    <!-- 分页显示 -->{$page}</ul>
+            </div>
+        </section>
+
+    </div>
+</div>

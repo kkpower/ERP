@@ -1,0 +1,365 @@
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-spinner.css" />
+<script>
+	$('#316').parents('li').addClass('nav-active')
+	$('#316').parents('li').addClass('nav-expanded')
+</script>
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+				<h2 class="panel-title">
+					<eq name="Think.cookie.think_language" value="zh-cn">{$list[0]['zkname']}</eq>
+					<eq name="Think.cookie.think_language" value="en-us">{$list[0]['englishname']}</eq>
+					{$Think.lang.warehouse}
+				</h2>
+			</header>
+
+			<div id="edit_modal" class="modal fade" tabindex="-1" role="dialog">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title">
+								转区
+							</h4>
+						</div>
+						<form onsubmit="return doarea(this)">
+							<input id="pld" value="" type="hidden" name="id">
+							<input type="hidden" value="{$pid}" name="pid">
+							<input type="hidden" value="" id="sourceid" name="sourceid">
+							<input type="hidden" name="k_id" id="k_id">
+							<input type="hidden" name="pidb" value="" id="pid2">
+							<input type="hidden" name="gidb" value="" id="gid2">
+							<input type="hidden" name="kidb" value="" id="kid2">
+							<input type="hidden" name="oidb" value="" id="oid2">
+							<input type="hidden" name="numberb" value="" id="number2">
+							<div class="modal-body" style="line-height: 34px;">
+								<div class="row" style="margin-left: 0;margin-right: 0;">
+									<input type="hidden" value="" id="bof" name="bof">
+									<!--<div class="input-group" style="padding-top: 20px;">-->
+										<!--<span class="input-group-addon">订单号</span>-->
+										<!--<input id="ordernumber" type="text" class="form-control" placeholder="" style="width: 80%;" value="{$list[0].bclassc_number}.{$list[0].sclassc_number}.{$list[0].snumber_number}" readonly="readonly">-->
+									<!--</div>-->
+									<div class="input-group" style="padding-top: 20px;">
+										<span class="input-group-addon">{$Think.lang.product_number}</span>
+										<input id="code" type="text" class="form-control" placeholder="" style="width: 80%;" value="{$list[0].bclassc_number}.{$list[0].sclassc_number}.{$list[0].snumber_number}" readonly="readonly">
+									</div>
+									<div class="input-group" style="padding-top: 20px;">
+										<span class="input-group-addon">产品名称</span>
+										<input id="good" type="text" class="form-control" placeholder="" style="width: 80%;" value="" readonly="readonly">
+									</div>
+									<div class="input-group" style="padding-top: 20px;">
+										<span class="input-group-addon">单价</span>
+										<input id="pricec" type="text" class="form-control" placeholder="" style="width: 30%;" value="" readonly="readonly" name="pricec">
+										<input id="currency" type="text" class="form-control" placeholder="" style="width: 20%;" value="{$list[0].spelling}" readonly="readonly" name="currency">
+									</div>
+									<div class="input-group" style="padding-top: 20px;">
+										<span class="input-group-addon">数量</span>
+										<input id="num" type="text" class="form-control" placeholder="" style="width: 15%;" value="" readonly="readonly">
+									</div>
+									<div class="input-group" style="padding-top: 20px;">
+										<span class="input-group-addon">当前仓库</span>
+										<input id="currentd" type="text" class="form-control" placeholder="" style="width: 30%;" value="{$nameall.sname}{$nameall.kname}" readonly="readonly">
+									</div>
+									<div class="input-group" style="padding-top: 20px;">
+
+										<span class="input-group-addon">转入库区<span style="color: red;">*</span></span>
+										<select class="form-control" name="warehouse_idb" id="first" style="width: 50%;">
+										</select>
+										<!--<input id="pltype" type="text" name="type" class="form-control" placeholder="" style="width: 30%;" value="">-->
+									</div>
+									<div class="input-group spinner" data-trigger="spinner" style="padding-top: 20px;width: 56%;">
+										<!--<span class="input-group-addon"></span>-->
+
+										<div class="input-group-btn">
+											<div class="btn btn-default" style="width: 100px;background: #eee;">转入数量<span style="color: red;">*</span></div>
+											<div class="btn btn-default spin-down" data-spin="down"><i class="glyphicon glyphicon-minus"></i></div>
+										</div>
+										<input id="tonum" type="text" name="number" class="form-control spinner" placeholder="" value="">
+										<div class="input-group-btn">
+											<div class="btn btn-default spin-up" data-spin="up"><i class="glyphicon glyphicon-plus"></i></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button class="btn btn-primary" id="add_pr" type="submit">{$Think.lang.Save}</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cantel}</button>
+							</div>
+						</form>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+			</div>
+			<div class="panel-body">
+				<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+				<table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+					<thead>
+					<h5 style="font-weight: bold;"><span style="margin-right: 10px;color: #DC143C;">{$Think.lang.SKU}:</span><a href="{:U('Product/homeProduct',array('pid'=>$list[0]['pid']))}" target="_blank">{$list[0].bclassc_number}.{$list[0].sclassc_number}.{$list[0].snumber_number}</a></h5>
+						<h5 style="font-weight: bold;"><span style="margin-right: 10px;color: #DC143C;">{$Think.lang.Productname}:</span><a href="{:U('Product/homeProduct',array('pid'=>$list[0]['pid']))}" target="_blank">{$list[0].namezh}</a></h5>
+						<h5 style="font-weight: bold;"><span style="margin-right: 10px;color: #DC143C;">{$Think.lang.unitpriceofproduct}:</span><span id="godid"></span>&nbsp;&nbsp;{$list[0].spelling}</h5>
+					<input type="hidden" id="rce1" value="{$list[0].exchange_rate}">
+					<input type="hidden" id="rce2" value="{$list[0].price}">
+						<tr>
+							<th>{$Think.lang.reservoirarea}</th>
+							<th>{$Think.lang.stock_quantity}</th>
+							<th>{$Think.lang.Operation}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<volist name="list" id="vo" key="k">
+							<tr>
+								<td>
+									<eq name="vo.kqname" value="1">{$Think.lang.waiting_for_inspection}</eq>
+									<eq name="vo.kqname" value="2">{$Think.lang.mainwarehouse}</eq>
+									<eq name="vo.kqname" value="3">{$Think.lang.tobeprocessed}</eq>
+									<eq name="vo.kqname" value="4">{$Think.lang.waste_warehouse}</eq>
+								</td>
+								<td class="nums">{$vo.number}</td>
+								<td>
+									<a href="{:U('Warehouse/areaReservoirdetails',array('id'=>$vo['w_lid'],'pid'=>$list[0]['pid']))}" target="_blank" style="border: 0px;color: #fff;" class="btn btn-primary btn-xs">{$Think.lang.Details}</a>
+								</td>
+							</tr>
+						</volist>
+					</tbody>
+				</table>
+				<ul class="pager" style="width: 100%;">
+					<!-- 分页显示 -->{$page}</ul>
+			</div>
+		</section>
+
+	</div>
+</div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/jquery.spinner.min.js"></script>
+<script>
+	var rce1 = $('#rce1').val();
+	var rce2 = $('#rce2').val();
+	$('#godid').text((Number(rce1)*Number(rce2)).toFixed(2));
+
+	$(".spinner").spinner({
+		max: $('.nums').text(),
+		min: 0,
+		step: 1
+	});
+	$(document).ready(function() {
+		$('#table1').DataTable({
+			"paging": false,
+			"lengthChange": false,
+			"info": false,
+			"searching": false
+		});
+	});
+	var bar = [];
+	$('.bar').each(function () {
+        bar.push($(this).val());
+    });
+	$('#sl').val(bar.pop());
+    var boo = [];
+    $('.bar').each(function () {
+        boo.push($(this).val());
+    });
+    $('#bof').val(boo.pop());
+
+	//转区
+	function doarea(form) {
+		$.ajax({
+			url: "{:U('Warehouse/executionZone')}",
+			type: "post",
+			data: $(form).serialize(),
+			dataType: "json",
+			async: true,
+			success: function(data) {
+				if(data.status == 0) {
+					$('#node_message').html('您没有该操作权限');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				} else if(data == "OK") {
+					$('#node_message').html('转区成功');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+				} else if(data == "NO") {
+					$('#node_message').html('转区失败');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				} else if(data == "SO") {
+					$('#node_message').html('转入库区有误或转入数量超出');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				}else if (data == "KO"){
+                    $('#node_message').html('转区成功');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';location.href=\"{:U('Warehouse/stock')}\"", 2000);
+                }
+			}
+		});
+		return false;
+	}
+
+	//收货
+	function doaream(form) {
+		$.ajax({
+			url: "{:U('Warehouse/executionZonec')}",
+			type: "post",
+			data: $(form).serialize(),
+			dataType: "json",
+			async: true,
+			success: function(data) {
+                console.log(data);
+                if(data.status == 0) {
+					$('#node_message').html('您没有该操作权限');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				} else if(data == "OK") {
+					$('#node_message').html('核对完成');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+				} else if(data == "NO") {
+					$('#node_message').html('核对失败');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				} else if (data == "KO"){
+                    $('#node_message').html('核对完成');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';location.href=\"{:U('Warehouse/stock')}\"", 2000);
+				}
+			}
+		});
+		return false;
+	}
+	//获取仓库
+	function areaturns(id, pid, warehouse_id, g_id, number, o_id, namezh, sourceorder, pname, wname) {
+		$('#sourcewarehouse').val(pname + wname);
+		$('#sourceordero').val(sourceorder);
+		$.ajax({
+			url: "{:U('Warehouse/getAjaxWarehouse')}",
+			type: "post", //选择传值方式
+			data: {
+				id: id,
+				warehouse_id: warehouse_id
+			},
+			dataType: "JSON",
+			success: function(data) {
+				$('#k_ida').val(id);
+				$('#pidc').val(pid);
+				$('#kidc').val(warehouse_id);
+				$('#gidc').val(g_id);
+				$('#numberc').val(number);
+				$('#oidc').val(o_id);
+				$('#numbera').val(o_id);
+				$('#gooda').val(namezh);
+				$('#numa').val(number);
+				console.log(data);
+				var p = "<option id='first_op1' value=''>请选择</option>"
+				$("#first1").html(p);
+				//将获取到的数据赋值
+				for(var i = 0; i < data.length; i++) {
+					//拼接option标签的 name value 等属性
+					var p = "<option value='" +
+						data[i]['id'] +
+						"'" +
+						">" +
+						data[i]['name'] +
+						"</option>";
+					$("#first_op1").after(p);
+				}
+				$('#cdit_modal').modal('toggle');
+			}
+		})
+	}
+	//获取仓库下的库区
+	function areaturn(id, pid, zkname,kqname,number,namezh,warehouse_id,g_id,o_id,ordernumber,sourceorder) {
+		$('#good').val(namezh);
+		$('#tonum').val(number)
+		$('#num').val(number);
+		$('#currentd').val(zkname+kqname);
+		$('#ordernumber').val(ordernumber);
+		$('#sourceid').val(sourceorder);
+		var goodprice = $('#godid').text();
+		$('#pricec').val(goodprice);
+		$.ajax({
+			url: "{:U('Warehouse/getAjaxreservoir')}",
+			type: "post", //选择传值方式
+			data: {
+				id: id,
+				warehouse_id: warehouse_id
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data)
+				$('#k_id').val(id);
+				$('#pid2').val(pid);
+				$('#kid2').val(warehouse_id);
+				$('#gid2').val(g_id);
+				$('#number2').val(number);
+				$('#oid2').val(o_id);
+				console.log(data);
+				var p = "<option id='first_op' value=''>请选择</option>"
+				$("#first").html(p);
+				//将获取到的数据赋值
+				for(var i = 0; i < data.length; i++) {
+					//拼接option标签的 name value 等属性
+					var p = "<option value='" +
+						data[i]['id'] +
+						"'" +
+						">" +
+						data[i]['name'] +
+						"</option>";
+					$("#first_op").after(p);
+				}
+				$('#edit_modal').modal('toggle');
+			}
+		})
+	}
+
+	//待检仓数量核对收货
+	function areaturnb(id, pid, warehouse_id, g_id, number, o_id, namezh, pname, wname, sourceorder) {
+		$('#sourcek').val(sourceorder);
+		$('#nld').val(id);
+		$.ajax({
+			url: "{:U('Warehouse/getAjaxreservoir')}",
+			type: "post", //选择传值方式
+			data: {
+				id: id,
+				warehouse_id: warehouse_id
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data)
+				$('#k_idk').val(id);
+				$('#pid2k').val(pid);
+				$('#kid2k').val(warehouse_id);
+				$('#gid2k').val(g_id);
+				$('#number2k').val(number);
+				$('#oid2k').val(o_id);
+				$('#numberk').val(o_id);
+				$('#tonumk').val(number)
+				$('#goodk').val(namezh);
+				$('#numk').val(number);
+				if(sourceorder == '') {
+					$('#sourceordersk').val(0);
+				} else {
+					$('#sourceordersk').val(sourceorder);
+				}
+				console.log(data);
+				//将获取到的数据赋值
+				$('#sdit_modal').modal('toggle');
+			}
+		})
+	}
+	if($('#mold').val() == 1) {
+		$('#qbsh').show();
+	} else {
+		$('#qbsh').hide();
+	}
+	var sum = 0;
+	$("span[name='xj']").each(function() {
+		sum += +$(this).text();
+	});
+	$("#total_price").text(sum.toFixed(1));
+</script>

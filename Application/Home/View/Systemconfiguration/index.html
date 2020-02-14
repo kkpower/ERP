@@ -1,0 +1,423 @@
+<script>
+    $('#343').parents('li').addClass('nav-active')
+    $('#343').parents('li').addClass('nav-expanded')
+</script>
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<div id="node_modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="width: 500px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">
+                    {$Think.lang.Nationalinformation}
+                </h4>
+            </div>
+            <div class="modal-body" style="line-height: 34px;">
+                <input type="hidden" id="countryid">
+                <div class="row" style="margin-left: 0;margin-right: 0;">
+                    <div class="input-group">
+                        <span class="input-group-addon" style="margin-top: 20px;">{$Think.lang.Janespell}<span style="color: red;">*</span></span>
+                        <input type="text" class="form-control" placeholder="" id="simplicity" onblur="getajaxRepeat(1)">
+                    </div>
+                    <div id="name_check1" style="float: left;margin-left: 20px;"></div>
+                    <br style="clear: both;" />
+                    <div class="input-group">
+                        <span class="input-group-addon" style="margin-top: 20px;">{$Think.lang.Chinesename}<span style="color: red;">*</span></span>
+                        <input type="text" class="form-control" placeholder="" id="namezh" onblur="getajaxRepeat(2)">
+                    </div>
+                    <div id="name_check2" style="float: left;margin-left: 20px;"></div>
+                    <br style="clear: both;" />
+                    <div class="input-group">
+                        <span class="input-group-addon">{$Think.lang.Engname}<span style="color: red;">*</span></span>
+                        <input type="text" class="form-control" placeholder="" id="nameus" onblur="getajaxRepeat(3)">
+                    </div>
+                    <div id="name_check3" style="float: left;margin-left: 20px;"></div>
+                    <br style="clear: both;" />
+                    <div class="input-group">
+                        <span class="input-group-addon" style="margin-top: 20px;">{$Think.lang.Currencyname}<span style="color: red;">*</span></span>
+                        <input type="text" class="form-control" placeholder="" id="money" onblur="getajaxRepeat(4)">
+                    </div>
+                    <div id="name_check4" style="float: left;margin-left: 20px;"></div>
+                    <br style="clear: both;" />
+                    <div class="input-group">
+                        <span class="input-group-addon" style="margin-top: 20px;">{$Think.lang.Currencysymbol}<span style="color: red;">*</span></span>
+                        <input type="text" class="form-control" placeholder="" id="symbol" onblur="getajaxRepeat(5)">
+                    </div>
+                    <div id="name_check5" style="float: left;margin-left: 20px;"></div>
+                    <br style="clear: both;" />
+                    <div class="input-group">
+                        <span class="input-group-addon" style="margin-top: 20px;">{$Think.lang.Currencyshortname}<span style="color: red;">*</span></span>
+                        <input type="text" class="form-control" placeholder="" id="currency"  onblur="getajaxRepeat(6)">
+                    </div>
+                    <div id="name_check6" style="float: left;margin-left: 20px;"></div>
+                    <br style="clear: both;" />
+                    <div class="input-group">
+                        <span class="input-group-addon" style="margin-top: 20px;">{$Think.lang.RMBexchangerate}<span style="color: red;">*</span></span>
+                        <input type="text" class="form-control" placeholder="" id="exchange_rate">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="add_pr" type="submit" onclick="saveCountry()">{$Think.lang.Save}</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cancel}</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+<div id="sode_modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="width: 500px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">
+                    {$Think.lang.companyinformation}
+                </h4>
+            </div>
+            <div class="modal-body" style="line-height: 34px;">
+                <input type="hidden" id="companyid">
+                <div class="row" style="margin-left: 0;margin-right: 0;">
+                    <div class="input-group">
+                        <span class="input-group-addon" style="margin-top: 20px;">{$Think.lang.Chinesename}<span style="color: red;">*</span></span>
+                        <input type="text" class="form-control" placeholder="" id="gsnamezh">
+                    </div>
+                    <div class="input-group" style="margin-top: 20px;">
+                        <span class="input-group-addon" style="margin-top: 20px;">{$Think.lang.Engname}<span style="color: red;">*</span></span>
+                        <input type="text" class="form-control" placeholder="" id="gsnameus">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="submit" onclick="saveCompany()">{$Think.lang.Save}</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cancel}</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+                    <a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+                </div>
+
+                <h2 class="panel-title">{$Think.lang.systemconfiguration}</h2>
+            </header>
+            <div class="panel-body">
+                <div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+                <!--<form class="" action="{:U('My/teleList')}" method="get" style="display: inline-block;float: left;margin-right:15px ;">-->
+                    <!--<input type="hidden" value="{$pid}" name="id">-->
+                    <!--<div class="input-group" style="width: 500px;">-->
+                        <!--<input name="search" type="text" value="" class="form-control" placeholder="请输入你想查询的姓名">-->
+                    	<!--<span class="input-group-btn">-->
+		                    <!--<button type="submit" class="btn btn-success" style="white-space: nowrap;">搜索</button>-->
+		                <!--</span>-->
+                    <!--</div>-->
+                    <!--<input type="hidden" id="" name='' value="">-->
+                    <!--<input type="hidden" name='' value="">-->
+                <!--</form>-->
+                <!--<br style="clear: both;" />-->
+                <table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+                    <thead>
+                    <tr>
+                        <th>{$Think.lang.Corporatename}</th>
+                        <th>{$Think.lang.warehousename}</th>
+                        <th>{$Think.lang.CountryName}</th>
+                        <th>操作</th>
+                        <th style="display: none;"></th>
+                        <th style="display: none;"></th>
+                        <th style="display: none;"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <volist name="list" id="vo" key="k">
+                        <tr>
+                            <td><a href="#" onclick="company('{$vo.company}')">{$vo.namezh}</a></td>
+                            <td><a href="{:U('Warehouse/inLibrary',array('k_id'=>$vo['warehouse_physical']))}" target="_blank">{$vo.name}</a></td>
+                            <td><a href="#" onclick="country('{$vo.country}')">{$vo.countryzh}</a></td>
+                        	<td></td>
+                        	<td style="display: none;">{$vo.company}</td>
+                        	<td style="display: none;">{$vo.warehouse_physical}</td>
+                        	<td style="display: none;">{$vo.country}</td>
+                        </tr>
+                    </volist>
+                    </tbody>
+                </table>
+                <ul class="pager" style="width: 100%;">
+                    <!-- 分页显示 -->{$page}</ul>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script>
+	var oTable;
+    $(document).ready(function() {
+        oTable = $('#table1').dataTable({
+			"paging": false,
+			"lengthChange": false,
+			"info": false,
+			"searching": false,
+			"fnCreatedRow": function(nRow, aData, iDataIndex) {
+				$('td:eq(3)', nRow).prepend("<button class='row-details row-details-close btn btn-info btn-xs' data_id='"+ aData[4] +"' data_cid='" + aData[5] + "' data_oid='"+ aData[6] +"'>详情</button>");
+			},
+		});
+		$('.table').on('click', ' tbody td .row-details', function() {
+			var nTr = $(this).parents('tr')[0];
+			console.log(oTable);
+			if(oTable.fnIsOpen(nTr)) //判断是否已打开
+			{
+				/* This row is already open - close it */
+				$(this).addClass("row-details-close").removeClass("row-details-open");
+				oTable.fnClose(nTr);
+			} else {
+				/* Open this row */
+				$(this).addClass("row-details-open").removeClass("row-details-close");
+				//  alert($(this).attr("data_id"));
+				//oTable.fnOpen( nTr,
+				// 调用方法显示详细信息 data_id为自定义属性 存放配置ID
+				fnFormatDetails(nTr, $(this).attr("data_id"),$(this).attr("data_cid"),$(this).attr("data_oid"));
+			}
+		});
+    });
+    //详情
+	function fnFormatDetails(nTr, pdataId, pcid, poid) {
+		console.log(pdataId)
+		console.log(poid)
+		$.ajax({
+			url: "{:U('Deliverycenter/1111')}", //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				company: pdataId,
+				warehouse:pcid,
+				country: poid	
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				var sOut = '';
+				for(var i = 0; i < data.length; i++) {
+					sOut += '<div>' +
+						'<img src="__ROOT__' + data[i].thumb + '" /><span>x' + data[i].number + '</span>' +
+						'<p><a target="_blank" href="' + "{:U('Product/homeProduct','','')}/pid/" + data[i].pid + '">' + data[i].namezh + '</a></p>' +
+						'<p><a target="_blank" href="' + "{:U('Product/homeProduct','','')}/pid/" + data[i].pid + '">料号:' + data[i].bclass + '.' + data[i].sclass + '.' + data[i].num + '</p>' +
+						'</div>';
+				}
+				oTable.fnOpen(nTr, sOut, 'details');
+			}
+		})
+
+	}
+    //查看公司信息
+    function company(company_id){
+        $('#gsnamezh').val();
+        $('#gsnameus').val();
+        $('#companyid').val(company_id);
+        $.ajax({
+            url: "{:U('Organizationt/getajaxCompany','','')}",
+            type: 'post',
+            dataType: 'JSON',
+            data:{
+                id:company_id
+            },
+            success: function(data) {
+                console.log(data);
+                $('#gsnamezh').val(data.namezh);
+                $('#gsnameus').val(data.nameus);
+            }
+        });
+        $('#sode_modal').modal('toggle');
+    }
+    //查看国家信息
+    function country(country_id) {
+        $('#countryid').val(country_id);
+        $.ajax({
+            url: "{:U('Organizationt/getajaxCountry','','')}",
+            type: 'post',
+            dataType: 'JSON',
+            data:{
+                id:country_id
+            },
+            success: function(data) {
+                console.log(data);
+                $('#simplicity').val(data.spelling);
+                $('#namezh').val(data.countryzh);
+                $('#nameus').val(data.countryus);
+                $('#symbol').val(data.symbol);
+                $('#currency').val(data.currency);
+                $('#exchange_rate').val(data.exchange_rate);
+                $('#money').val(data.money);
+            }
+        });
+        $('#node_modal').modal('toggle');
+    }
+    //更改国家信息
+    function saveCountry() {
+        var id = $('#countryid').val();
+        var simplicity = $('#simplicity').val();
+        var namezh = $('#namezh').val();
+        var nameus = $('#nameus').val();
+        var symbol = $('#symbol').val();
+        var currency = $('#currency').val();
+        var exchange_rate = $('#exchange_rate').val();
+        var money = $('#money').val();
+        $.ajax({
+            url: "{:U('Organizationt/saveCountry')}",
+            type: 'post',
+            dataType: 'JSON',
+            data:{
+                id:id,
+                spelling:simplicity,
+                countryzh:namezh,
+                countryus:nameus,
+                symbol:symbol,
+                currency:currency,
+                exchange_rate:exchange_rate,
+                money:money
+            },
+            success: function(data) {
+                console.log(data);
+                if (data=='NO'){
+                    $('#node_message').html('{$Think.lang.Cannotbeempty}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if(data > 0) {
+                    $('#node_message').html('{$Think.lang.Savesuccessfully}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+
+                } else{
+                    $('#node_message').html('{$Think.lang.Noinformationhasbeenmodified}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }
+            }
+        });
+    }
+
+    //更改公司信息
+    function saveCompany() {
+        var id = $('#companyid').val();
+        var namezh = $('#gsnamezh').val();
+        var nameus = $('#gsnameus').val();
+
+        $.ajax({
+            url: "{:U('Organizationt/saveCompany')}",
+            type: 'post',
+            dataType: 'JSON',
+            data:{
+                id:id,
+                namezh:namezh,
+                nameus:nameus
+
+            },
+            success: function(data) {
+                console.log(data);
+                if(data=='of'){
+                    $('#node_message').html('{$Think.lang.Cannotbeempty}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if (data=='zh'){
+                    $('#node_message').html('{$Think.lang.TheChinesenamealreadyexists}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if (data=='us'){
+                    $('#node_message').html('{$Think.lang.TheEnglishnamealreadyexists}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }else if(data > 0) {
+                    $('#node_message').html('{$Think.lang.Savesuccessfully}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+
+                } else{
+                    $('#node_message').html('{$Think.lang.Noinformationhasbeenmodified}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }
+            }
+        });
+    }
+    //检测国家重复信息
+    function getajaxRepeat(type) {
+        var id = $('#countryid').val();
+        switch (type){
+            case 1:
+                var name = $("#simplicity").val();
+                break;
+            case 2:
+                var name = $('#namezh').val();
+                break;
+            case 3:
+                var name = $('#nameus').val();
+                break;
+            case 4:
+                var name = $('#money').val();
+                break;
+            case 5:
+                var name = $('#symbol').val();
+                break;
+            case 6:
+                var name = $('#currency').val();
+                break;
+        }
+
+        $.ajax({
+            url: "{:U('Organizationt/getajaxRepeat')}",
+            type: "post", //选择传值方式
+            data: {
+                type:type,
+                id:id,
+                name: name
+            },
+            dataType: "JSON",
+            success: function(data) {
+                console.log(data);
+                if(type == 1) {
+                    if (data>0){
+                        $('#name_check1').html('<span style="color:red;">{$Think.lang.Simplyrepeat}</span>');
+                    }else{
+                        $('#name_check1').html('<span style="color:#5cb85c;">{$Think.lang.Thissimplespellcanbeused}</span>');
+                    }
+                }else if (type==2){
+                    if (data>0){
+                        $('#name_check2').html('<span style="color:red;">{$Think.lang.Chinesenamerepeat}</span>');
+                    }else{
+                        $('#name_check2').html('<span style="color:#5cb85c;">{$Think.lang.Namecanused}</span>');
+                    }
+                }else if (type==3){
+                    if (data>0){
+                        $('#name_check3').html('<span style="color:red;">{$Think.lang.DuplicateEnglishname}</span>');
+                    }else{
+                        $('#name_check3').html('<span style="color:#5cb85c;">{$Think.lang.Namecanused}</span>');
+                    }
+                }else if (type==4){
+                    if (data>0){
+                        $('#name_check4').html('<span style="color:red;">{$Think.lang.Duplicatecurrencyname}</span>');
+                    }else{
+                        $('#name_check4').html('<span style="color:#5cb85c;">{$Think.lang.Thecurrencynamecanbeused}</span>');
+                    }
+                }else if (type==5){
+                    if (data>0){
+                        $('#name_check5').html('<span style="color:red;">{$Think.lang.Currencysymbolrepetition}</span>');
+                    }else{
+                        $('#name_check5').html('<span style="color:#5cb85c;">{$Think.lang.currencysymbolcanbeused}</span>');
+                    }
+                }else if (type==6){
+                    if (data>0){
+                        $('#name_check6').html('<span style="color:red;">{$Think.lang.currencyabbreviations}</span>');
+                    }else{
+                        $('#name_check6').html('<span style="color:#5cb85c;">{$Think.lang.Thiscurrencyabbreviationcanbeused}</span>');
+                    }
+                }
+
+            }
+        })
+    }
+</script>

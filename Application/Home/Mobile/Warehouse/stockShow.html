@@ -1,0 +1,555 @@
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-spinner.css" />
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+				<h2 class="panel-title">{$nameall.sname} - {$nameall.kname}</h2>
+			</header>
+			<div id="cdit_modal" class="modal fade" tabindex="-1" role="dialog">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title">
+								转库
+							</h4>
+						</div>
+						<form onsubmit="return doareas(this)">
+							<input id="pld" value="" type="hidden" name="id">
+							<input type="hidden" value="{$pid}" name="pid">
+							<div class="modal-body" style="line-height: 34px;">
+								<input type="hidden" id="sourceordero" name="sourceordera">
+								<div class="row" style="margin-left: 0;margin-right: 0;">
+									<div class="input-group" style="padding-top: 1.2rem;">
+										<span class="input-group-addon">订单号</span>
+										<input id="numbera" type="text" class="form-control" placeholder="" value="" readonly="readonly">
+									</div>
+									<div class="input-group" style="padding-top: 1.2rem;">
+										<span class="input-group-addon">产品</span>
+										<input id="gooda" type="text" class="form-control" placeholder="" value="" readonly="readonly">
+									</div>
+									<div class="input-group" style="padding-top: 1.2rem;">
+										<span class="input-group-addon">数量</span>
+										<input id="numa" type="text" class="form-control" placeholder="" value="" readonly="readonly">
+									</div>
+									<div class="input-group" style="padding-top: 1.2rem;">
+										<span class="input-group-addon">来源仓库</span>
+										<input id="sourcewarehouse" type="text" class="form-control" placeholder="" value="" readonly="readonly">
+									</div>
+									<div class="input-group" style="padding-top: 1.2rem;">
+										<span class="input-group-addon">当前仓库</span>
+										<input id="current" type="text" class="form-control" placeholder="" value="{$nameall.sname}{$nameall.kname}" readonly="readonly">
+									</div>
+									<div class="input-group" style="padding-top: 1.2rem;">
+										<input type="hidden" name="k_id" id="k_ida">
+										<input type="hidden" name="pidb" value="" id="pidc">
+										<input type="hidden" name="gidb" value="" id="gidc">
+										<input type="hidden" name="kidb" value="" id="kidc">
+										<input type="hidden" name="oidb" value="" id="oidc">
+										<input type="hidden" name="numberb" value="" id="numberc">
+										<span class="input-group-addon">转入仓库<span style="color: red;">*</span></span>
+										<select name="warehouse_idb" id="first1">
+										</select>
+										<!--<input id="pltype" type="text" name="type" class="form-control" placeholder="" style="width: 30%;" value="">-->
+									</div>
+									<div class="input-group" style="padding-top: 1.2rem;">
+										<span class="input-group-addon">运输方式<span style="color: red;">*</span></span>
+										<select name="transport" class="form-control">
+											<option value="">请选择</option>
+											<option value="land">陆运</option>
+											<option value="sea">海运</option>
+											<option value="aircraft">空运</option>
+										</select>
+									</div>
+									<div class="input-group" style="padding-top: 1.2rem;">
+										<span class="input-group-addon">转入数量<span style="color: red;">*</span></span>
+										<input id="address" type="text" name="number" class="form-control" placeholder="" value="">
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button class="btn btn-primary" id="add_pr" type="submit">{$Think.lang.Save}</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cantel}</button>
+							</div>
+						</form>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+			</div>
+			<div id="sdit_modal" class="modal fade" tabindex="-1" role="dialog">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title">
+								收货
+							</h4>
+						</div>
+						<form onsubmit="return doaream(this)">
+							<input id="nld" value="" type="hidden" name="id">
+							<input type="hidden" value="{$pid}" name="pid">
+							<input type="hidden" name="k_id" id="k_idk">
+							<input type="hidden" name="pidb" value="" id="pid2k">
+							<input type="hidden" name="gidb" value="" id="gid2k">
+							<input type="hidden" name="kidb" value="" id="kid2k">
+							<input type="hidden" name="oidb" value="" id="oid2k">
+							<input type="hidden" name="numberb" value="" id="number2k">
+							<div class="modal-body" style="line-height: 34px;">
+								<div class="row" style="margin-left: 0;margin-right: 0;">
+									<div class="input-group" style="padding-top: 20px;">
+										<span class="input-group-addon">订单号</span>
+										<input id="numberk" type="text" class="form-control" placeholder="" style="width: 30%;" value="" readonly="readonly">
+									</div>
+									<div class="input-group" style="padding-top: 20px;">
+										<span class="input-group-addon">产品</span>
+										<input id="goodk" type="text" class="form-control" placeholder="" style="width: 50%;" value="" readonly="readonly">
+									</div>
+									<div class="input-group" style="padding-top: 20px;">
+										<span class="input-group-addon">来源</span>
+										<input id="sourcek" type="text" class="form-control" style="width: 30%;" readonly="readonly">
+										<input type="hidden" id="sourceordersk" name="sourceorder">
+									</div>
+									<div class="input-group" style="padding-top: 20px;">
+										<span class="input-group-addon">当前仓库</span>
+										<input id="currentk" type="text" class="form-control" placeholder="" style="width: 30%;" value="{$nameall.sname}{$nameall.kname}" readonly="readonly">
+									</div>
+									<div class="input-group" style="padding-top: 20px;">
+										<span class="input-group-addon">预期数量</span>
+										<input id="numk" type="text" class="form-control" placeholder="" style="width: 15%;" value="" readonly="readonly">
+									</div>
+									<div class="input-group spinner" data-trigger="spinner" style="padding-top: 20px;width: 56%;">
+										<!--<span class="input-group-addon"></span>-->
+
+										<div class="input-group-btn">
+											<div class="btn btn-default" style="width: 100px;background: #eee;">实收数量<span style="color: red;">*</span></div>
+											<div class="btn btn-default spin-down" data-spin="down"><i class="glyphicon glyphicon-minus"></i></div>
+										</div>
+										<input id="tonumk" type="text" name="number" class="form-control spinner" placeholder="" value="">
+										<div class="input-group-btn">
+											<div class="btn btn-default spin-up" data-spin="up"><i class="glyphicon glyphicon-plus"></i></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button class="btn btn-primary" id="add_pr" type="submit">{$Think.lang.Save}</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cantel}</button>
+							</div>
+						</form>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+			</div>
+
+			<div id="edit_modal" class="modal fade" tabindex="-1" role="dialog">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title">
+								转区
+							</h4>
+						</div>
+						<form onsubmit="return doarea(this)">
+							<input id="pld" value="" type="hidden" name="id">
+							<input type="hidden" value="{$pid}" name="pid">
+							<input type="hidden" name="k_id" id="k_id">
+							<input type="hidden" name="pidb" value="" id="pid2">
+							<input type="hidden" name="gidb" value="" id="gid2">
+							<input type="hidden" name="kidb" value="" id="kid2">
+							<input type="hidden" name="oidb" value="" id="oid2">
+							<input type="hidden" name="numberb" value="" id="number2">
+							<div class="modal-body" style="line-height: 34px;">
+								<div class="row" style="margin-left: 0;margin-right: 0;">
+									<div class="input-group" style="padding-top: 1.2rem;">
+										<span class="input-group-addon">订单号</span>
+										<input id="number" type="text" class="form-control" placeholder="" value="" readonly="readonly">
+									</div>
+									<div class="input-group" style="padding-top: 1.2rem;">
+										<span class="input-group-addon">产品</span>
+										<input id="good" type="text" class="form-control" placeholder="" value="" readonly="readonly">
+									</div>
+									<div class="input-group" style="padding-top: 1.2rem;">
+										<span class="input-group-addon">数量</span>
+										<input id="num" type="text" class="form-control" placeholder="" value="" readonly="readonly">
+									</div>
+									<div class="input-group" style="padding-top: 1.2rem;">
+										<span class="input-group-addon">来源</span>
+										<input id="source" type="text" class="form-control" readonly="readonly">
+										<input type="hidden" id="sourceorders" name="sourceorder">
+									</div>
+									<div class="input-group" style="padding-top: 1.2rem;">
+										<span class="input-group-addon">当前仓库</span>
+										<input id="current" type="text" class="form-control" placeholder="" value="{$nameall.sname}{$nameall.kname}" readonly="readonly">
+									</div>
+									<div class="input-group" style="padding-top: 1.2rem;">
+
+										<span class="input-group-addon">转入库区<span style="color: red;">*</span></span>
+										<select class="form-control" name="warehouse_idb" id="first">
+										</select>
+										<!--<input id="pltype" type="text" name="type" class="form-control" placeholder="" style="width: 30%;" value="">-->
+									</div>
+									<div class="input-group spinner" data-trigger="spinner" style="padding-top: 1.2rem;">
+										<!--<span class="input-group-addon"></span>-->
+
+										<div class="input-group-btn">
+											<div class="btn btn-default" style="width: 100px;background: #eee;">转入数量<span style="color: red;">*</span></div>
+											<div class="btn btn-default spin-down" data-spin="down"><i class="glyphicon glyphicon-minus"></i></div>
+										</div>
+										<input id="tonum" type="text" name="number" class="form-control spinner" placeholder="" value="">
+										<div class="input-group-btn">
+											<div class="btn btn-default spin-up" data-spin="up"><i class="glyphicon glyphicon-plus"></i></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button class="btn btn-primary" id="add_pr" type="submit">{$Think.lang.Save}</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cantel}</button>
+							</div>
+						</form>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+			</div>
+			<div class="panel-body">
+				<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+				<form class="" action="{:U('Warehouse/stockShow')}" method="get" style="display: inline-block;float: left;">
+					<input type="hidden" name="pid" value="{$pid}">
+					<input type="hidden" name="kid" value="{$kid}">
+					<div class="input-group">
+						<input name="o_id" type="text" value="" class="form-control" placeholder="请输入订单号">
+						<span class="input-group-btn">
+                    <button type="submit" class="btn btn-success" style="white-space: nowrap;">搜索</button>
+                </span>
+					</div>
+				</form>
+				<input type="hidden" value="{$mold}" id="mold">
+
+				<br style="clear: both;" />
+				<form onsubmit="return onm(this)">
+					<volist name="list" id="vo">
+						<input type="hidden" value="{$vo.number}" name="number[]">
+						<input type="hidden" value="{$vo.o_id}" name="oid[]">
+						<input type="hidden" value="{$vo.g_id}" name="gid[]">
+					</volist>
+					<input type="hidden" value="{$pid}" name="pid">
+					<input type="hidden" value="{$mold}" name="mold">
+					<input type="hidden" value="{$kid}" name="warehouse_id">
+				</form>
+				<table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;margin-top: 20px;">
+					<thead>
+						<h5 style="font-weight: bold;"><span style="margin-right: 10px;">产品:</span>{$nameall.namezh}</h5>
+						<h5 style="font-weight: bold;"><span style="margin-right: 10px;">编码:</span>{$codes.bclassc_number}.{$codes.sclassc_number}.{$codes.snumber_number}</h5>
+						<tr>
+							<th>订单号</th>
+							<!--<th>现进价</th>-->
+							<th>数量</th>
+							<th>来源</th>
+							<th>供应商</th>
+							<th>入库时间</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<volist name="list" id="vo" key="k">
+							<tr>
+								<td>{$vo.o_id}</td>
+								<!--<td>{$vo.price}￥</td>-->
+								<td class="nums">{$vo.number}</td>
+								<td>
+									<if condition="$vo.sourceortarget eq 0">
+										<eq name="vo.sourceorder" value="1">采购订单</eq>
+										<eq name="vo.sourceorder" value="2">内部订单</eq>
+									</if>
+									{$vo.pname}{$vo.wname}
+								</td>
+								<td>{$vo.name}</td>
+								<td>{$vo.creationtime}</td>
+								<td>
+									<if condition="$nameall.kname eq '主仓'">
+										<button id="zq" onclick='areaturns("{$vo.id}","{$vo.pid}","{$kid}","{$vo.g_id}","{$vo.number}","{$vo.o_id}","{$vo.namezh}","{$vo.sourceorder}","{$vo.pname}","{$vo.wname}")' style="border: 0px;" type="button" class="btn btn-primary btn-xs">
+										转库
+									</button>
+									</if>
+									<if condition="$vo.checkd eq 1 ">
+										<if condition="$nameall.kname neq '主仓' ">
+											<button id="zq" onclick='areaturn("{$vo.id}","{$vo.pid}","{$kid}","{$vo.g_id}","{$vo.number}","{$vo.o_id}","{$vo.namezh}","{$vo.pname}","{$vo.wname}","{$vo.sourceorder}","{$vo.sourceortarget}")' style="border: 0px;" type="button" class="btn btn-primary btn-xs">
+										转区
+									</button>
+										</if>
+									</if>
+									<if condition="$vo.checkd eq '' ">
+										<button id="zq" onclick='areaturnb("{$vo.id}","{$vo.pid}","{$kid}","{$vo.g_id}","{$vo.number}","{$vo.o_id}","{$vo.namezh}","{$vo.pname}","{$vo.wname}","{$vo.sourceorder}","{$vo.sourceortarget}")' style="border: 0px;" type="button" class="btn btn-primary btn-xs">
+										收货
+									</button>
+									</if>
+								</td>
+							</tr>
+						</volist>
+					</tbody>
+				</table>
+				<ul class="pager" style="width: 100%;">
+					<!-- 分页显示 -->{$page}</ul>
+			</div>
+		</section>
+
+	</div>
+</div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/jquery.spinner.min.js"></script>
+<script>
+	$(".spinner").spinner({
+		max: $('.nums').text(),
+		min: 0,
+		step: 1
+	});
+	$(document).ready(function() {
+		$('#table1').DataTable({
+			"paging": false,
+			"lengthChange": false,
+			"info": false,
+			"searching": false
+		});
+	});
+	//转库
+	function doareas(form) {
+		$.ajax({
+			url: "{:U('Warehouse/executionZonea')}",
+			type: "post",
+			data: $(form).serialize(),
+			dataType: "json",
+			async: true,
+			success: function(data) {
+				if(data.status == 0) {
+					$('#node_message').html('您没有该操作权限');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				} else if(data == "OK") {
+					$('#node_message').html('转库成功');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+				} else if(data == "NO") {
+					$('#node_message').html('转库失败');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				} else if(data == "SO") {
+					$('#node_message').html('转入仓库相同或数量超额');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				}
+			}
+		});
+		return false;
+	}
+	//转区
+	function doarea(form) {
+		$.ajax({
+			url: "{:U('Warehouse/executionZone')}",
+			type: "post",
+			data: $(form).serialize(),
+			dataType: "json",
+			async: true,
+			success: function(data) {
+				if(data.status == 0) {
+					$('#node_message').html('您没有该操作权限');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				} else if(data == "OK") {
+					$('#node_message').html('转区成功');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+				} else if(data == "NO") {
+					$('#node_message').html('转区失败');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				} else if(data == "SO") {
+					$('#node_message').html('转入库区相同或数量超额');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				}
+			}
+		});
+		return false;
+	}
+
+	//收货
+	function doaream(form) {
+		$.ajax({
+			url: "{:U('Warehouse/executionZonec')}",
+			type: "post",
+			data: $(form).serialize(),
+			dataType: "json",
+			async: true,
+			success: function(data) {
+				if(data.status == 0) {
+					$('#node_message').html('您没有该操作权限');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				} else if(data == "OK") {
+					$('#node_message').html('收货成功');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+				} else if(data == "NO") {
+					$('#node_message').html('收货失败');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				}
+			}
+		});
+		return false;
+	}
+	//获取仓库
+	function areaturns(id, pid, warehouse_id, g_id, number, o_id, namezh, sourceorder, pname, wname) {
+		$('#sourcewarehouse').val(pname + wname);
+		$('#sourceordero').val(sourceorder);
+		$.ajax({
+			url: "{:U('Warehouse/getAjaxWarehouse')}",
+			type: "post", //选择传值方式
+			data: {
+				id: id,
+				warehouse_id: warehouse_id
+			},
+			dataType: "JSON",
+			success: function(data) {
+				$('#k_ida').val(id);
+				$('#pidc').val(pid);
+				$('#kidc').val(warehouse_id);
+				$('#gidc').val(g_id);
+				$('#numberc').val(number);
+				$('#oidc').val(o_id);
+				$('#numbera').val(o_id);
+				$('#gooda').val(namezh);
+				$('#numa').val(number);
+				console.log(data);
+				var p = "<option id='first_op1' value=''>请选择</option>"
+				$("#first1").html(p);
+				//将获取到的数据赋值
+				for(var i = 0; i < data.length; i++) {
+					//拼接option标签的 name value 等属性
+					var p = "<option value='" +
+						data[i]['id'] +
+						"'" +
+						">" +
+						data[i]['name'] +
+						"</option>";
+					$("#first_op1").after(p);
+				}
+				$('#cdit_modal').modal('toggle');
+			}
+		})
+	}
+	//获取仓库下的库区
+	function areaturn(id, pid, warehouse_id, g_id, number, o_id, namezh, pname, wname, sourceorder, sourceortarget) {
+		if(sourceortarget == 0) {
+			if(sourceorder == 1) {
+				$('#source').val('采购订单');
+			} else if(sourceorder == 2) {
+				$('#source').val('内部订单');
+			}
+		} else {
+			$('#source').val(pname + wname);
+		}
+		$.ajax({
+			url: "{:U('Warehouse/getAjaxreservoir')}",
+			type: "post", //选择传值方式
+			data: {
+				id: id,
+				warehouse_id: warehouse_id
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data)
+				$('#k_id').val(id);
+				$('#pid2').val(pid);
+				$('#kid2').val(warehouse_id);
+				$('#gid2').val(g_id);
+				$('#number2').val(number);
+				$('#oid2').val(o_id);
+				$('#number').val(o_id);
+				$('#tonum').val(number)
+				$('#good').val(namezh);
+				$('#num').val(number);
+				if(sourceorder == '') {
+					$('#sourceorders').val(0);
+				} else {
+					$('#sourceorders').val(sourceorder);
+				}
+				console.log(data);
+				var p = "<option id='first_op' value=''>请选择</option>"
+				$("#first").html(p);
+				//将获取到的数据赋值
+				for(var i = 0; i < data.length; i++) {
+					//拼接option标签的 name value 等属性
+					var p = "<option value='" +
+						data[i]['id'] +
+						"'" +
+						">" +
+						data[i]['name'] +
+						"</option>";
+					$("#first_op").after(p);
+				}
+				$('#edit_modal').modal('toggle');
+			}
+		})
+	}
+
+	//待检仓数量核对收货
+	function areaturnb(id, pid, warehouse_id, g_id, number, o_id, namezh, pname, wname, sourceorder, sourceortarget) {
+		if(sourceortarget == 0) {
+			if(sourceorder == 1) {
+				$('#sourcek').val('采购订单');
+			} else if(sourceorder == 2) {
+				$('#sourcek').val('内部订单');
+			}
+		} else {
+			$('#sourcek').val(pname + wname);
+		}
+		$('#nld').val(id);
+		$.ajax({
+			url: "{:U('Warehouse/getAjaxreservoir')}",
+			type: "post", //选择传值方式
+			data: {
+				id: id,
+				warehouse_id: warehouse_id
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data)
+				$('#k_idk').val(id);
+				$('#pid2k').val(pid);
+				$('#kid2k').val(warehouse_id);
+				$('#gid2k').val(g_id);
+				$('#number2k').val(number);
+				$('#oid2k').val(o_id);
+				$('#numberk').val(o_id);
+				$('#tonumk').val(number)
+				$('#goodk').val(namezh);
+				$('#numk').val(number);
+				if(sourceorder == '') {
+					$('#sourceordersk').val(0);
+				} else {
+					$('#sourceordersk').val(sourceorder);
+				}
+				console.log(data);
+				//将获取到的数据赋值
+				$('#sdit_modal').modal('toggle');
+			}
+		})
+	}
+	if($('#mold').val() == 1) {
+		$('#qbsh').show();
+	} else {
+		$('#qbsh').hide();
+	}
+	var sum = 0;
+	$("span[name='xj']").each(function() {
+		sum += +$(this).text();
+	});
+	$("#total_price").text(sum.toFixed(1));
+</script>

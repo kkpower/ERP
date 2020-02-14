@@ -1,0 +1,226 @@
+<div class="row">
+	<div class="col-md-6">
+		<section class="panel">
+			<header class="panel-heading">
+				<h2 class="panel-title">{$Think.lang.Changepassword}</h2>
+				<p style="margin: 0;">{$Think.lang.currentaccount}:<span style="color: red;">{$Think.session.user_info.uname}</span></p>
+			</header>
+			<div class="panel-body">
+				<div class="form-group">
+					<div class="input-group">
+						<span class="input-group-addon">{$Think.lang.oldpassword}</span>
+						<input type="password" id="oldpassword" name="pwd" class="form-control" placeholder="{$Think.lang.pleaseenteroldpassword}">
+					</div>
+					<div id="name_check" style="float: left;margin-left: 10px;"></div>
+					<br style="clear: both;height: 0;" />
+					<div class="input-group">
+						<span class="input-group-addon">{$Think.lang.newpassword}</span>
+						<input type="text" id="newpwd" class="form-control" placeholder="{$Think.lang.pleaseenternewpassword}">
+					</div>
+					<div id="name_check1" style="float: left;margin-left: 10px;"></div>
+
+					<br style="clear: both;" />
+					<div class="input-group" style="padding-top: 0px;">
+						<span class="input-group-addon">{$Think.lang.confirm_the_new_password}</span>
+						<input type="text" id="confirmnewpwd" class="form-control" placeholder="{$Think.lang.pleaseenternewpasswordagain}">
+					</div>
+					<div class="form-group" style="padding-top: 15px;">
+						<button type="submit" class="center-block btn btn-primary" onclick="return determine()" id="deter">{$Think.lang.determine}</button>
+					</div>
+				</div>
+
+			</div>
+		</section>
+
+	</div>
+	
+	<div class="col-md-6">
+		<section class="panel">
+			<header class="panel-heading">
+				<h2 class="panel-title">{$Think.lang.change_uname}</h2>
+				<p style="margin: 0;">{$Think.lang.currentaccount}:<span style="color: red;">{$Think.session.user_info.uname}</span></p>
+			</header>
+			<div class="panel-body">
+				<div class="form-group">
+					<div class="input-group">
+						<span class="input-group-addon">{$Think.lang.Userpassword}</span>
+						<input type="password" id="password_u" class="form-control" placeholder="{$Think.lang.PleaseInputPassword}">
+					</div>
+					<div id="name_check3" style="float: left;margin-left: 10px;"></div>
+
+					<br style="clear: both;" />
+					<div class="input-group" style="padding-top: 0px;">
+						<span class="input-group-addon">{$Think.lang.Modifytheaccountnumber}</span>
+						<input type="text" id="username_u" class="form-control" placeholder="{$Think.lang.enter_new_name}">
+					</div>
+					<div id="name_check4" style="float: left;margin-left: 10px;"></div>
+					<br style="clear: both;height: 0;" />
+					<div class="input-group">
+						<span class="input-group-addon">{$Think.lang.confirm_new_name}</span>
+						<input type="text" id="username_con" class="form-control" placeholder="{$Think.lang.pleaseenternewusernameagain}">
+					</div>
+					<input type="hidden" name="uid" value="{$Think.session.user_info.uid}">
+					<div class="form-group" style="padding-top: 15px;">
+						<button type="button" class="center-block btn btn-primary" onclick="determine1()">{$Think.lang.determine}</button>
+					</div>
+				</div>
+
+			</div>
+		</section>
+
+	</div>
+</div>
+<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+<script>
+	//获取当前用户密码
+	function oldpwd() {
+
+	}
+
+	function determine() {
+		var newpwd = $('#newpwd').val();
+		var oldpassword = $('#oldpassword').val();
+		var confirmnewpwd = $('#confirmnewpwd').val();
+		if(oldpassword == '') {
+			$('#name_check').html('<span style="color:red;">{$Think.lang.pleaseenteroldpassword}</span>');
+		} else {
+			$('#name_check').html('<span style="color:red;"></span>');
+		}
+		if(newpwd == '') {
+			$('#name_check1').html('<span style="color:red;">{$Think.lang.pleaseenternewpassword}</span>');
+		} else {
+			var oldpassword = $('#oldpassword').val();
+			var uid = $("input[ name='uid'] ").val();
+			$.ajax({
+				url: "{:U('System/updatePassword')}",
+				type: "post", //选择传值方式
+				data: {
+					uid: uid,
+					oldpassword: oldpassword,
+					newpassword: newpwd,
+					confirmnewpwd: confirmnewpwd
+				},
+				dataType: "JSON",
+				success: function(data) {
+					if(data == 'no') {
+						$('#node_message').html('{$Think.lang.oldpasswordenteredleasetryagain}');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';", 3000);
+						return false;
+					} else if(data == 'ko') {
+						$('#node_message').html('{$Think.lang.serverisbusy}');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';", 3000);
+						return false;
+					} else if(data == 'ok') {
+						$('#node_message').html('{$Think.lang.modificationissuccessfulpleaselog}');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';location.reload()", 3000);
+					} else if(data == 'so') {
+						$('#node_message').html('{$Think.lang.passwords_are_inconsistent_twice}');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';", 3000);
+					} else if(data == 'fo') {
+						$('#node_message').html('{$Think.lang.newpasswordcannotoldpassword}');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';", 3000);
+					}
+				}
+			})
+		}
+	}
+	
+	//修改用户名
+	function determine1() {
+		var newuname = $('#username_u').val();
+		var upassword = $('#password_u').val();
+		var connewuname = $('#username_con').val();
+		if(upassword == '') {
+			$('#name_check3').html('<span style="color:red;">{$Think.lang.pleaseenteroldpassword}</span>');
+			return;
+		} else {
+			$('#name_check3').html('<span style="color:red;"></span>');
+		}
+		if(newuname == '') {
+			$('#name_check4').html('<span style="color:red;">{$Think.lang.enter_new_name}</span>');
+		}else if(newuname != connewuname){
+			$('#name_check4').html('<span style="color:red;">{$Think.lang.two_username_not_match}</span>');
+			return false;
+		} else {
+			$.ajax({
+				url: "{:U('System/upAc')}",
+				type: "post", //选择传值方式
+				data: {
+					newuname: newuname,
+					pwd: upassword
+				},
+				dataType: "JSON",
+				success: function(data) {
+					if(data.status == 1) {
+						$('#node_message').html(data.info);
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';location.reload()", 1500);
+					} else{
+						$('#node_message').html(data.info);
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';", 2000);
+					}
+				}
+			})
+		}
+	}
+	// 调用ajax
+	//	$(function() {
+	//		$("#search").click(function() {
+	//			// 获取input框中的值
+	//			var pwd = $("input[ name='pwd'] ").val();
+	//			var uid = $("input[ name='uid'] ").val();
+	//			var type = $('input:radio:checked').val();
+	//			//alert(pwd);
+	//
+	//			// alert(uid);
+	//			// alert(type);
+	//			if(pwd == '') {
+	//				// 判断密码是否为空
+	//				alert('请输入密码');
+	//			} else {
+	//				// 判断是否选择要修改的类型
+	//				if(type == undefined) {
+	//					alert('请选择修改类型');
+	//				} else {
+	//					$.ajax({
+	//						//请求方式
+	//						type: 'POST',
+	//						//发送请求的地址
+	//						url: '__URL__/ajax',
+	//						//服务器返回的数据类型
+	//						dataType: 'json',
+	//						// 发送的数据
+	//						data: {
+	//							pwd: pwd,
+	//							uid: uid,
+	//							type: type
+	//						},
+	//						success: function(data) {
+	//							//请求成功函数内容
+	//							// alert(JSON.stringify(data))
+	//							// 判断data返回值
+	//							if(data == '密码错误') {
+	//								// 密码错误 返回错误信息
+	//								alert(data);
+	//							} else {
+	//								// 如果返回正确跳转修改页面同时传递type参数
+	//								location = "__URL__/edit/?type=" + data
+	//								// alert(data);
+	//							}
+	//						},
+	//						error: function(jqXHR) {
+	//							//请求失败函数内容
+	//							alert('请求失败,请检查您的网络连接');
+	//						}
+	//					});
+	//				}
+	//			}
+	//		});
+	//	});
+</script>

@@ -1,0 +1,191 @@
+<script src="__ROOT__/Public/login/assets/js/jquery-1.11.1.min.js">
+</script>
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+
+				<h2 class="panel-title"></h2>
+			</header>
+			<div class="panel-body">
+				<form action="">
+					<div style="width: 100%;">
+						<div style="width: 90%;margin: 0 auto;height: 300px;position: relative;">
+							<img src="{img1}" alt="" style="width: 45%;margin: 12px 4% 12px 0;" />
+							<img src="{img2}" alt="" style="width: 45%;margin: 12px 0 12px 4%;" />
+							<input placeholder="图片1" type="text" name="img1" style="position: absolute;top: 45%;left: 4%;width: 40%;height: 26px;line-height: 26px;" />
+							<input placeholder="图片2" type="text" name="img2" style="position: absolute;top: 45%;right: 4%;width: 40%;height: 26px;line-height: 26px;" />
+						</div>
+						<div style="width: 90%;margin: 0 auto;height: 300px;position: relative;">
+							<img src="3" alt="" style="width: 45%;margin: 12px 4% 12px 0;" />
+							<img src="4" alt="" style="width: 45%;margin: 12px 0 12px 4%;" />
+							<input placeholder="图片3" type="text" name="img3" style="position: absolute;top: 45%;left: 4%;width: 40%;height: 26px;line-height: 26px;" />
+							<input placeholder="图片4" type="text" name="img4" style="position: absolute;top: 45%;right: 4%;width: 40%;height: 26px;line-height: 26px;" />
+						</div>
+						<!--<img src="img/12.JPG" alt="" style="width: 750px;display: block;margin: 12px auto;" />
+			<img src="img/13.JPG" alt="" style="width: 750px;display: block;margin: 12px auto;" />-->
+						文本1：<input type="text" name="text1" style="width: 80%;height: 26px;line-height: 26px;margin-bottom: 4px;" /><br/> 
+						文本2：<input type="text" name="text2" style="width: 80%;height: 26px;line-height: 26px;margin-bottom: 4px;" />
+						<h2 style="font-size: 22px;color: #222;">Product Description</h2>
+						<span id="add_title" style="margin-right: 10px;display: inline-block;font-size:18px;padding: 4px 10px;border: 1px solid #bbb;cursor: pointer;font-weight: normal;background: #e5e5e5;margin-bottom:20px;">加标题</span>
+						<span id="add_content" style="margin-right: 10px;display: inline-block;font-size:18px;padding: 4px 10px;border: 1px solid #bbb;cursor: pointer;font-weight: normal;background: #e5e5e5;">加内容</span>
+						<span id="recall" style="margin-right: 10px;display: inline-block;font-size:18px;padding: 4px 10px;border: 1px solid #bbb;cursor: pointer;font-weight: normal;background: #e5e5e5;">撤回</span>
+						<div id="prduct_description">
+							<div>内容1：<input type="text" name="ocontent1" style="width: 80%;height: 26px;line-height: 26px;margin-bottom: 4px;" /></div>
+						</div>
+						<h2 style="font-size: 22px;margin-top: 40px;">contact_us</h2>
+						<span id="add_title_two" style="margin-right: 10px;display: inline-block;font-size:18px;padding: 4px 10px;border: 1px solid #bbb;cursor: pointer;background: #e5e5e5;margin-bottom:20px;">加标题</span>
+						<span id="add_content_two" style="margin-right: 10px;display: inline-block;font-size:18px;padding: 4px 10px;border: 1px solid #bbb;cursor: pointer;background: #e5e5e5;">加内容</span>
+						<span id="recall_two" style="margin-right: 10px;display: inline-block;font-size:18px;padding: 4px 10px;border: 1px solid #bbb;cursor: pointer;font-weight: normal;background: #e5e5e5;">撤回</span>
+						<div id="contact_us">
+							<div>标题1：<input type="text" name="ttitle1" style="width: 80%;height: 26px;line-height: 26px;margin-bottom: 4px;" /></div>
+						</div>
+					</div>
+					<span id="submit" style="margin:30px auto 20px;display:block;width:120px;font-size:18px;padding: 4px;border: 1px solid #bbb;cursor: pointer;background:dodgerblue;color: #fff;text-align: center;">提交</span>
+				</form>
+
+				<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog" style="width: 90%;">
+						<div class="modal-content">
+							<div class="modal-header">
+								<div id="moban">
+									<div style="width: 100%;">
+										<div style="width: 90%;margin: 0 auto;">
+											<img id="img1" src="img/11.JPG" alt="img1" style="width: 45%;margin: 12px 4% 12px 0;">
+											<img id="img2" src="img/12.JPG" alt="img2" style="width: 45%;margin: 12px 0 12px 4%;">
+										</div>
+										<div style="width: 90%;margin: 0 auto;">
+											<img id="img3" src="img/13.JPG" alt="img3" style="width: 45%;margin: 12px 4% 12px 0;">
+											<img id="img4" src="img/11.JPG" alt="img4" style="width: 45%;margin: 12px 0 12px 4%;">
+										</div>
+										<div id="qianyan">
+
+										</div>
+										<h2 style="font-size: 22px;margin: 22px 0 44px;">Product Description</h2>
+										<div id="p_d">
+
+										</div>
+										<div id="c_u" style="font-weight: bold;">
+										</div>
+										<p style="text-align: right;padding-top: 26px;width: 90%;margin: 0 auto;"><img id="img_logo" src="__ROOT__/Public/img/logo.png" alt="" style="width: 160px;"></p>
+									</div>
+								</div>
+								<button id="xianshi">显示代码</button>
+								<textarea id="textarea" name="" rows="" cols="" style="width: 100%;height: 1000px;"></textarea>
+							</div>
+						</div>
+						<!-- /.modal-content -->
+					</div>
+					<!-- /.modal -->
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+<script type="text/javascript">
+	$('#xianshi').on('click', function() {
+		$('#textarea').val($('#moban').html())
+	})
+	var arr = [];
+	var ii = 0,
+		jj = 1,
+		kk = 1,
+		ll = 0;
+	$('#add_title').on('click', function() {
+		ii++;
+		var list = "<div>标题" + ii + "：<input type='text' style='width: 80%;height: 26px;line-height: 26px;margin-bottom: 4px;' name='otitle" + ii + "'></div>"
+		$('#prduct_description').append(list)
+	})
+	$('#add_content').on('click', function() {
+		jj++;
+		var list = "<div>内容" + jj + "：<input type='text' style='width: 80%;height: 26px;line-height: 26px;margin-bottom: 4px;' name='ocontent" + jj + "'></div>"
+		$('#prduct_description').append(list)
+	})
+
+	$('#add_title_two').on('click', function() {
+		kk++;
+		var list = "<div>标题" + kk + "：<input type='text' style='width: 80%;height: 26px;line-height: 26px;margin-bottom: 4px;' name='ttitle" + kk + "'></div>"
+		$('#contact_us').append(list)
+	})
+	$('#add_content_two').on('click', function() {
+		ll++;
+		var list = "<div>内容" + ll + "：<input type='text' style='width: 80%;height: 26px;line-height: 26px;margin-bottom: 4px;' name='tcontent" + ll + "'></div>"
+		$('#contact_us').append(list)
+	})
+
+	$('#recall').on('click', function() {
+		if($('#prduct_description div').length != 0) {
+			if($('#prduct_description div').eq(-1).children('input').attr('name').indexOf('content') > -1) {
+				jj--;
+			} else if($('#prduct_description div').eq(-1).children('input').attr('name').indexOf('title') > -1) {
+				ii--
+			}
+		} else {
+			return false;
+		};
+		$('#prduct_description div').eq(-1).remove('div')
+	})
+	$('#recall_two').on('click', function() {
+		if($('#contact_us div').length != 0) {
+			if($('#contact_us div').eq(-1).children('input').attr('name').indexOf('content') > -1) {
+				ll--;
+			} else if($('#contact_us div').eq(-1).children('input').attr('name').indexOf('title') > -1) {
+				kk--;
+			}
+		} else {
+			return false;
+		};
+		$('#contact_us div').eq(-1).remove('div')
+	})
+
+	$("#submit").click(function() {
+		x = $("form").serializeArray();
+		arr = x;
+		console.log(arr)
+		$('#userModal').modal('toggle');
+		show();
+		//$.each(x, function(i, field){
+		//  $("#results").append(field.name + ":" + field.value + " ");
+		//});
+	});
+
+	function show() {
+		var lis1, lis;
+		$('#p_d').html('');
+		$('#c_u').html('');
+		$('#qianyan').html('');
+		for(var i = 0; i < arr.length; i++) {
+			if(arr[i].name.indexOf('otitle') != -1) {
+				lis1 = '<h2 style="font-size: 22px;margin: 22px 0 44px;color:#222;">' + arr[i].value + '</h2>'
+				$('#p_d').append(lis1)
+			} else if(arr[i].name.indexOf('ocontent') != -1) {
+				lis1 = '<p style="line-height: 30px;font-size: 18px;margin-bottom: 0;margin-top:1em;">' + arr[i].value + '</p>'
+				$('#p_d').append(lis1)
+			} else if(arr[i].name.indexOf('img1') != -1) {
+				$('#img1').attr('src', arr[i].value)
+			} else if(arr[i].name.indexOf('img2') != -1) {
+				$('#img2').attr('src', arr[i].value)
+			} else if(arr[i].name.indexOf('img3') != -1) {
+				$('#img3').attr('src', arr[i].value)
+			} else if(arr[i].name.indexOf('img4') != -1) {
+				$('#img4').attr('src', arr[i].value)
+			} else if(arr[i].name.indexOf('text') != -1) {
+				lis1 = '<p style="padding-top: 20px;line-height: 30px;margin:1em 0 1em;">' + arr[i].value + '</p>'
+				$('#qianyan').append(lis1)
+			}
+		}
+		for(var j = 0; j < arr.length; j++) {
+			if(arr[j].name.indexOf('ttitle') != -1) {
+				lis = '<p style="font-size: 22px;padding-top: 16px;color: #708090;margin-top:1em;">' + arr[j].value + '</p>'
+				$('#c_u').append(lis)
+			} else if(arr[j].name.indexOf('tcontent') != -1) {
+				lis = '<p style="font-size: 18px;line-height: 24px;margin-top:1em;">' + arr[j].value + '</p>'
+				$('#c_u').append(lis)
+			}
+		}
+	}
+</script>

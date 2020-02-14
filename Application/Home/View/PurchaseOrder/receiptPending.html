@@ -1,0 +1,267 @@
+<script src="__ROOT__/Public/js/zen.js"></script>
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-spinner.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<!--ajax获取子目录的地址-->
+<script>
+	$('#356').parents('li').addClass('nav-active')
+	$('#356').parents('li').addClass('nav-expanded')
+</script>
+<style>
+	.details span {
+		display: inline-block;
+		width: 200px;
+		float: left;
+		font-size: 14px;
+		line-height: 28px;
+		text-align: right;
+		padding-right: 12px;
+	}
+	
+	.details div {
+		float: left;
+		font-weight: bold;
+		font-size: 14px;
+		line-height: 28px;
+	}
+</style>
+<input type="hidden" id="classaddurl" value="{:U('Product/getclassAjax','','')}">
+<!--获取收货信息-->
+<input type="hidden" id="ajaxReceipt" value="{:U('PurchaseOrder/ajaxReceipt','','')}">
+<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+				<h2 class="panel-title">{$Think.lang.pending_receipt}</h2>
+			</header>
+			<div class="panel-body">
+				<div class="row">
+					<!--<div class="col-md-3">-->
+						<!--<div class="input-group">-->
+							<!--<span class="input-group-addon">{$Think.lang.warehouse}</span>-->
+							<!--<input type="hidden" id="mbck" value="{$zkid}">-->
+							<!--<select name="zk_id" id="father" class="form-control">-->
+								<!--<option value="">{$Think.lang.All}</option>-->
+								<!--<foreach name="warehouse" item="wa">-->
+									<!--<option value="{$wa.id}">{$wa.name}</option>-->
+								<!--</foreach>-->
+							<!--</select>-->
+						<!--</div>-->
+					<!--</div>-->
+					<div class="col-md-3">
+						<div class="input-group">
+							<span class="input-group-addon">包装码</span>
+							<input type="hidden" id="orderon" value="{$orderon}">
+							<input id="orcode" name="orderon" type="text" value="" class="form-control" placeholder="请扫描包装码">
+						</div>
+					</div>
+				</div>
+				<div id="box_info" style="width: 100%;display: none;">
+					<!--采购订单id-->
+					<input type="hidden" value="" id="order_id">
+					<!--仓库id-->
+					<input type="hidden" value="" id="k_id">
+					<!--运输仓id-->
+					<input type="hidden" value="" id="transport_id">
+					<!--待检仓id-->
+					<input type="hidden" value="" id="stay_id">
+					<!--默认收货仓位-->
+					<input type="hidden" value="" id="shelf_id">
+					<!--箱子id-->
+					<input type="hidden" value="" id="pn_id">
+					<div style="padding-top: 10px;">
+						<div class="col-md-6">
+							<div class="details">
+								<span>{$Think.lang.Purchaseordernumber}：</span>
+								<div id="ordernum"></div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="details">
+								<span>{$Think.lang.TrackingNumber}：</span>
+								<div id="track"></div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="details">
+								<span>{$Think.lang.from_supplier}：</span>
+								<div id="supplier2"></div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="details">
+								<span>{$Think.lang.Receivingwarehouse}：</span>
+								<div id="ware"></div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="details">
+								<span>{$Think.lang.Transporters}：</span>
+								<div id="yss"></div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="details">
+								<span>{$Think.lang.Modeoftransport}：</span>
+								<div id="tran"></div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="details">
+								<span>{$Think.lang.delivery_time}：</span>
+								<div id="futime"></div>
+							</div>
+						</div>
+						<br style="clear: both;" />
+						<table id="table2" class="table table-hover table-striped table-bordered" style="margin-bottom: 0;border-collapse: collapse;margin-top: 12px;margin-bottom: 12px;">
+							<thead>
+								<th>{$Think.lang.product_number}</th>
+								<th>{$Think.lang.Productname}</th>
+								<th>{$Think.lang.Number}</th>
+							</thead>
+							<tbody id="tbody">
+
+							</tbody>
+						</table>
+						<button class="btn btn-primary" style="margin-right: 15px;" onclick="confirmReceipt()">{$Think.lang.receipt}</button>
+						<button class="btn btn-default" id="close">{$Think.lang.Close}</button>
+					</div>
+				</div>
+			</div>
+
+		</section>
+	</div>
+</div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/jquery.spinner.min.js"></script>
+
+<script>
+	$("#close").click(function(){
+		$('#box_info').css('display','none');
+	});
+	$('#orcode').on('keyup', function() {
+		if(event.keyCode == 13) {
+			var url = $('#ajaxReceipt').val();
+			var orcode = $.trim($('#orcode').val()).split('-'); //包装二维码参数
+			console.log(orcode)
+			var pn = orcode[1];
+			var po = orcode[3];
+			$.ajax({
+				url: url,
+				type: 'post',
+				data: {
+					pn: pn,
+					po: po
+				},
+				success: function(data) {
+					console.log(data);
+					if(data.info) {
+						$('#node_message').html('{$Think.lang.Operationauthority}');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';", 2000);
+					}else if (data!=='NO'){
+						$('#ordernum').html("<a href=\"{:U('PurchaseOrder/completedDetails','','')}/id/"+data.two.id+"\" target=\"_blank\">"+'PO'+data.two.order_number+"</a>");
+						$('#supplier2').html("<a href=\"{:U('Supplier/detail','','')}/id/"+data.two.supplier_id+"\" target=\"_blank\">"+data.two.supplier_name+"</a>");
+						$('#ware').html("<a href=\"{:U('Warehouse/detail','','')}/id/"+data.two.ku_id+"\" target=\"_blank\">"+data.two.ck_name+"</a>");
+						$('#tran').text(data.two.transport_mode_namezh);
+						$('#futime').text(data.two.examine_time);
+						$('#logistics_status').val(data.two.order_number);
+						$('#yss').text(data.two.transporters);
+						$('#track').text(data.two.tracking_number);
+						$('#order_id').val(data.two.id);
+						$('#k_id').val(data.two.ku_id);
+						$('#transport_id').val(data.two.warehouse_location_id);
+						$('#stay_id').val(data.three.id);
+						$('#shelf_id').val(data.shelf.id);
+						$('#pn_id').val(data.one[0].pn_id);
+						var list = '';
+						for(var i = 0; i < data.one.length; i++) {
+							list += '<tr>' +
+									'<td>' + "<a href=\"{:U('Product/homeProduct','','')}/pid/"+data['one'][i]['pid']+"\" target=\"_blank\">" + data['one'][i].bclassc_number +'.'+ data['one'][i].sclassc_number +'.'+ data['one'][i].snumber_number + "</a>"+ '</td>' +
+									'<td>' + "<a href=\"{:U('Product/homeProduct','','')}/pid/"+data['one'][i]['pid']+"\" target=\"_blank\">" + data['one'][i].namezh +"</a>"+ '</td>' +
+									'<td>' + data['one'][i].num + '</td>' +
+									 "<input name='pid[]' type='hidden' value='" + data['one'][i].pid + "'/>" +
+									 "<input name='num[]' type='hidden' value='" + data['one'][i].num + "'/>" +
+									'</tr>';
+						}
+						$('#tbody').html(list);
+						$('#box_info').css('display','block');
+					}else{
+						$('#node_message').html('该订单已收货或不存在');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';", 2000);
+						$('#box_info').css('display','none');
+					}
+
+				}
+			})
+			//			$('#node_modal').modal('toggle');
+		}
+	})
+	//确认收货
+	function confirmReceipt(){
+		var r = confirm("是否确认收货?");
+		if (r){
+			var o_id = $('#order_id').val();
+			var k_id = $('#k_id').val();
+			var transport_id = $('#transport_id').val();
+			var stay_id = $('#stay_id').val();
+			var shelf_id = $('#shelf_id').val();
+			var pn_id = $('#pn_id').val();
+			var pid_value = [];
+			$('input[name="pid[]"]').each(function() {
+				pid_value.push($(this).val());
+				//将单选框被选中的value值放到chk_value[]数组里
+			});
+
+			var num_value = [];
+			$('input[name="num[]"]').each(function() {
+				num_value.push($(this).val());
+				//将单选框被选中的value值放到chk_value[]数组里
+			});
+			$.ajax({
+				url: "{:U('PurchaseOrder/collectDo')}",
+				type: 'post',
+				dataType: "json",
+				async: true,
+				data: {
+					oid:o_id,
+					k_id:k_id,
+					transport_id:transport_id,
+					stay_id:stay_id,
+					shelf_id:shelf_id,
+					pid:pid_value,
+					num:num_value,
+					pn_id:pn_id
+
+				},
+				success: function(data) {
+					console.log(data);
+					if(data.info) {
+						$('#node_message').html('{$Think.lang.Operationauthority}');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';", 2000);
+					} else if(data=='ok') {
+						$('#node_message').html('{$Think.lang.successful_receipt}');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+					}else if(data=='no') {
+						$('#node_message').html('{$Think.lang.goods_receipt_failure}');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';", 2000);
+					} else {
+						$('#node_message').html('{$Think.lang.goods_receipt_failure}');
+						node_message.style.display = 'block';
+					}
+				}
+			});
+		}
+
+	}
+</script>

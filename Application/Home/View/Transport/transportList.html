@@ -1,0 +1,432 @@
+<script>
+	$('#330').parents('li').addClass('nav-active')
+	$('#330').parents('li').addClass('nav-expanded')
+</script>
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/switch.css" />
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/switch.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/jqjianrong.js"></script>
+<div class="row">
+	<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+	<div class="col-md-6">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+				<h2 class="panel-title">运输商</h2>
+
+			</header>
+			<div class="panel-body">
+				<div class="col-sm-1 " style="width: auto;padding-left: 0;">
+					<button class="center-block btn btn-primary" onclick="$('#transporters').val()=='';$('#addModal').modal('toggle');">
+                            	添加运输商
+                        </button>
+				</div>
+			</div>
+			<div class="panel-body">
+				<div class="table-responsive">
+					<table class="table table-hover mb-none table-striped" style="text-align: center">
+						<thead>
+							<tr>
+								<th style="text-align: center">序号</th>
+								<th style="text-align: center">运输商</th>
+								<th style="text-align: center">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<foreach name="transporters" item="vo">
+								<tr>
+									<td>{$key+1}</td>
+									<td>{$vo.transporters}</td>
+									<td>
+										<button type="button" onclick="transport_mode(this,'{$vo.id}')" class="btn btn-info btn-xs">
+                                        	查看
+                                    </button>
+                                    <button type="button" onclick="editTransporters1(this,'{$vo.id}')" class="btn btn-primary btn-xs">
+                                        	修改
+                                    </button>
+										<button type="button" onclick="delTransporters('{$vo.id}')" class="btn btn-danger btn-xs">
+                                        	删除
+                                    </button>
+									</td>
+								</tr>
+							</foreach>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</section>
+	</div>
+	<div class="col-md-6" id="transport_mode" style="display: none;">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" onclick="$('#transport_mode').css('display','none')"></a>
+				</div>
+				<h2 id="transport_name" class="panel-title"></h2>
+			</header>
+			<div class="panel-body">
+				<div class="col-sm-1 " style="width: auto;padding-left: 0;">
+					<button class="center-block btn btn-primary" onclick="$('#transporters_mode').val()=='';$('#addModeModal').modal('toggle');">
+                            	添加运输方式
+                        </button>
+				</div>
+			</div>
+			<div class="panel-body">
+				<div class="table-responsive">
+					<input type="hidden" id="transport_id" value="" />
+					<table class="table table-hover mb-none table-striped" style="text-align: center;">
+						<thead>
+							<tr>
+								<th style="text-align: center">状态</th>
+								<th style="text-align: center">序号</th>
+								<th style="text-align: center">运输方式</th>
+								<th style="text-align: center">操作</th>
+							</tr>
+						</thead>
+						<tbody id="xx">
+							<foreach name="transort_mode" item="vo">
+								<tr>
+									<td style="line-height: 26px;"><input id="{$vo.id}_ck" type="checkbox" name="checkboxed" class="row_check" value="{$vo.id}" style="width: 20px;height: 20px;"></td>
+									<td style="line-height: 28px;">{$key+1}</td>
+									<td style="line-height: 28px;">{$vo.mode}</td>
+									<td style="line-height: 26px;">
+										<button type="button" onclick="editMode1(this,'{$vo.id}')" class="btn btn-primary btn-xs">
+                                        	修改
+                                    	</button>
+										<button type="button" onclick="delMode('{$vo.id}')" class="btn btn-danger btn-xs">
+                                        	删除
+                                    	</button>
+									</td>
+								</tr>
+							</foreach>
+						</tbody>
+					</table>
+					<button class="btn btn-default" style="float: right;margin-top: 15px;" onclick="$('#transport_mode').css('display','none');">取消</button>
+					<button class="btn btn-primary" style="float: right;margin-right: 15px;margin-top: 15px;" onclick="updateMode()">保存</button>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog" style="width: 500px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+                </button>
+				<h4 class="modal-title">
+					添加运输商
+                </h4>
+			</div>
+			<div class="modal-body">
+				<div class="input-group" style="padding: 0 20px 0;">
+					<span class="input-group-addon">运输商名称</span>
+					<input type="text" id="transporters" class="form-control" placeholder="请输入运输商名称">
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" onclick="addTransporters()">{$Think.lang.Save}</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog" style="width: 500px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+                </button>
+				<h4 class="modal-title">
+					修改运输商
+                </h4>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" id="transporters_id"/>
+				<div class="input-group" style="padding: 0 20px 0;">
+					<span class="input-group-addon">运输商名称</span>
+					<input type="text" id="transporters1" class="form-control" placeholder="请输入运输商名称">
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" onclick="editTransporters()">{$Think.lang.Save}</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="addModeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog" style="width: 500px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+                </button>
+				<h4 class="modal-title">
+					添加运输方式
+                </h4>
+			</div>
+			<div class="modal-body">
+				<div class="input-group" style="padding: 0 20px 0;">
+					<span class="input-group-addon">运输方式</span>
+					<input type="text" id="transporters_mode" class="form-control" placeholder="请输入运输方式">
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" onclick="addMode()">{$Think.lang.Save}</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="editModeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog" style="width: 500px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+                </button>
+				<h4 class="modal-title">
+					修改运输方式
+                </h4>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" id="transporters_modeId"/>
+				<div class="input-group" style="padding: 0 20px 0;">
+					<span class="input-group-addon">运输方式</span>
+					<input type="text" id="transporters1_mode" class="form-control" placeholder="请输入运输方式">
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" onclick="editMode()">{$Think.lang.Save}</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<script>
+	//显示运输方式
+	function transport_mode(that, id) {
+		$('#transport_mode').css('display', 'block');
+		$("#transport_id").val(id);
+		$("#transport_name").text($(that).parent('td').siblings().eq(1).text())
+		$('.row_check').prop('checked', false);
+		$.ajax({
+			url: "{:U('Transport/getAjaxMode')}", //通过JQ获取URL获得路径
+			data: {
+				id: id
+			}, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式(
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				for(var i = 0; i < data.length; i++) {
+					$('#' + data[i].id + '_ck').prop('checked', true);
+					console.log($('#' + data[i].id + '_ck').is(':checked'))
+				}
+				$(".row_check").simpleSwitch({
+					"theme": "FlatCircular"
+				});
+			}
+		})
+	}
+	//添加运输商
+	function addTransporters() {
+		if($('#transporters').val() == '') {
+			if(t) {
+				clearTimeout(t)
+			};
+			$('#node_message').text('运输商名称不能为空');
+			node_message.style.display = 'block';
+			var t = setTimeout("node_message.style.display='none'", 2000);
+			return false;
+		}
+		$.ajax({
+			url: "{:U('Transport/addTransporters')}", //通过JQ获取URL获得路径
+			data: {
+				transporters: $('#transporters').val()
+			}, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式(
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				if(t) {
+					clearTimeout(t)
+				};
+				$('#node_message').text('添加成功');
+				node_message.style.display = 'block';
+				var t = setTimeout("node_message.style.display='none';location.reload();", 2000);
+			}
+		})
+	}
+	//添加运输方式
+	function addMode() {
+		if($('#transporters_mode').val() == '') {
+			if(t) {
+				clearTimeout(t)
+			};
+			$('#node_message').text('运输方式不能为空');
+			node_message.style.display = 'block';
+			var t = setTimeout("node_message.style.display='none'", 2000);
+			return false;
+		}
+		$.ajax({
+			url: "{:U('Transport/addMode')}", //通过JQ获取URL获得路径
+			data: {
+				mode: $('#transporters_mode').val()
+			}, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式(
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				if(t) {
+					clearTimeout(t)
+				};
+				$('#node_message').text('添加成功');
+				node_message.style.display = 'block';
+				var t = setTimeout("node_message.style.display='none';location.reload();", 2000);
+			}
+		})
+	}
+	//删除运输商
+	function delTransporters(id) {
+		var r = confirm('确认删除该运输商？');
+		if(r == true) {
+			$.ajax({
+				url: "{:U('Transport/delTransporters')}", //通过JQ获取URL获得路径
+				data: {
+					id: id
+				}, //通过页面元素的ID来获取设备ID
+				type: "post", //选择传值方式(
+				dataType: "JSON",
+				success: function(data) {
+					console.log(data);
+					if(t) {
+						clearTimeout(t)
+					};
+					$('#node_message').text('删除成功');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload();", 2000);
+				}
+			})
+		}
+	}
+	//删除运输方式
+	function delMode(id) {
+		var r = confirm('确认删除该运输方式？');
+		if(r == true) {
+			$.ajax({
+				url: "{:U('Transport/delMode')}", //通过JQ获取URL获得路径
+				data: {
+					id: id
+				}, //通过页面元素的ID来获取设备ID
+				type: "post", //选择传值方式(
+				dataType: "JSON",
+				success: function(data) {
+					console.log(data);
+					if(t) {
+						clearTimeout(t)
+					};
+					$('#node_message').text('删除成功');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload();", 2000);
+				}
+			})
+		}
+	}
+	function editTransporters1(that,id){
+		$('#transporters1').val($(that).parent('td').siblings().eq(1).text());
+		$('#transporters_id').val(id)
+		$('#editModal').modal('toggle');
+	}
+	function editMode1(that,id){
+		$('#transporters1_mode').val($(that).parent('td').siblings().eq(2).text());
+		$('#transporters_modeId').val(id)
+		$('#editModeModal').modal('toggle');
+	}
+	//修改运输商
+	function editTransporters() {
+			$.ajax({
+				url: "{:U('Transport/editTransporters')}", //通过JQ获取URL获得路径
+				data: {
+					id: $('#transporters_id').val(),
+					transporters: $('#transporters1').val()
+				}, //通过页面元素的ID来获取设备ID
+				type: "post", //选择传值方式(
+				dataType: "JSON",
+				success: function(data) {
+					console.log(data);
+					if(t) {
+						clearTimeout(t)
+					};
+					$('#node_message').text('修改成功');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload();", 2000);
+				}
+			})
+	}
+	//修改运输方式
+	function editMode() {
+			$.ajax({
+				url: "{:U('Transport/editMode')}", //通过JQ获取URL获得路径
+				data: {
+					id: $('#transporters_modeId').val(),
+					mode: $('#transporters1_mode').val()
+				}, //通过页面元素的ID来获取设备ID
+				type: "post", //选择传值方式(
+				dataType: "JSON",
+				success: function(data) {
+					console.log(data);
+					if(t) {
+						clearTimeout(t)
+					};
+					$('#node_message').text('修改成功');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload();", 2000);
+				}
+			})
+	}
+	//修改状态
+	function updateMode(){
+		var checkbox = $('.row_check');
+		var arr1 = [];
+		for(var i=0,j;j=checkbox[i++];){
+			if(j.checked ==true){
+				arr1.push(j.value)
+			};
+		}
+		console.log(arr1);
+		$.ajax({
+				url: "{:U('Transport/updateMode')}", //通过JQ获取URL获得路径
+				data: {
+					id: $('#transport_id').val(),
+					mode_id: arr1
+				}, //通过页面元素的ID来获取设备ID
+				type: "post", //选择传值方式(
+				dataType: "JSON",
+				success: function(data) {
+					console.log(data);
+					if(t) {
+						clearTimeout(t)
+					};
+					$('#node_message').text('修改成功');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload();", 2000);
+				}
+			})
+	}
+</script>

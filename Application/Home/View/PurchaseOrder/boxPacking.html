@@ -1,0 +1,95 @@
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-spinner.css" />
+<script>
+	$('#190').parents('li').addClass('nav-active')
+	$('#190').parents('li').addClass('nav-expanded')
+</script>
+<div id="node_modal" class="modal fade" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document" style="width: 500px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">
+					包装箱二维码
+				</h4>
+			</div>
+			<div class="modal-body" style="line-height: 34px;" id="codebz">
+				<img id="bzimg" style="width: 300px;height: 300px;" src="" alt="" />
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" id="add_pr" type="submit">下载</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cancel}</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+				<h2 class="panel-title">采购订单包装箱</h2>
+			</header>
+
+			<div class="panel-body">
+				<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+				<br style="clear: both;" />
+				<table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+					<h3 style="font-weight: bold;"><span style="margin-right: 10px;color: #DC143C;">采购订单号:</span><a href="{:U('PurchaseOrder/productDetails',array('id'=>$list[0]['order_purchase_id']))}" target="_blank">PO{$list[0].order_number}</a></h3>
+					<thead>
+						<tr>
+							<th>序号</th>
+							<th>箱号</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<volist name="list" id="vo" key="k">
+
+							<tr>
+								<td>{$k}</td>
+								<td>{$vo.id}{$vo.order_purchase_id}</td>
+								<td><button id="zq" onclick='packing("{$vo.id}","{$vo.order_purchase_id}")' style="border: 0px;" type="button" class="btn btn-primary btn-xs" >
+									生成二维码
+								</button> <a href="{:U('PurchaseOrder/codePacking',array('id'=>$vo['id'],'oid'=>$vo['order_purchase_id']))}" target="_blank" style="border: 0px;color: #fff;" class="btn btn-primary btn-xs">查看</a></td>
+							</tr>
+						</volist>
+					</tbody>
+				</table>
+			</div>
+		</section>
+
+	</div>
+</div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/jquery.spinner.min.js"></script>
+<script>
+	function packing(id,oid) {
+		$.ajax({
+			url: "{:U('PurchaseOrder/orcode')}",
+			type: 'post',
+			data:{
+				id:id,
+				oid:oid
+			},
+			dataType: 'JSON',
+			async:false,
+			success: function(data) {
+				console.log(data);
+				if (data.code==200) {
+					//console.log(r);
+					var path = 'data:image/png;base64,'+data.data;
+					//给img的sec赋值。
+					$("#bzimg").attr('src',path);
+				} else {
+					alert(data.err);
+				}
+				$('#node_modal').modal('toggle');
+			}
+		});
+	}
+</script>

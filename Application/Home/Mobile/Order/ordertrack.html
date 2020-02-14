@@ -1,0 +1,230 @@
+<script>
+	$('#185').parents('li').addClass('nav-active')
+	$('#185').parents('li').addClass('nav-expanded')
+</script>
+<style>
+	#details_body .col-md-6{
+		padding: 0;
+	}
+</style>
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+
+				<h2 class="panel-title">订单查询</h2>
+			</header>
+			<div class="panel-body">
+				<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;width:20rem;margin-left: -10rem;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 1.2rem;padding: .6rem 1.2rem;color: #fff;z-index: 1200;"></div>
+				<div class="input-group">
+					<input name="search" id="search_order" type="text" value="" class="form-control" placeholder="请输入你想查询的订单号" />
+					<span class="input-group-btn">
+                    	<button type="button" class="btn btn-success" style="white-space: nowrap;" onclick="order_details()">搜索</button>
+                	</span>
+				</div>
+				<br style="clear: both;" />
+				<div id="details_body" style="line-height: 34px;">
+					<div class="col-md-6">
+					<div class="input-group">
+						<span class="input-group-addon">订单号</span>
+						<div class="form-control" id="details_o_number"></div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 1.2rem;">
+						<span class="input-group-addon">收件人</span>
+						<div class="form-control" id="details_name"></div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 1.2rem;">
+						<span class="input-group-addon">国家</span>
+						<div class="form-control" id="details_country"></div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 1.2rem;">
+						<span class="input-group-addon">省</span>
+						<div class="form-control" id="details_state"></div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 1.2rem;">
+						<span class="input-group-addon">市</span>
+						<div class="form-control" id="details_city"></div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 1.2rem;">
+						<span class="input-group-addon">收件电话</span>
+						<div class="form-control" id="details_phone"></div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 1.2rem;">
+						<span class="input-group-addon">邮箱</span>
+						<div class="form-control" id="details_email"></div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 1.2rem;">
+						<span class="input-group-addon">收件地址1</span>
+						<div class="form-control" id="details_street1"></div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 1.2rem;">
+						<span class="input-group-addon">收件地址2</span>
+						<div class="form-control" id="details_street2"></div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 1.2rem;">
+						<span class="input-group-addon">收件地址3</span>
+						<div class="form-control" id="details_street3"></div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 1.2rem;">
+						<span class="input-group-addon">邮寄方式</span>
+						<div class="form-control" id="details_ship"></div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 1.2rem;">
+						<span class="input-group-addon">asin</span>
+						<div class="form-control" id="details_asin"></div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 1.2rem;">
+						<span class="input-group-addon">sku</span>
+						<div class="form-control" id="details_sku"></div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 1.2rem;">
+						<span class="input-group-addon">买家账户</span>
+						<div class="form-control" id="details_buyerid"></div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 1.2rem;">
+						<span class="input-group-addon">下单时间</span>
+						<div class="form-control" id="details_time"></div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 1.2rem;">
+						<span class="input-group-addon">订单状态</span>
+						<div class="form-control" id="details_status"></div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group" style="padding-top: 1.2rem;">
+						<span class="input-group-addon">邮编</span>
+						<div class="form-control" id="details_zip"></div>
+					</div>
+				</div>
+					<div class="col-md-12" style="padding: 0;">
+						<table class="table table-hover table-bordered table-striped" style="margin-top: 20px;border-collapse: collapse;text-align: center;">
+							<thead>
+								<tr>
+									<th style="text-align: center;">料号</th>
+									<th style="text-align: center;">产品名称</th>
+									<th style="text-align: center;">产品单价</th>
+									<th style="text-align: center;">产品数量</th>
+								</tr>
+							</thead>
+							<tbody id="details_tbody">
+							</tbody>
+						</table>
+					</div>
+					<div class="col-md-12" id="details_img">
+
+					</div>
+					<br style="clear: both;" />
+				</div>
+			</div>
+		</section>
+
+	</div>
+</div>
+<script>
+	function order_details() {
+		$('#details_o_number').empty();
+		$('#details_name').empty();
+		$('#details_country').empty();
+		$('#details_state').empty();
+		$('#details_city').empty();
+		$('#details_phone').empty();
+		$('#details_email').empty();
+		$('#details_street1').empty();
+		$('#details_street2').empty();
+		$('#details_street3').empty();
+		$('#details_asin').empty();
+		$('#details_sku').empty();
+		$('#details_buyerid').empty();
+		$('#details_zip').empty();
+		$('#details_time').empty();
+		$('#details_status').empty();
+		$('#details_tbody').empty();
+		$('#details_img').empty();
+		$('#details_ship').empty();
+		$.ajax({
+			url: "{:U('Order/ordersearch','','')}", //通过页面元素的ID来获取设备ID
+			type: "get", //选择传值方式
+			data: {
+				search: $('#search_order').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				if(data==0){
+					if(t) {
+						clearTimeout(t)
+					};
+					$('#node_message').html('没有这个订单');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none'", 2000);
+					return false;
+				}
+				var str = "";
+				var str1 = "";
+				$('#details_o_number').text(data[0].o_number);
+				$('#details_name').text(data[0].recipient_first_name);
+				$('#details_country').text(data[0].country);
+				$('#details_state').text(data[0].state);
+				$('#details_city').text(data[0].city);
+				$('#details_phone').text(data[0].buyer_phone);
+				$('#details_email').text(data[0].buyer_email);
+				$('#details_street1').text(data[0].street_1);
+				$('#details_street2').text(data[0].street_2 == null ? "" : data[0].street_2);
+				$('#details_street3').text(data[0].street_3 == null ? "" : data[0].street_3);
+				$('#details_asin').text(data[0].asin);
+				$('#details_sku').text(data[0].sku);
+				$('#details_buyerid').text(data[0].source_buyerid);
+				$('#details_zip').text(data[0].zip);
+				$('#details_time').text(data[0].create_time);
+				$('#details_status').text(data[0].processing_status);
+				$('#details_ship').text(data[0].ship_level);
+				for(var i = 0; i < data.length; i++) {
+					str += '<tr><td>' + data[i].bclass + '.' + data[i].sclass + '.' + data[i].num + '</td>' + '<td>' +"<a href=\"{:U('Product/homeProduct','','')}/pid/"+ data[i].pid +"\">"+ data[i].namezh + '</a>'+ '</td><td>' + data[i].price + '</td><td>' + data[i].number + '</td></tr>';
+					str1 += '<div><img src="' + data[i].thumb + '" /><p>x' + data[i].number + '</p></div>';
+				}
+				$('#details_tbody').html(str);
+				$('#details_img').html(str1);
+			}
+		})
+	}
+
+	$('#search_order').on('keyup', function(event) {
+		if(event.keyCode == '13') {
+			order_details()
+		}
+	})
+</script>

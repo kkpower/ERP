@@ -1,0 +1,371 @@
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<style>
+    .modal-dialog {
+        margin: 60px auto !important;
+    }
+
+    .bootstrap-select.btn-group .dropdown-toggle .filter-option {
+        padding-left: 5px;
+        padding-top: 3px;
+        color: #666;
+    }
+
+    .bootstrap-select {
+        width: 50% !important;
+    }
+
+    .bootstrap-select>button {
+        height: 100%;
+        line-height: 100%;
+    }
+
+    .bootstrap-select>button:active {
+        background: #fff !important;
+    }
+
+    .bootstrap-select>button:hover {
+        background: #fff !important;
+    }
+
+    .bootstrap-select>button:focus {
+        background: #fff !important;
+    }
+
+    .caret {
+        color: #333 !important;
+    }
+
+    .wrap {
+        margin: 0 auto;
+        /*padding: 20px;*/
+        width: 210mm;
+        height: 297mm;
+        /*border:1px solid #ccc;*/
+    }
+
+    #wrap ul,
+    #wrap p {
+        padding: 0;
+        margin: 0;
+    }
+
+    #wrap li {
+        padding: 20px;
+        list-style: none;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+    }
+
+    .left p {
+        font-size: 12px;
+        line-height: 18px;
+        white-space: nowrap;
+    }
+
+    .left {
+        margin-top: -4px;
+        margin-left: -26px;
+        -webkit-transform: scale(0.7, 0.7);
+        -moz-transform: scale(0.7, 0.7);
+        -o-transform: scale(0.7, 0.7);
+        transform: scale(0.7, 0.7);
+    }
+
+    .middle {
+        padding-top: 20px;
+        position: relative;
+        width: 76%;
+    }
+
+    .middle p {
+        font-size: 12px;
+        font-weight: bold;
+        line-height: 20px;
+    }
+
+    .name1 {
+        -webkit-transform: scale(0.8, 0.8);
+        -moz-transform: scale(0.8, 0.8);
+        -o-transform: scale(0.8, 0.8);
+        transform: scale(0.8, 0.8);
+    }
+
+    #details_img {
+        text-align: center;
+    }
+
+    #details_img>div {
+        display: inline-block;
+        width: 20%;
+        position: relative;
+        margin: 0 2% 2%;
+    }
+
+    #details_img img {
+        width: 100%;
+    }
+
+    #details_img p {
+        position: absolute;
+        top: 0;
+        right: 0;
+        line-height: 16px;
+        text-align: center;
+        font-size: 16px;
+        color: red;
+        font-weight: bold;
+    }
+</style>
+<script>
+	$('#85').parents('li').addClass('nav-active')
+	$('#85').parents('li').addClass('nav-expanded')
+	$('html').addClass('sidebar-left-collapsed')
+</script>
+<input type="hidden" id="orderdetails" name="orderdetails" value="{:U('Deliverycenter/orderdetails')}">
+<input type="hidden" id="problem" />
+<input id="areaing" type="hidden" value="{$areaing}" />
+<p id="send_message" style="display: none;"></p>
+<p id="all_message" style="display: none;">{$orderjson}</p>
+<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel">
+            <header class="panel-heading">
+           		<div style="float: left;">
+                <p style="font-size: 14px;margin-bottom: 0;color: #666;">订单平台:<span style="font-weight: bold;">{$AnumberInfo.name}</span></p>
+                <p style="font-size: 14px;margin-bottom: 0;color: #666;">订单来自账号:<span style="font-weight: bold;">{$AnumberInfo.name}</span></p>
+                <p style="font-size: 14px;margin-bottom: 0;color: #666;">本次导入<span style="font-weight: bold;color: red;">{$ImportQuantity}</span>个订单</p>
+                <p style="font-size: 14px;margin-bottom: 0;color: #666;">订单状态:<span style="font-weight: bold;">
+                     <foreach name="problem" item="vo">
+                         {$key}:{$vo}
+                 </foreach>
+                    </span></p>
+                <!--<p style="font-size: 14px;margin-bottom: 0;color: #666;">合并订单:<span style="font-weight: bold;">{$merge}</span></p>-->
+           		</div>
+                <div style="margin-left: 20px;float: left;">
+                <div>
+                    <foreach name="countryGP" item="vo">
+                        <p  style="font-size: 14px;margin-bottom: 0;color: #666;">
+                        收件区域:<span style="font-weight: bold;">{$key}:{$vo}</span>
+                        </p>
+                    </foreach>
+
+                </div>
+                </div>
+                <br style="clear: both;"/>
+            </header>
+
+            <div class="panel-body"> 
+                <table id="table1" class="table table-hover table-bordered" style="border-collapse: collapse;">
+                    <thead>
+                    <tr>
+                        <td><input type="checkbox" class="check-all" onclick="historyImg(this,event)">全选</td>
+                        <td>外部订单号</td>
+                        <td>平台</td>
+                        <td>账户</td>
+                        <td>收件人</td>
+                        <td>国家</td>
+                        <td>运输要求</td>
+						<td>订单状态</td>
+						<td>订单日期</td>
+                        <td>操作</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <volist name="list" id="vo">
+                        <tr id="tr_{$vo.id}">
+                            <td><input id="{$key}_ck" type="checkbox" name="checkboxed" class="row_check" value="{$vo.id}"></td>
+                            <td id="{$key}_3">{$vo.external_sn}</td>
+                            <td id="{$key}_4">{$AnumberInfo.name}</td>
+                            <td id="{$key}_2">{$AnumberInfo.account_number}</td>
+                            <td id="{$key}_5">{$vo.fullname}</td>
+                            <td id="{$key}_6">{$vo.country}</td>
+                            <td id="{$key}_8">{$vo.ship_level}</td>
+							<td id="{$key}_9">{$vo.status_id}</td>
+							<td id="{$key}_10">{$vo.creation_time}</td>
+                            <td id="{$key}_11">
+                            	<button onclick="cancelorder('{$vo.id}')" style="background: #EE0000; border: 0px;" type="button" data-toggle="modal" class="btn btn-primary btn-xs">
+										取消订单
+									</button>
+                                <a style="color: #fff;" type="button" target="_blank" href="{:U('Order/details',array('id'=>$vo['id']))}" class="btn btn-info btn-xs">订单详情</a>
+                                <if condition="($vo.status_id lt 3) OR ($vo.status_id eq 9)">
+                                    <a style="color: #fff;" type="button" target="_blank" href="{:U('Order/update',array('id'=>$vo['id']))}" class="btn btn-primary btn-xs">修改</a>
+                                </if>
+                            </td>
+                        </tr>
+                    </volist>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+</div>
+<script>
+	function historyImg(dom,e) {
+        stopBubble(e);
+    }
+ //阻止事件冒泡函数
+    function stopBubble(e) {
+        if (e && e.stopPropagation)
+            e.stopPropagation()
+        else
+            window.event.cancelBubble = true
+    }
+    var platform = $('#platform').val();
+    $('#pl_form').val(platform);
+
+    var status = $('#status').val();
+    $('#status_id').val(status);
+
+    var pagen = $('#pag').val();
+    $('#pagen').val(pagen);
+
+
+    if($('#selector').val() != "") {
+        $('#status_div').css('display', 'table');
+    } else {
+        $('#status_div').css('display', 'none');
+    }
+    var status_id = $('#status_id').val();
+    if(status_id != ""){
+        $('#selectord').val(status_id);
+    }else{
+        $('#selectord').val("2");
+    }
+
+    if(status_id == 2 || status_id == 4) {
+        $('#bulk_print').css('display', 'inline-block');
+    } else {
+        $('#bulk_print').css('display', 'none');
+    }
+    if(status_id == 4) {
+        $('#print_complete').css('display', 'inline-block');
+    } else {
+        $('#print_complete').css('display', 'none');
+    }
+</script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/print.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<!--<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/jsbarcode.js"></script>-->
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/jquery.qrcode.min.js"></script>
+<script>
+    //打印
+    var num = 0;
+    var arr1 = "";
+    var pid_arr = [],
+            pid_length = "",
+            pid_arr1 = [];
+    if($('#all_message').text() != "") {
+        arr1 = JSON.parse($('#all_message').html());
+    }
+
+    //输入框自动聚焦
+    $('#search_order').focus();
+    $('#details_modal').on('shown.bs.modal', function(e) {
+        $('#details_pid').focus();
+    })
+
+    //下拉框选择国家
+    $('#selector').on('change', function() {
+        if($('#selector').val() != "") {
+            $('#status_div').css('display', 'table');
+        } else {
+            $('#status_div').css('display', 'none');
+        }
+    })
+    //下拉状态改变
+    $('#selectord').on('change', function() {
+        $('#country_form').submit();
+    })
+
+    console.log(arr1);
+    $('#print_btn').on('click', function() {
+        print_order1();
+        $("#wrap").print();
+    })
+
+
+    //表格插件
+    $(document).ready(function() {
+        $('#table1').DataTable({
+            "paging": false,
+            "lengthChange": false,
+            "info": false,
+            "searching": false
+        });
+    });
+
+    //全选、反选
+    $(function() {
+        var changetotal = function() {
+            //获取所选中的行
+            var checked_checkbox = $('.row_check:checked');
+        };
+
+        $('.check-all').change(function() {
+            var status = $(this).prop('checked');
+            $('.row_check').prop('checked', status);
+            changetotal();
+        });
+
+        $('.row_check').change(function() {
+            changetotal();
+            var checkbox_all = $('.row_check');
+            var checkbox_checked = $('.row_check:checked');
+            var status = checkbox_all.length == checkbox_checked.length;
+            $('.check-all').prop('checked', status);
+        });
+    });
+    //全选
+    $('.check-all').change(function() {
+        var status = $(this).prop('checked');
+        $('.row_check').prop('checked', status);
+    });
+
+    //搜索订单
+    $('#search_order').on('keyup', function(event) {
+        if(event.keyCode == '13') {
+            search_order()
+        }
+    })
+
+    //搜索订单
+    function search_order() {
+        window.open("{:U('Order/details')}?o_number="+$('#search_order').val());
+    }
+    //取消订单
+	function cancelorder(id) {
+		var r = confirm("您确定取消该订单吗?");
+		if(r) {
+			$.ajax({
+				url: "{:U('Order/cancelOrder')}",
+				type: 'post',
+				dataType: "json",
+				data: {
+					type: 1,
+					id: id
+				},
+				success: function(data) {
+					if(data.status == 0) {
+						$('#node_message').html('{$Think.lang.Operationauthority}');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';", 2000);
+					} else if(data > 0) {
+						//						$(obj).parents("tr").remove();
+						$('#node_message').html('取消成功');
+						$('#tr_'+id).remove();
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';", 2000);
+					}else if (data==0){
+						$('#node_message').html('该订单无法取消');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';", 2000);
+					}
+				}
+			});
+		}
+	}
+</script>

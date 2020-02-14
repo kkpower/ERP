@@ -1,0 +1,956 @@
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/FirstEdition/assets/shu/boot/chartist-custom.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<style>
+	.six:before {
+		content: "";
+		position: absolute;
+		top: -20px;
+		left: 0;
+		width: 0;
+		height: 0;
+		border-left: 40px solid transparent;
+		border-right: 40px solid transparent;
+		border-bottom: 20px solid #ececec;
+	}
+	
+	.six:after {
+		content: "";
+		position: absolute;
+		bottom: -20px;
+		left: 0;
+		width: 0;
+		height: 0;
+		border-left: 40px solid transparent;
+		border-right: 40px solid transparent;
+		border-top: 20px solid #ececec;
+	}
+	
+	.modal-dialog {
+		margin: 60px auto !important;
+	}
+	.bootstrap-select.btn-group .dropdown-toggle .filter-option {
+    padding-left: 5px;
+    padding-top: 3px;
+    color: #666;
+}
+	/*.bootstrap-select{
+	width: 50% !important;
+}*/
+#info1 .input-group{
+	width: 70%;
+}
+.bootstrap-select>button{
+	height: 100%;
+	line-height: 100%;
+}
+.bootstrap-select>button:active{
+	background: #fff !important;
+}
+.bootstrap-select>button:hover{
+	background: #fff !important;
+}
+.bootstrap-select>button:focus{
+	background: #fff !important;
+}
+select{
+	appearance:none;
+-moz-appearance:none;
+-webkit-appearance:none;
+}
+select::-ms-expand { display: none; }
+.caret{
+	color: #333 !important;
+}
+#parameter .input-group:first-child{
+	padding-top: 0 !important;
+}
+/*.input-group-addon:first-child{
+	min-width: 7em;
+}*/
+</style>
+<script>
+	$('#23').parents('li').addClass('nav-active')
+	$('#23').parents('li').addClass('nav-expanded')
+</script>
+<input type="hidden" id="pid" value="{$info.pid}">
+<!--获取产品信息 需要产品 id-->
+<input type="hidden" id="getInfoProduct" value="{:U('Product/getInfoProduct')}">
+<!--保存产品信息 需要产品 id-->
+<input type="hidden" id="saveInfoProduct" value="{:U('Product/saveInfoProduct')}">
+<!--获取所有的技术参数的名-->
+<input type="hidden" id="getAjaxProductParameter" value="{:U('Product/getAjaxProductParameter')}">
+<!--删除产品技术参数-->
+<input type="hidden" id="dellProductExpansion" value="{:U('Product/dellProductExpansion')}">
+<!--添加产品技术参数-->
+<input type="hidden" id="addProductExpansion" value="{:U('Product/addProductExpansion')}">
+<!--保存产品技术参数-->
+<input type="hidden" id="saveProductExpansion" value="{:U('Product/saveProductExpansion')}">
+<!--产品名称 重复检测-->
+<input type="hidden" id="productname" name='' value="{:U('Product/productname','','')}">
+<!--产品简称 重复检测-->
+<input type="hidden" id="productshortname" name='' value="{:U('Product/productshortname','','')}">
+<!--查询一级编码 url-->
+<input type="hidden" id="getAjaxclassone" name='' value="{:U('Product/getAjaxclassone')}">
+<!--查询二级编码 url-->
+<input type="hidden" id="getAjaxclasstwo" name='' value="{:U('Product/getAjaxclasstwo','','')}">
+<form action="{:U('Supplier/proDuct','','')}" method="get" style="display: inline-block;float: left;margin-right:15px ;" target="_blank">
+	<div id="lode_modal" class="modal fade" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document" style="width: 500px;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">
+						{$Think.lang.supplier}
+					</h4>
+				</div>
+				<div class="modal-body" style="line-height: 34px;">
+					<div class="row" style="margin-left: 0;margin-right: 0;">
+						<div class="input-group">							
+							<span class="input-group-addon">{$Think.lang.supplier}<span style="color: red;">*</span></span>
+							<input type="hidden" id="search" name="search">
+							<select class="form-control" name="id">
+								<option value="">--{$Think.lang.Pleasechoose}--</option>
+								<foreach name="supperlist" item="vo">
+									<option value="{$vo.id}">{$vo.name}</option>
+								</foreach>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" type="submit">{$Think.lang.determine}</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cancel}</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+	</div>
+</form>
+<form action="{:U('Warehouse/inLibrary','','')}" method="get" style="display: inline-block;float: left;margin-right:15px ;" target="_blank">
+<div id="nodes_modal" class="modal fade" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document" style="width: 500px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">
+					库存查询
+				</h4>
+			</div>
+			<div class="modal-body" style="line-height: 34px;">
+				<div class="row" style="margin-left: 0;margin-right: 0;">
+					<div class="input-group">
+						<span class="input-group-addon">{$Think.lang.warehouse}<span style="color: red;">*</span></span>
+						<input type="hidden" id="p_id" name="p_id">
+						<select class="form-control" name="k_id">
+							<option value="">--{$Think.lang.Pleasechoose}--</option>
+							<foreach name="kulist" item="vo">
+								<option value="{$vo.id}">{$vo.name}</option>
+							</foreach>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" id="add_pr" type="submit">{$Think.lang.determine}</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cancel}</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+</div>
+</form>
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+				<input type="hidden" name='getRoleAuthority' value="{:U('System/getRoleAuthority','','')}">
+				<h2 class="panel-title">{$Think.lang.Producthomepage}</h2>
+			</header>
+			<div class="panel-body">
+				<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+				<div style="width: 36%;float: left;">
+					<div style="width: 100%;height: 180px;">
+						<div style="margin: 0 auto;">
+							<img style="width: 120px;display: block;height: 120px;margin: 0 auto;cursor: pointer;box-sizing: content-box;border-radius: 12px;" src="__ROOT__{$info.thumb}" onclick="onthm()" />
+						</div>
+						<p style="margin: 0;text-align: center;font-weight: bold;">{$info.onenumber}.{$info.twonumber}.{$info.number}</p>
+						<p style="margin: 0;text-align: center;line-height: 1.3em;">{$info.name}</p>
+					</div>
+
+					<div style="height: 70px;background: deepskyblue;color: #fff;text-align: center;line-height: 24px;">
+						<div style="width: 33%;border-right: 1px solid #fff;height: 100%;float: left;">
+							<p style="padding-top: 12px;margin-bottom: 0;">{$Think.lang.state}</p>
+							<p></p>
+						</div>
+						<div style="width: 34%;border-right: 1px solid #fff;height: 100%;float: left;;">
+							<p style="padding-top: 12px;margin-bottom: 0;">{$Think.lang.Date}</p>
+							<p></p>
+						</div>
+						<div style="width: 33%;height: 100%;float: left;;">
+							<p style="padding-top: 12px;margin-bottom: 0;">{$Think.lang.Sales_Amount}</p>
+							<p></p>
+						</div>
+					</div>
+
+					<div style="height: 56px;line-height: 50px;text-align: center;background: #F8F7F7;border-bottom: 1px solid #e5e5e5;">
+						<button class="btn btn-danger" id="look_pr">{$Think.lang.info}</button>
+						<button class="btn btn-danger" onclick="onthm()">{$Think.lang.Thumbnail}</button>
+						<button class="btn btn-danger">{$Think.lang.Drawing}</button>
+					</div>
+					<div style="background: #F8F7F7;">
+						<div style="height: 150px;">
+
+							<div style="float: left;width: 33%;height: 100%;">
+								<a target="_blank" href="{:U('Product/imgindex',array('pid'=>$info[pid]))}">
+									<div class="six" style="width: 80px;height: 40px;background: #ececec;margin: 50px auto 0;position: relative;">
+										<span style="display: block;width: 30px;height: 30px;margin:0 auto;padding-top: 5px;font-size: 30px;" class="glyphicon glyphicon-picture" aria-hidden="true"></span>
+									</div>
+								</a>
+								<p style="text-align: center;padding-top:30px;">{$Think.lang.Productpicture}</p>
+							</div>
+
+							<div style="float: left;width: 34%;height: 100%;">
+								<div class="six" style="width: 80px;height: 40px;background: #ececec;margin: 50px auto 0;position: relative;">
+									<span style="display: block;width: 30px;height: 30px;margin:0 auto;padding-top: 5px;font-size: 30px;" class="glyphicon glyphicon-yen" aria-hidden="true"></span>
+								</div>
+								<p style="text-align: center;padding-top:30px;">{$Think.lang.Cost_accounting}</p>
+							</div>
+							<div style="float: left;width: 33%;height: 100%;">
+								<div class="six" style="width: 80px;height: 40px;background: #ececec;margin: 50px auto 0;position: relative;">
+									<span style="display: block;width: 30px;height: 30px;margin:0 auto;padding-top: 5px;font-size: 30px;" class="glyphicon glyphicon-plane" aria-hidden="true"></span>
+								</div>
+								<p style="text-align: center;padding-top:30px;">{$Think.lang.Set_shipping_cost}</p>
+							</div>
+						</div>
+						<div style="height: 150px;">
+							<div style="float: left;width: 33%;height: 100%;cursor:pointer;" onclick="stock('{$info.pid}')">
+								<div class="six" style="width: 80px;height: 40px;background: #ececec;margin: 50px auto 0;position: relative;">
+									<span style="display: block;width: 30px;height: 30px;margin:0 auto;padding-top: 5px;font-size: 30px;color: black;" class="glyphicon glyphicon-book" aria-hidden="true"></span>
+								</div>
+								<p style="text-align: center;padding-top:30px;">{$Think.lang.Inventory_management}</p>
+							</div>
+							<div style="float: left;width: 34%;height: 100%;cursor:pointer;"  onclick="supplier('{$info.name}')">
+								<div class="six" style="width: 80px;height: 40px;background: #ececec;margin: 50px auto 0;position: relative;">
+									<span style="display: block;width: 30px;height: 30px;margin:0 auto;padding-top: 5px;font-size: 30px;color: black;" class="glyphicon glyphicon-oil" aria-hidden="true"></span>
+								</div>
+								<p style="text-align: center;padding-top:30px;">{$Think.lang.supplier}</p>
+							</div>
+							<div style="float: left;width: 33%;height: 100%;">
+								<a target="_blank" href="{:U('Order/saleStatistics',array('pid'=>$info[pid]))}">
+								<div class="six" style="width: 80px;height: 40px;background: #ececec;margin: 50px auto 0;position: relative;">
+									<span style="display: block;width: 30px;height: 30px;margin:0 auto;padding-top: 5px;font-size: 30px;" class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+								</div>
+								</a>
+								<p style="text-align: center;padding-top:30px;">{$Think.lang.Order}</p>
+							</div>
+						</div>
+						<div style="height: 150px;">
+							<div style="float: left;width: 33%;height: 100%;">
+								<div class="six" style="width: 80px;height: 40px;background: #ececec;margin: 50px auto 0;position: relative;">
+									<span style="display: block;width: 30px;height: 30px;margin:0 auto;padding-top: 5px;font-size: 30px;" class="glyphicon glyphicon-signal" aria-hidden="true"></span>
+								</div>
+								<p style="text-align: center;padding-top:30px;">{$Think.lang.analyze_data}</p>
+							</div>
+							<div style="float: left;width: 34%;height: 100%;">
+								<div class="six" style="width: 80px;height: 40px;background: #ececec;margin: 50px auto 0;position: relative;">
+									<span style="display: block;width: 30px;height: 30px;margin:0 auto;padding-top: 5px;font-size: 30px;" class="glyphicon glyphicon-user" aria-hidden="true"></span>
+								</div>
+								<p style="text-align: center;padding-top:30px;">{$Think.lang.client}</p>
+							</div>
+							<div style="float: left;width: 33%;height: 100%;">
+								<div class="six" style="width: 80px;height: 40px;background: #ececec;margin: 50px auto 0;position: relative;">
+									<span style="display: block;width: 30px;height: 30px;margin:0 auto;padding-top: 5px;font-size: 30px;" class="glyphicon glyphicon-file" aria-hidden="true"></span>
+								</div>
+								<p style="text-align: center;padding-top:30px;">{$Think.lang.Quality_report}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div style="width: 60%;float: right;">
+					<div style="width: 90%;">
+						<div id="headline-chart" class="ct-chart" style="margin-bottom: 30px;"></div>
+					</div>
+					<ul id="myTab" class="nav nav-tabs">
+						<li class="active">
+							<a href="#home" data-toggle="tab">
+								<!--技术参数-->
+								{$Think.lang.parameter}
+							</a>
+						</li>
+						<li>
+							<a href="#payment" data-toggle="tab">
+								<!--订单-->
+								{$Think.lang.Order}
+								<span class="badge" style="margin-left: 4px;float: right;">0</span>
+							</a>
+						</li>
+					</ul>
+					<div id="myTabContent" class="tab-content">
+						<div class="tab-pane fade in active" id="home">
+							<table class="table">
+								<thead>
+									<tr>
+										<td colspan="3" style="text-align: center;">
+											<div style="height: 34px;width: 65px;display: inline-block;">
+												<span class="glyphicon glyphicon-plus-sign" style="font-size: 30px;float: left;cursor: pointer;" onclick="onm(3)"></span>
+												<span style="font-size: 30px;line-height: 34px;float: left;">3</span>
+											</div>
+											<div style="height: 34px;width: 65px;display: inline-block;">
+												<span class="glyphicon glyphicon-plus-sign" style="font-size: 30px;float: left;cursor: pointer;" onclick="onm(5)"></span>
+												<span style="font-size: 30px;line-height: 34px;float: left;">5</span>
+											</div>
+											<div style="height: 34px;width: 70px;display: inline-block;">
+												<span class="glyphicon glyphicon-plus-sign" style="font-size: 30px;float: left;cursor: pointer;" onclick="onm(10)"></span>
+												<span style="font-size: 30px;line-height: 34px;float: left;">10</span>
+											</div>
+											<div style="height: 34px;width: 160px;display: inline-block;margin-left: 20px;">
+												<span class="glyphicon glyphicon-file" style="font-size: 30px;float: left;cursor: pointer;"></span>
+												<span style="font-size: 24px;line-height: 34px;float: left;">{$Think.lang.Drawing}</span>
+											</div>
+										</td>
+									</tr>
+								</thead>
+								<volist name="list" id="vo">
+									<tr>
+										<td style="width: 33%;">{$vo.name}</td>
+										<td style="width: 33%;">{$vo.value}</td>
+										<td style="width: 34%;">
+											<!--修改-->
+											<button class="btn btn-primary btn-xs" onclick="change_parameter(this,'{$vo.id}')">{$Think.lang.Modify}</button>
+											<!--删除-->
+											<button class="btn btn-danger btn-xs" onclick="remove_parameter('{$vo.id}')">{$Think.lang.Delete}</button>
+										</td>
+									</tr>
+								</volist>
+							</table>
+						</div>
+						<div class="tab-pane fade" id="payment" style="height: 400px;overflow-y: scroll;">
+							<!--应收货款-->
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+
+<div id="node_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">
+					<!--添加新的技术参数-->
+                    {$Think.lang.new_parameter}
+				</h4>
+				<p style="margin-bottom: 0;font-size: 14px;">{$info.onenumber}.{$info.twonumber}.{$info.number} {$info.name}</p>
+			</div>
+			<div class="modal-body" style="line-height: 34px;">
+				<form action="" id="form_parameter">
+					<div class="row" style="margin-left: 0;margin-right: 0;" id="parameter">
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" id="save_parameter" type="submit">{$Think.lang.Save}</button>
+				<div type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cancel}</div>
+			</div>
+
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+
+<div id="message_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">
+					{$Think.lang.edit}
+				</h4>
+				<p id="num_pr" style="font-size: 14px;margin-bottom: 0;"></p>
+			</div>
+			<div class="modal-body" style="line-height: 34px;">
+				<div id="info1" class="row" style="margin-left: 0;margin-right: 0;">
+					<div class="input-group" style="position: relative;">
+						<span class="input-group-addon">{$Think.lang.Primarycode}<span style="color: red;">*</span></span>
+						<span class="caret" style="position: absolute;right: 2%;top: 46%;z-index: 20;"></span>
+						<select id="queryDevice" disabled="disabled" type="text" name="queryDevice" class="form-control" onchange="getAjaxclasstwo()" data-live-search="true">
+						</select>
+					</div>
+					<div class="input-group" style="padding-top: 12px;position: relative;">						
+						<span class="input-group-addon">{$Think.lang.Secondcode}<span style="color: red;">*</span></span>
+						<span class="caret" style="position: absolute;right: 2%;top: 64%;z-index: 20;"></span>
+						<select id="second" disabled="disabled" type="text" name="second" class="form-control">
+						</select>
+					</div>
+					<div class="input-group" style="padding-top: 12px;">
+						<span class="input-group-addon">{$Think.lang.Third_level_coding}</span>
+						<input type="text" name="number" readonly="readonly" class="form-control" value="" placeholder="">
+					</div>
+					<div class="input-group" style="padding-top: 12px;float: left;">
+						<span class="input-group-addon">{$Think.lang.Productname}<span style="color: red;">*</span></span>
+						<input type="text" name="name" class="form-control" value="" placeholder="" onblur="productname()">
+						<!--<span class="input-group-addon" style="cursor: pointer;" onclick="">检测</span>-->
+					</div>
+					<div id="name_check" style="float: left;padding-top: 10px;margin-left: 20px;"></div>
+					<br style="clear: both;"/>
+					<div class="input-group" style="padding-top: 12px;float: left;">
+						<span class="input-group-addon">{$Think.lang.Abbreviation}<span style="color: red;">*</span></span>
+						<input type="text" name="shortname" class="form-control" value="" placeholder="" onblur="productshortname()">
+						<!--<span class="input-group-addon" style="cursor: pointer;" onclick="">检测</span>-->
+					</div>
+					<div id="shortname_check" style="float: left;padding-top: 10px;margin-left: 20px;"></div>
+					<br style="clear: both;"/>
+					<div class="input-group" style="padding-top: 12px;">
+						<span class="input-group-addon">{$Think.lang.Productquality}（{$Think.lang.Gram}）</span>
+						<input type="text" name="weight" class="form-control" value="" placeholder="">
+					</div>
+					<div class="input-group" style="padding-top: 12px;">
+						<span class="input-group-addon">{$Think.lang.long}（{$Think.lang.Cm}）</span>
+						<input type="text" name="long" class="form-control" value="" placeholder="">
+					</div>
+					<div class="input-group" style="padding-top: 12px;">
+						<span class="input-group-addon">{$Think.lang.width}（{$Think.lang.Cm}）</span>
+						<input type="text" name="width" class="form-control" value="" placeholder="">
+					</div>
+					<div class="input-group" style="padding-top: 12px;">
+						<span class="input-group-addon">{$Think.lang.height}（{$Think.lang.Cm}）</span>
+						<input type="text" name="height" class="form-control" value="" placeholder="">
+					</div>
+					<div id="key_words" class="input-group" style="padding-top: 12px;float: left;">
+						<span class="input-group-addon">{$Think.lang.label}</span>
+						<select id="getAjaxKeywords" type="text" name="queryDevice" value="" class="selectpicker form-control" data-live-search="true" multiple>
+						</select>
+					</div>
+					<button class="btn btn-primary" style="float: left;margin-top: 12px;margin-left: 12px;" onclick="key_words()">{$Think.lang.Add_keywords}</button>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button id="save_pr" type="button" class="btn btn-primary">{$Think.lang.Save}</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cancel}</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+</div>
+<!-- /.modal-dialog -->
+
+<div id="parameter_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">
+					<!--查看和编辑技术参数-->
+                    {$Think.lang.edit}
+				</h4>
+				<p style="font-size: 14px;margin-bottom: 0;">{$info.onenumber}.{$info.twonumber}.{$info.number} {$info.name}</p>
+				<p style="font-size: 14px;margin-bottom: 0;" id="parameter_name"></p>
+			</div>
+			<div class="modal-body" style="line-height: 34px;">
+				<div class="row" style="margin-left: 0;margin-right: 0;">
+					<div class="input-group">
+						<span class="input-group-addon">
+                            value
+                        </span>
+						<input type="text" name="name" id="parameter_value" class="form-control" placeholder="" style="width: 30%;">
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button id="save_parameter1" type="button" class="btn btn-primary">{$Think.lang.Save}</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cancel}</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+</div>
+<!-- /.modal-dialog -->
+<script src="__PUBLIC__/FirstEdition/assets/shu/boot/chartist.min.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script>
+	var deviceStr = "<option id='first_op' value=''>{$Think.lang.Selectfirstcode}</option>";
+	var deviceStr1 = "<option value=''>{$Think.lang.Add_label}</option>";
+//	console.log(JSON.parse('{$keywords}'));
+	var getAjaxclassone = $("#getAjaxclassone").val();
+		$.ajax({
+			url: getAjaxclassone, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {},
+			dataType: "JSON",
+			success: function(data) {
+				for(var i = 0; i < data.length; i++) {
+					deviceStr += "<option value='" +
+						data[i]['id'] +
+						"'" +
+						">" +
+						data[i].number + ': ' + data[i]['nameus'] +
+						"</option>";
+				}
+			}
+		})
+		//关键词
+	$.ajax({
+		url: "{:U('Product/getAjaxKeywords')}", //通过页面元素的ID来获取设备ID
+		type: "post", //选择传值方式
+		data: {},
+		dataType: "JSON",
+		success: function(data) {
+			console.log(data);
+			for(var i = 0; i < data.length; i++) {
+				deviceStr1 += "<option value='" +
+					data[i].id +
+					"'" +
+					">" +
+					data[i].name +
+					"</option>";
+			}
+			$("#getAjaxKeywords").html("");
+			$('#getAjaxKeywords').append(deviceStr1);
+			$('#getAjaxKeywords').selectpicker({
+				noneSelectedText:'{$Think.lang.Add_label}'
+			});
+			$('#getAjaxKeywords').selectpicker('refresh');
+		}
+	})
+//	$("#queryDevice").on('shown.bs.select', function(e) {
+//		$("#queryDevice").html("");
+//		$('#queryDevice').append(deviceStr);
+//		$('#queryDevice').selectpicker('refresh');
+//	});
+	
+	function getAjaxclasstwo() //二级编码
+	{
+		var getAjaxclasstwo = $("#getAjaxclasstwo").val();
+		$.ajax({
+			url: getAjaxclasstwo, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				superior: $('#queryDevice').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				//											↓ 请选择第二级编码
+				var p = "<option id='second_op' value=''>{$Think.lang.Selectsecondcode}</option>"
+				$("#second").html(p);
+				//将获取到的数据赋值
+				for(var i = 0; i < data.length; i++) {
+					//拼接option标签的 name value 等属性
+					var p = "<option value='" +
+						data[i]['id'] +
+						"'" +
+						">" +
+						data[i].number + ': ' + data[i]['nameus'] +
+						"</option>";
+					$("#second_op").after(p);
+				}
+
+			}
+		})
+	}
+	
+	function getAjaxclasstwo1(val) //二级编码
+	{
+		var getAjaxclasstwo = $("#getAjaxclasstwo").val();
+		$.ajax({
+			url: getAjaxclasstwo, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				superior: $('#queryDevice').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				//请选择第二级编码
+				var p = "<option id='second_op' value=''>{$Think.lang.Selectsecondcode}</option>"
+				$("#second").html(p);
+				//将获取到的数据赋值
+				for(var i = 0; i < data.length; i++) {
+					//拼接option标签的 name value 等属性
+					var p = "<option value='" +
+						data[i]['id'] +
+						"'" +
+						">" +
+						data[i].number + ': ' + data[i]['nameus'] +
+						"</option>";
+					$("#second_op").after(p);
+				}
+				$("#second option[value='"+val+"']").attr("selected","selected");
+			}
+		})
+	}
+	
+	function onm(num) {
+		$('#parameter').empty();
+		for(var i = 0; i < num; i++) {
+			var list = '<div class="input-group" style="padding-top: 20px;"><span class="input-group-addon">规范名称</span><input type="text" name="parameter' +
+				'" class="form-control"  style="width: 39%;"></div>' +
+				'<div class="input-group"><span class="input-group-addon">参数值</span><input type="text" name="values' +
+				'" class="form-control" placeholder="" style="width: 40%;"></div>'
+			$('#parameter').append(list)
+		}
+		$('#node_modal').modal('toggle')
+	}
+
+	//折线图
+	var data, options;
+
+	// headline charts
+	data = {
+		labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+		series: [
+			[23, 29, 24, 40, 25, 24, 35],
+			[14, 25, 18, 34, 29, 38, 44],
+		]
+	};
+
+	options = {
+		height: 300,
+		showArea: true,
+		showLine: false,
+		showPoint: false,
+		fullWidth: true,
+		axisX: {
+			showGrid: false
+		},
+		lineSmooth: false,
+	};
+
+	new Chartist.Line('#headline-chart', data, options);
+	//点击打开缩略图上传页面
+	function onthm() {
+		window.location.href = "{:U('Product/productthm',array('pid'=>$info[pid]))}";
+	}
+	//查看产品信息
+	$('#look_pr').on('click', function() {
+		$('#message_modal').modal('toggle');
+		var getInfoProduct = $("#getInfoProduct").val();
+		$.ajax({
+			url: getInfoProduct, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				pid: $('#pid').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data)
+				var arr1 = [];
+				if(data.keywords_id != null){
+					arr1 = data.keywords_id.split(',');
+					arr1.pop();
+					arr1.shift();
+					if(arr1[0] ==""){
+						arr1 = [];
+					}
+				}
+				console.log(arr1);
+				$('#num_pr').text(data.onenumber + '.' + data.twonumber + '.' + data.number + " " + data.name)
+//				$("#queryDevice").html("");
+				$('#queryDevice').append(deviceStr);
+//				$('#queryDevice').selectpicker('refresh');
+				$('#queryDevice').val(data.bclassid);
+				getAjaxclasstwo1(data.sclassid);
+				$("input[name='name']").val(data.name)
+				$("input[name='weight']").val(data.weight)
+				$("input[name='long']").val(data.extent)
+				$("input[name='width']").val(data.width)
+				$("input[name='height']").val(data.height)
+				$("input[name='number']").val(data.number)
+				$("input[name='shortname']").val(data.shortname)
+				$("#getAjaxKeywords").val(arr1)
+				$('#getAjaxKeywords').selectpicker('refresh');
+			}
+		})
+	})
+
+	//修改保存产品信息
+	$('#save_pr').on('click', function() {
+		var saveInfoProduct = $("#saveInfoProduct").val();
+		if($("input[name='name']").val() == "" || $("input[name='shortname']").val() == "") {
+			if(t) {
+				clearTimeout(t)
+			};
+			$('#node_message').html('请输入必填项');
+			node_message.style.display = 'block';
+			var t = setTimeout("node_message.style.display='none';", 1500);
+			return false;
+		}else if($.trim($("input[name='shortname']").val()).length > 16){
+			if(t) {
+				clearTimeout(t)
+			};
+			$('#node_message').html('简称最多16位字节');
+			node_message.style.display = 'block';
+			var t = setTimeout("node_message.style.display='none';", 1500);
+			return false;
+		}
+		$.ajax({
+			url: saveInfoProduct, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				pid: $('#pid').val(),
+				bclass: $("#queryDevice").val(),
+				sclass: $("#second").val(),
+				name: $("input[name='name']").val(),
+				weight: $("input[name='weight']").val(),
+				long: $("input[name='long']").val(),
+				width: $("input[name='width']").val(),
+				height: $("input[name='height']").val(),
+				xnumber: $("input[name='number']").val(),
+				shortname:$("input[name='shortname']").val(),
+				keywords_id:$('#getAjaxKeywords').val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data)
+				if(data == 1) {
+					if(t) {
+						clearTimeout(t)
+					};
+					$('#node_message').html('{$Think.lang.Savesuccessfully}');
+					$('#message_modal').modal('toggle');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload()", 1500);
+				}else{
+					if(t) {
+						clearTimeout(t)
+					};
+					$('#node_message').html('{$Think.lang.Save_failed}');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload()", 1500);
+				}
+			}
+		})
+	})
+
+	//添加新的技术参数
+	$('#save_parameter').on('click', function() {
+		var arr = $('#form_parameter').serializeArray();
+		var obj = [];
+		var addProductExpansion = $("#addProductExpansion").val();
+		for(var i = arr.length - 1; i > -1; i--) {
+			if(i % 2 == 0) {
+				if(arr[i].value == "" || arr[i + 1].value == "") {
+					arr.splice(i, 2)
+				}
+			}
+		}
+		console.log(arr)
+		for(var i = 0; i < arr.length; i++) {
+			if(i % 2 == 0) {
+				var list = {}
+				list.name = arr[i].value
+				list.value = arr[i + 1].value
+				obj.push(list)
+			}
+		}
+		console.log(obj)
+		$.ajax({
+			url: addProductExpansion, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				pid: $('#pid').val(),
+				list: obj
+			},
+			dataType: "JSON",
+			success: function(data) {
+				if(t) {
+					clearTimeout(t)
+				};
+				$('#node_message').html('{$Think.lang.Savesuccessfully}');
+				$('#node_modal').modal('toggle');
+				node_message.style.display = 'block';
+				var t = setTimeout("node_message.style.display='none';location.reload()", 1500);
+			}
+		})
+	})
+
+	//修改单条参数
+	function change_parameter(tag, id) {
+		var saveProductExpansion = $("#saveProductExpansion").val();
+		var a = $(tag).parents('tr').children('td').eq(0).text(),
+			b = $(tag).parents('tr').children('td').eq(1).text();
+		$('#parameter_name').text(a)
+		$('#parameter_value').val(b)
+		$('#parameter_modal').modal('toggle')
+		$('#save_parameter1').on('click', function() {
+			$.ajax({
+				url: saveProductExpansion, //通过页面元素的ID来获取设备ID
+				type: "post", //选择传值方式
+				data: {
+					id: id,
+					value: $('#parameter_value').val()
+				},
+				dataType: "JSON",
+				success: function(data) {
+					console.log(data)
+					if(t) {
+						clearTimeout(t)
+					};
+					$('#node_message').html('{$Think.lang.Savesuccessfully}');
+					$('#parameter_modal').modal('toggle');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload()", 1500);
+				}
+			})
+		})
+	}
+
+	//删除一条参数
+	function remove_parameter(id) {
+		var dellProductExpansion = $("#dellProductExpansion").val();
+		var r = confirm('{$Think.lang.Confirmdelete}?');
+		if(r) {
+			$.ajax({
+				url: dellProductExpansion, //通过页面元素的ID来获取设备ID
+				type: "post", //选择传值方式
+				data: {
+					id: id
+				},
+				dataType: "JSON",
+				success: function(data) {
+					console.log(data)
+					if(t) {
+						clearTimeout(t)
+					};
+					$('#node_message').html('{$Think.lang.Successfullydeleted}');//删除成功
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload()", 1500);
+				}
+			})
+		}
+	}
+	
+	//产品简称检测
+	function productshortname(){
+		var productshortname = $("#productshortname").val();
+		$.ajax({
+			url: productshortname, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				name: $("input[name='shortname']").val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				if(data=='can'){
+					$('#shortname_check').html('<span style="color:#5cb85c;">{$Think.lang.this_have_access_to}</span>');
+				}else{
+				    //产品简称重复
+					$('#shortname_check').html('<span style="color:red;">{$Think.lang.Duplicateproduct}</span>');
+				}
+			}
+		})
+	}
+	//产品检测
+	function productname(){
+		var productname = $("#productname").val();
+		$.ajax({
+			url: productname, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				name: $("input[name='name']").val()
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				if(data=='can'){
+					$('#name_check').html('<span style="color:#5cb85c;">{$Think.lang.Namecanused}</span>');
+				}else{
+					$('#name_check').html('<span style="color:red;">{$Think.lang.Duplicate_product_name}</span>');
+				}
+				
+			}
+		})
+	}
+	//库存弹框
+	function stock(pid){
+		$('#p_id').val(pid);
+		$('#nodes_modal').modal('toggle');
+	}
+	function supplier(name){
+		$('#search').val(name);
+		$('#lode_modal').modal('toggle');
+	}
+	
+	function key_words() {
+		console.log(1111)
+		console.log($('#getAjaxKeywords').val())
+		console.log($('#key_words input').val());
+		var kkk = $('#key_words input').val();
+		if($.trim(kkk)== ""){
+			$('#node_message').text('{$Think.lang.label_cannot_empty}');
+			node_message.style.display = 'block';
+			var t = setTimeout("node_message.style.display='none';", 1500);
+			return false;
+		};
+		var aaa;
+		if($('#getAjaxKeywords').val() == null){
+			aaa = [];
+		}else{
+			aaa = $('#getAjaxKeywords').val();
+		}
+		 
+		$.ajax({
+			url: "{:U('Product/ajaxAddKeywords')}", //通过JQ获取URL获得路径
+			data: {
+				keywords: kkk
+			}, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式(
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				if(data == 0) {
+					if(t) {
+						clearTimeout(t)
+					};
+					$('#node_message').text('{$Think.lang.Keyword_repetition}，{$Think.lang.add_failed}');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 1500);
+				} else {
+					if(t) {
+						clearTimeout(t)
+					};
+					aaa.push(data.id);
+					$('#node_message').text('{$Think.lang.Addsuccessfully}');
+					node_message.style.display = 'block';
+					var deviceStr1 = "<option value=''>{$Think.lang.Add_label}</option>";
+					$.ajax({
+						url: "{:U('Product/getAjaxKeywords')}", //通过页面元素的ID来获取设备ID
+						type: "post", //选择传值方式
+						data: {},
+						dataType: "JSON",
+						success: function(data) {
+							console.log(data);
+							for(var i = 0; i < data.length; i++) {
+								deviceStr1 += "<option value='" +
+									data[i].id +
+									"'" +
+									">" +
+									data[i].name +
+									"</option>";
+							}
+							$("#getAjaxKeywords").html("");
+							$('#getAjaxKeywords').append(deviceStr1);
+							$('#getAjaxKeywords').selectpicker({
+								noneSelectedText: '{$Think.lang.Add_label}'
+							});
+							console.log(aaa);
+							$('#getAjaxKeywords').val(aaa);
+							$('#getAjaxKeywords').selectpicker('refresh');	
+						}
+					})
+					var t = setTimeout("node_message.style.display='none';", 1500);
+				}
+			}
+		})
+	}
+</script>

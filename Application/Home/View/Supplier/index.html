@@ -1,0 +1,306 @@
+<style>
+	.modal-dialog {
+		margin: 60px auto !important;
+	}
+	
+	.caret1 {
+		content: "";
+		border-top: 0;
+		border-bottom: 4px dashed;
+	}
+	
+	#node_modal .input-group {
+		width: 70%;
+	}
+	
+	#node_modal .input-group .input-group-addon {
+		width: 202px;
+	}
+</style>
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<script>
+	$('#79').parents('li').addClass('nav-active')
+	$('#79').parents('li').addClass('nav-expanded')
+</script>
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+				<h2 class="panel-title">{$Think.lang.supplier_information}</h2>
+			</header>
+			<div class="panel-body">
+				<form class="" action="{:U('Supplier/index')}" method="get" style="display: inline-block;float: left;margin-right:15px ;">
+					<div class="input-group" style="width: 500px;">
+						<input name="search" type="text" value="{$suppliername}" class="form-control" placeholder="{$Think.lang.enter_name_vendor_youwant}">
+						<span class="input-group-btn">
+		                    <button type="submit" class="btn btn-success" style="white-space: nowrap;">{$Think.lang.Search}</button>
+		                </span>
+					</div>
+				</form>
+				<button class="btn btn-primary" onclick="add()" style="float: left;">{$Think.lang.add_supplier}</button>
+				<br style="clear: both;" />
+				<table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+					<thead>
+						<tr>
+							<th style="cursor: pointer;">{$Think.lang.supplier_name}<span class="caret"></span></th>
+							<th>{$Think.lang.supplier_type}</th>
+							<th>{$Think.lang.payment_method}</th>
+							<th>{$Think.lang.Operation}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<volist name="list" id="vo">
+							<tr>
+								<input type="hidden" value="{$vo.snumber}" name="pao">
+								<td>
+									{$vo.name}
+								</td>
+								<td>
+									<eq name="Think.cookie.think_language" value="zh-cn">{$vo.namezh}</eq>
+									<eq name="Think.cookie.think_language" value="en-us">{$vo.nameus}</eq>
+								</td>
+								<td>
+									<eq name="Think.cookie.think_language" value="zh-cn">{$vo.namech}</eq>
+									<eq name="Think.cookie.think_language" value="en-us">{$vo.nameuk}</eq>
+								</td>
+								<td>
+									<a href="{:U('Supplier/proDuct',array('id'=>$vo['id']))}" class="btn btn-primary btn-xs" style="color: #fff;" target="_blank">{$Think.lang.product}</a>
+									<a href="{:U('Supplier/detail',array('id'=>$vo['id']))}" class="btn btn-primary btn-xs" style="color: #fff;" target="_blank">{$Think.lang.view}</a>
+									<!--<button class="btn btn-danger btn-xs"  onclick='gysdel(this,"{$vo.id}")'>{$Think.lang.Delete}</button>-->
+									<eq name="vo.status" value="1"><button type="button" class="btn btn-danger btn-xs" onclick="gysdel('{$vo.id}',1)">{$Think.lang.Disable}</button></eq>
+									<eq name="vo.status" value="2"><button type="button" class="btn btn-success btn-xs" onclick="gysdel('{$vo.id}',2)">{$Think.lang.Enable}</button></eq>
+								</td>
+							</tr>
+						</volist>
+					</tbody>
+				</table>
+				<ul class="pager" style="width: 100%;">
+					<!-- 分页显示 -->{$page}</ul>
+			</div>
+		</section>
+	</div>
+</div>
+<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+<div id="node_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">
+					{$Think.lang.add_supplier}
+				</h4>
+			</div>
+			<form class="form-horizontal" onsubmit="return doadd(this)">
+				<div class="modal-body" style="line-height: 34px;">
+					<input type="hidden" name="id" value="{$vo.id}">
+					<div class="row" style="margin-left: 0;margin-right: 0;">
+						<div class="input-group">
+
+							<span class="input-group-addon">	{$Think.lang.vendorcode}<span style="color: red;">*</span></span>
+							<input type="text" id="snumber" name="snumber" class="form-control" value="" readonly="readonly">
+						</div>
+						<div class="input-group" style="padding-top: 12px;">
+							<span class="input-group-addon">{$Think.lang.supplier_type}<span style="color: red;">*</span></span>
+							<select type="text" name="type" class="form-control">
+								<option value="">{$Think.lang.pleaseselectsuppliertype}</option>
+								<foreach name="suppliertype" item="or">
+									<option value="{$or.val}">
+										<eq name="Think.cookie.think_language" value="zh-cn">{$or.namezh}</eq>
+										<eq name="Think.cookie.think_language" value="en-us">{$or.name}</eq>
+									</option>
+								</foreach>
+							</select>
+						</div>
+						<div class="input-group" style="padding-top: 12px;">
+							<span class="input-group-addon">{$Think.lang.Vendorname}<span style="color: red;">*</span></span>
+							<input type="text" name="name" class="form-control" value="" placeholder="">
+						</div>
+						<div class="input-group" style="padding-top: 12px;">
+							<span class="input-group-addon">{$Think.lang.supplier_address}</span>
+							<textarea type="text" name="address" class="form-control" placeholder=""></textarea>
+						</div>
+						<div style="width: 100%;" id="contact">
+							<div class="input-group" style="padding-top: 12px;">
+								<span class="input-group-addon">{$Think.lang.Contacts}</span>
+								<input type="text" name="contacts" class="form-control" value="">
+							</div>
+							<div class="input-group">
+								<span class="input-group-addon">{$Think.lang.Phonenumber}</span>
+								<input type="text" name="contactnumber" class="form-control" value="">
+							</div>
+						</div>
+						<div class="btn btn-primary" style="margin-top: 12px;" onclick="add_tel()">增加联系人电话</div>
+						<div class="input-group" style="padding-top: 12px;">
+							<span class="input-group-addon">{$Think.lang.Email}</span>
+							<input type="text" name="email" class="form-control" value="">
+						</div>
+						<div class="input-group" style="padding-top: 12px;">
+							<span class="input-group-addon">{$Think.lang.company_website}</span>
+							<input type="text" name="weburl" class="form-control" value="" placeholder="">
+						</div>
+						<div class="input-group" style="padding-top: 12px;">
+							<span class="input-group-addon">{$Think.lang.Bankname}</span>
+							<input type="text" name="bank" value="" class="form-control" placeholder="">
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon">{$Think.lang.bank_account_holder_name}</span>
+							<input type="text" name="bankname" value="" class="form-control" placeholder="">
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon">{$Think.lang.Bankaccount}</span>
+							<input type="text" name="account" value="" class="form-control" placeholder="">
+						</div>
+						<div class="input-group" style="padding-top: 12px;">
+							<span class="input-group-addon">{$Think.lang.payment_method}</span>
+							<select type="text" name="payment" class="form-control" placeholder="Last Name">
+								<option value="">{$Think.lang.pleaseselectthepaymentmethod}</option>
+								<foreach name="payment" item="or">
+									<option value="{$or.val}">
+										<eq name="Think.cookie.think_language" value="zh-cn">{$or.namezh}</eq>
+										<eq name="Think.cookie.think_language" value="en-us">{$or.name}</eq>
+									</option>
+								</foreach>
+							</select>
+						</div>
+						<div class="input-group" style="padding-top: 12px;">
+							<span class="input-group-addon">{$Think.lang.company_Profile}</span>
+							<textarea type="text" name="remarks" class="form-control" placeholder=""></textarea>
+						</div>
+						<div class="input-group" style="padding-top: 12px;">
+							<span class="input-group-addon">{$Think.lang.state}</span>
+							<select type="text" name="state" class="form-control">
+								<option value="1">{$Think.lang.Enable}</option>
+								<option value="2">{$Think.lang.Disable}</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" type="submit">{$Think.lang.Save}</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cancel}</button>
+				</div>
+			</form>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script>
+	$(document).ready(function() {
+		$('#table1').DataTable({
+			"paging": false,
+			"lengthChange": false,
+			"info": false,
+			"searching": false
+		});
+	});
+	//添加供应商页面
+	function add() {
+
+		var arr1 = [];
+		for(var i = 0; i < $('[name="pao"]').length; i++) {
+			arr1.push($('[name="pao"]')[i].defaultValue)
+		}
+		var arr2 = parseInt(arr1.pop());
+		console.log(arr2);
+		var arr3 = arr2 + 1;
+		console.log(arr3);
+		if(isNaN(arr2)) {
+			var snumber = $("#snumber").val(1);
+			console.log(snumber);
+		} else {
+			var snumber = $("#snumber").val(arr3);
+			console.log(snumber);
+		}
+		$('#node_modal').modal('toggle');
+	}
+	//添加供应商
+	function doadd(form) {
+		$.ajax({
+			url: "{:U('Supplier/supplierAdd')}",
+			type: "post",
+			data: $(form).serialize(),
+			dataType: "json",
+			async: true,
+			success: function(data) {
+				if(data.status == 0) {
+					$('#node_message').html('{$Think.lang.Operationauthority}');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				} else if(data == 'NO') {
+					$('#node_message').html('{$Think.lang.add_failed}');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';", 2000);
+				} else if(data == 'OK') {
+					$('#node_message').html('{$Think.lang.Addsuccessfully}');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+				}
+			}
+		});
+		return false;
+	}
+
+	function gysdel(id, type) {
+		if(type == 1) {
+			var r = confirm("{$Think.lang.Areyoudisable}");
+		}
+		if(type == 2) {
+			var r = confirm("{$Think.lang.Areyouenable}");
+		}
+
+		if(r) {
+			$.ajax({
+				url: "{:U('Supplier/gysdelete')}",
+				type: 'post',
+				dataType: "json",
+				data: {
+					id: id,
+					type: type
+				},
+				success: function(data) {
+					if(data.status == 0) {
+						$('#node_message').html('{$Think.lang.Operationauthority}');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';", 2000);
+					} else if(data == 'prohibit') {
+						$('#node_message').html('{$Think.lang.Disabledsuccessfully}');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+					} else if(data == 'enable') {
+						$('#node_message').html('{$Think.lang.Successfullyenabled}');
+						node_message.style.display = 'block';
+						var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+					}
+				}
+			});
+		}
+	}
+	$('.aa').on('click', function() {
+		//		if($(this).children('span').attr())
+		if($(this).children('span').attr('class').indexOf('1') == -1) {
+			$(this).children('span').addClass('caret1')
+		} else {
+			$(this).children('span').removeClass('caret1')
+		}
+
+	})
+
+	function add_tel() {
+		var list = '<div class="input-group" style="padding-top: 12px;">' +
+			'<span class="input-group-addon">{$Think.lang.Contacts}</span>' +
+			'<input type="text" name="contacts" class="form-control" value="">' +
+			'</div>' +
+			'<div class="input-group">' +
+			'<span class="input-group-addon">{$Think.lang.Phonenumber}</span>' +
+			'<input type="text" name="contactnumber" class="form-control" value="">' +
+			'</div>';
+		$('#contact').append(list);
+	}
+</script>

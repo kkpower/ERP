@@ -1,0 +1,577 @@
+<input id="dell" type="hidden" value="{:U('Employeelist/dell','','')}">
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/table.css" />
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.css" />
+<input type="hidden" id="transferuser" value="{:U('Employeelist/transferuser','','')}">
+<input type="hidden" id="transferDou" value="{:U('Employeelist/transferDou','','')}">
+
+<script>
+	$('#53').parents('li').addClass('nav-active')
+	$('#53').parents('li').addClass('nav-expanded')
+</script>
+<!--主体开始-->
+<style>
+	select {
+		padding: 5px;
+		height: auto;
+		border: 1px solid #ccc;
+	}
+	
+	.modal-dialog {
+		margin: 60px auto !important;
+	}
+</style>
+<div id="code_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">
+					{$Think.lang.Mobilizeemployees}
+				</h4>
+			</div>
+			<div class="modal-body" style="line-height: 34px;">
+				<div class="row">
+
+					<input type="hidden" id="useid">
+					<div class="input-group col-md-6" style="float: left;padding: 0 15px;margin-bottom: 12px;">
+						<span class="input-group-addon">{$Think.lang.Chinesename}</span>
+						<input class="form-control" id="username" readonly="readonly"/>
+					</div>
+					<div class="input-group col-md-6" style="float: left;padding: 0 15px;margin-bottom: 12px;">
+						<span class="input-group-addon">{$Think.lang.Employeecode}</span>
+						<input class="form-control" id="numbercode" readonly="readonly"/>
+					</div>
+					<div class="input-group col-md-6" style="float: left;padding: 0 15px;margin-bottom: 12px;">
+						<span class="input-group-addon">{$Think.lang.Transfercompany}</span>
+						<select id="leader2" name="company_id" onchange="searchAjax2()" class="form-control">
+							<option value="">{$Think.lang.Pleaseselectacompany}</option>
+							<foreach name="organization" item="or">
+								<option value="{$or.id}">{$or.namezh}</option>
+							</foreach>
+
+						</select>
+					</div>
+					<div class="input-group col-md-6" style="float: left;padding: 0 15px;margin-bottom: 12px;">
+						<span class="input-group-addon">{$Think.lang.Transferdepartment}</span>
+						<select id="bumen2" type="text" onchange="bumenAjax2()" class="form-control">
+						</select>
+					</div>
+					<div class="input-group col-md-6" style="float: left;padding: 0 15px;">
+						<span class="input-group-addon">{$Think.lang.Transferposition}</span>
+						<select id="position2" type="text" class="form-control" onchange="positionAjax2()">
+						</select>
+					</div>
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" onclick="doTransfer()">{$Think.lang.Save}</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cancel}</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<section class="panel">
+			<header class="panel-heading">
+				<div class="panel-actions">
+					<a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+					<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+				</div>
+
+				<h2 class="panel-title">{$Think.lang.Personneldirectory}</h2>
+			</header>
+			<div class="panel-body">
+				<input id="searchAjax" type="hidden" value="{:U('Employeelist/getAjaxOrganization','','')}">
+				<form class="" action="{:U('Employeelist/index','','')}" method="get" style="display: inline-block;float: left;margin-right:15px;">
+					<div class="input-group" style="width: 500px;">
+						<input name="search_term" type="text" placeholder="{$Think.lang.Pleaseenter}" value="" class="form-control">
+						<span class="input-group-btn">
+		                    <button type="submit" class="btn btn-success" style="white-space: nowrap;">{$Think.lang.Search}</button>
+		                </span>
+					</div>
+				</form>
+				<button class="btn btn-primary" onclick="onm()" style="float: left;">{$Think.lang.Addemployee}</button>
+				<table id="table1" class="table table-hover mb-none table-striped table-bordered" style="border-collapse: collapse;">
+					<thead>
+						<tr>
+							<th>{$Think.lang.Id}</th>
+							<th>{$Think.lang.Engname}</th>
+							<th>{$Think.lang.Chinesename}</th>
+							<th>{$Think.lang.Company}</th>
+							<th>{$Think.lang.Department}</th>
+							<th>{$Think.lang.Position}</th>
+							<th>{$Think.lang.Email}</th>
+							<th>{$Think.lang.Operation}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<volist name="list" id="vo">
+							<tr>
+								<td>{$key+1}</td>
+								<td>{$vo.name}</td>
+								<td>{$vo.lastnamezh}{$vo.namezh}</td>
+								<td>{$vo.company}</td>
+								<td>{$vo.department}</td>
+								<td>{$vo.position}</td>
+								<td>{$vo.email}</td>
+								<td>
+									<button onclick="transferuser('{$vo.id}')" class="btn btn-xs btn-primary">{$Think.lang.Transfer}</button>
+									<button onclick="option('{$vo.id}')" class="btn btn-xs btn-primary">{$Think.lang.Details}</button>
+									<button onclick="option_del('{$vo.id}')" class="btn btn-xs btn-danger">{$Think.lang.Delete}</button>
+								</td>
+							</tr>
+						</volist>
+					</tbody>
+				</table>
+				<ul class="pager" style="width: 100%;">
+					<!-- 分页显示 -->{$page}</ul>
+			</div>
+		</section>
+	</div>
+</div>
+<div id="node_message" style="position: fixed;top: 50%;left: 50%;display: none;background: #888;min-width:300px;margin-left: -150px;margin-top:-15px;border-radius: 8px;text-align: center;font-size: 16px;padding: 12px 20px;color: #fff;z-index: 1200;"></div>
+<!--模态框-->
+<form id="form" action="{:U('Employeelist/add','','')}" method="post">
+	<div id="node_modal" class="modal fade  bs-example-modal-lg" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">
+                    	{$Think.lang.Addinformation}
+                </h4>
+				</div>
+				<div class="modal-body" style="line-height: 34px;">
+					<div style="margin-bottom: 20px;">
+						<select id="leader" name="company_id" onchange="searchAjax()">
+							<option value="">{$Think.lang.Pleaseselectacompany}</option>
+							<foreach name="organization" item="or">
+								<option value="{$or.id}">{$or.namezh}</option>
+							</foreach>
+
+						</select>
+						<select id="bumen" name="organization_id" onchange="bumenAjax()">
+						</select>
+						<select id="position" name="position_id" onchange="positionAjax()">
+						</select>
+						<!--<select id="zhiwu" name="position">-->
+						<!--</select>-->
+					</div>
+					<div class="row" style="margin-left: 0;margin-right: 0;">
+						<div class="input-group">
+							<span class="input-group-addon">{$Think.lang.Loginaccount}</span>
+							<input type="text" name="uname" class="form-control" placeholder="Account number" style="width: 30%;" required="required">
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon">{$Think.lang.Loginpassword}</span>
+							<input type="text" name="pwd" class="form-control" placeholder="Password" style="width: 30%;" required="required">
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon">{$Think.lang.Usercode}</span>
+							<input type="text" name="numbering" class="form-control" placeholder="User coding" style="width: 30%;" required="required">
+						</div>
+						<div class="input-group" style="padding-top: 20px;">
+							<span class="input-group-addon">First Name in English</span>
+							<input type="text" name="name" class="form-control" placeholder="First Name" style="width: 30%;" required="required">
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon">Last Name in English</span>
+							<input type="text" name="lastname" class="form-control" placeholder="Last Name" style="width: 30%;" required="required">
+						</div>
+						<div class="input-group" style="padding-top: 20px;">
+							<span class="input-group-addon">{$Think.lang.Chinesesurname}</span>
+							<input type="text" name="lastnamezh" class="form-control" placeholder="" style="width: 20%;" required="required">
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon">{$Think.lang.Chinesename}</span>
+							<input type="text" name="namezh" class="form-control" placeholder="" style="width: 20%;" required>
+						</div>
+
+						<div class="input-group" style="padding-top: 20px;">
+							<span class="input-group-addon">{$Think.lang.Email}</span>
+							<input type="text" name="email" class="form-control" placeholder="" style="width: 50%;">
+						</div>
+
+						<div id="add_tel">
+							<div class="input-group" style="padding-top: 20px;">
+								<span class="input-group-addon">{$Think.lang.Phonenumber}</span>
+								<input type="text" name="contact[]" class="form-control" placeholder="" style="width: 30%;">
+							</div>
+						</div>
+						<div onclick="add_tel()" class="btn btn-primary" style="margin-top: 10px;">{$Think.lang.Addphone}</div>
+
+						<div class="input-group" style="padding-top: 20px;">
+							<span class="input-group-addon">{$Think.lang.Bankname}</span>
+							<input type="text" name="bank" class="form-control" placeholder="" style="width: 50%;">
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon">{$Think.lang.BankAccount}</span>
+							<input type="text" name="account" class="form-control" placeholder="" style="width: 50%;">
+						</div>
+						<div class="input-group" style="padding-top: 20px;">
+							<span class="input-group-addon">{$Think.lang.IDcard}</span>
+							<input type="text" name="identity" class="form-control" placeholder="" style="width: 40%;">
+						</div>
+
+						<div class="input-group" style="padding-top: 20px;">
+							<span class="input-group-addon">{$Think.lang.Aboutme}</span>
+							<textarea type="text" name="remarks" class="form-control" placeholder="" style="width: 40%;"></textarea>
+						</div>
+						<!--性别-->
+						<div class="input-group" style="padding-top: 20px;">
+							<span class="input-group-addon">{$Think.lang.Sex}</span>
+							<div style="border: 1px solid #ccc;width: 30%;border-bottom-right-radius: 4px;border-top-right-radius: 4px;">
+								<label for="sex_man" style="margin-bottom: 0;">
+								<input type="radio" id="sex_man" style="width: 16px;height: 16px;vertical-align: top;margin-top: 8px;margin-left: 20px;" name="sex" value="1" checked="checked">{$Think.lang.Man}
+							</label>
+								<label for="sex_woman" style="margin-bottom: 0;">
+								<input type="radio" id="sex_woman" style="width: 16px;height: 16px;vertical-align: top;margin-top: 8px;margin-left: 5px;" name="sex" value="2">{$Think.lang.Woman}
+							</label>
+							</div>
+						</div>
+						<div class="col-md-12">
+
+						</div>
+						<!--选择部门和职位-->
+						<!--这个部门职位选择-->
+
+						<!--动态选择部门职位-->
+					</div>
+
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary" onclick="aa()">{$Think.lang.Save}</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">{$Think.lang.Cancel}</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+</form>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/table.js"></script>
+<script src="__ROOT__/Public/FirstEdition/assets/shu/boot/bootstrap-select.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#table1').DataTable({
+            "paging": false,
+            "lengthChange": false,
+            "info": false,
+            "searching": false
+        });
+    });
+    //调动员工
+    function doTransfer(){
+        var url = $("#transferDou").val();
+        var company = $('#leader2').val();
+        var bumen = $('#bumen2').val();
+        var position = $('#position2').val();
+        var uid = $('#useid').val();
+        $.ajax({
+            url: url, //通过页面元素的ID来获取设备ID
+            type: "post", //选择传值方式
+            data: {
+                uid: uid,
+                company: company,
+                bumen: bumen,
+                position: position
+            },
+            async:true,
+            dataType: "JSON",
+            success: function(data) {
+                if(data.status == 0) {
+                    $('#node_message').html('{$Think.lang.Operationauthority}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                } else if(data > 0) {
+                    $('#node_message').html('{$Think.lang.Successfultransfer}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';location.reload()", 2000);
+
+                } else {
+                    $('#node_message').html('{$Think.lang.Transferfailure}');
+                    node_message.style.display = 'block';
+                    var t = setTimeout("node_message.style.display='none';", 2000);
+                }
+
+            }
+        })
+	}
+    function transferuser(id){
+        var url = $('#transferuser').val();
+        $.ajax({
+			url:url,
+			data:{
+			    uid:id
+			},
+			dataType:'JSON',
+			type:'post',
+			success:function (data) {
+                console.log(data);
+                $('#useid').val(id);
+                $('#username').val(data.lastnamezh+data.namezh);
+                if (data.numbering==''){
+                    $('#numbercode').val('');
+				} else {
+                    $('#numbercode').val(data.numbering);
+				}
+                $('#leader2').val('');
+                $('#bumen2').val('');
+                $('#position2').val('');
+                $('#code_modal').modal('toggle');
+            }
+		})
+	}
+	function option(a) {
+		// location.href = "/InternalSystem/index.php/Home/my/me?nosdid=" + a
+		// window.open("/InternalSystem/index.php/Home/my/me?nosdid=" + a, "_blank");
+		var form = $("<form method='post' target='_blank'></form>");
+		var url = "{:U('My/me')}";
+		form.attr({
+			"action": url
+		});
+
+		var input = $("<input type='hidden' name='nosdid'>");
+		input.val(a);
+		form.append(input);
+		console.log(input.val());
+		$("html").append(form);
+		form.submit();
+	}
+
+	function onm() {
+		$('#node_modal').modal('toggle');
+	}
+
+	function aa() {
+		console.log($('#form').serializeArray());
+	}
+	//	console.log($('#form').serializeArray());
+
+	function searchAjax() //点击第一个搜索框
+	{
+		var leader = $("#leader").val(); //获取选择id
+		var url = $("#searchAjax").val();
+		$.ajax({
+			url: url, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				type: 1,
+				leader: leader
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				var p = "<option id='Fulcrum' value=''>{$Think.lang.Pleaseselectdepartment}</option>"
+				$("#bumen").html(p);
+				//将获取到的数据赋值
+				for(var i = 0; i < data.length; i++) {
+					//拼接option标签的 name value 等属性
+					var p = "<option value='" +
+						data[i]['id'] +
+						"'" +
+						">" +
+						data[i]['namezh'] +
+						"</option>";
+					$("#Fulcrum").after(p);
+				}
+
+			}
+		})
+
+	}
+    function searchAjax2() //点击第一个搜索框
+    {
+        var leader = $("#leader2").val(); //获取选择id
+        var url = $("#searchAjax").val();
+        $.ajax({
+            url: url, //通过页面元素的ID来获取设备ID
+            type: "post", //选择传值方式
+            data: {
+                type: 1,
+                leader: leader
+            },
+            dataType: "JSON",
+            success: function(data) {
+                console.log(data);
+                var p = "<option id='Fulcrum' value=''>{$Think.lang.Pleaseselectdepartment}</option>"
+                $("#bumen2").html(p);
+                //将获取到的数据赋值
+                for(var i = 0; i < data.length; i++) {
+                    //拼接option标签的 name value 等属性
+                    var p = "<option value='" +
+                        data[i]['id'] +
+                        "'" +
+                        ">" +
+                        data[i]['namezh'] +
+                        "</option>";
+                    $("#Fulcrum").after(p);
+                }
+
+            }
+        })
+
+    }
+
+	function bumenAjax() //点击第二个搜索框
+	{
+		var leader = $("#bumen").val(); //获取选择id
+		var url = $("#searchAjax").val();
+		$.ajax({
+			url: url, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				type: 2,
+				leader: leader
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				var p = "<option id='element' value=''>{$Think.lang.Pleaseselectposition}</option>"
+				$("#position").html(p);
+				//将获取到的数据赋值
+				for(var i = 0; i < data.length; i++) {
+					//拼接option标签的 name value 等属性
+					var p = "<option value='" +
+						data[i]['id'] +
+						"'" +
+						">" +
+						data[i]['namezh'] +
+						"</option>";
+					$("#element").after(p);
+				}
+
+			}
+		})
+	}
+    function bumenAjax2() //点击第二个搜索框
+    {
+        var leader = $("#bumen2").val(); //获取选择id
+        var url = $("#searchAjax").val();
+        $.ajax({
+            url: url, //通过页面元素的ID来获取设备ID
+            type: "post", //选择传值方式
+            data: {
+                type: 2,
+                leader: leader
+            },
+            dataType: "JSON",
+            success: function(data) {
+                console.log(data);
+                var p = "<option id='element' value=''>{$Think.lang.Pleaseselectposition}</option>"
+                $("#position2").html(p);
+                //将获取到的数据赋值
+                for(var i = 0; i < data.length; i++) {
+                    //拼接option标签的 name value 等属性
+                    var p = "<option value='" +
+                        data[i]['id'] +
+                        "'" +
+                        ">" +
+                        data[i]['namezh'] +
+                        "</option>";
+                    $("#element").after(p);
+                }
+
+            }
+        })
+    }
+
+	function positionAjax() //第三级的下拉
+	{
+		var leader = $("#position").val(); //获取选择id
+		var url = $("#searchAjax").val();
+		$.ajax({
+			url: url, //通过页面元素的ID来获取设备ID
+			type: "post", //选择传值方式
+			data: {
+				leader: leader
+			},
+			dataType: "JSON",
+			success: function(data) {
+				console.log(data);
+				var p = "<option id='ozhi' value=''>{$Think.lang.Pleaseselectposition}</option>"
+				$("#zhiwu").html(p);
+				//将获取到的数据赋值
+				for(var i = 0; i < data.length; i++) {
+					//拼接option标签的 name value 等属性
+					var p = "<option value='" +
+						data[i]['id'] +
+						"'" +
+						">" +
+						data[i]['namezh'] +
+						"</option>";
+					$("#ozhi").after(p);
+				}
+
+			}
+		})
+	}
+
+    function positionAjax2() //第三级的下拉
+    {
+        var leader = $("#position2").val(); //获取选择id
+        var url = $("#searchAjax").val();
+        $.ajax({
+            url: url, //通过页面元素的ID来获取设备ID
+            type: "post", //选择传值方式
+            data: {
+                leader: leader
+            },
+            dataType: "JSON",
+            success: function(data) {
+                console.log(data);
+                var p = "<option id='ozhi' value=''>{$Think.lang.Pleaseselectposition}</option>"
+                $("#zhiwu").html(p);
+                //将获取到的数据赋值
+                for(var i = 0; i < data.length; i++) {
+                    //拼接option标签的 name value 等属性
+                    var p = "<option value='" +
+                        data[i]['id'] +
+                        "'" +
+                        ">" +
+                        data[i]['namezh'] +
+                        "</option>";
+                    $("#position2").after(p);
+                }
+
+            }
+        })
+    }
+
+	function add_tel() {
+		var list = '<div class="input-group"><span class="input-group-addon">{$Think.lang.Phonenumber}</span><input type="text" name="contact[]" class="form-control" placeholder="" style="width: 30%;"></div>'
+		$('#add_tel').append(list)
+	};
+
+	function option_del(id) {
+		var dell = $('#dell').val();
+		var r = confirm("{$Think.lang.Confirmdelete}")
+		if(r) {
+			$.ajax({
+				url: dell, //通过页面元素的ID来获取设备ID
+				type: "post", //选择传值方式
+				data: {
+					nodesid: id
+				},
+				dataType: "JSON",
+				success: function(data) {
+					if(t) {
+						clearTimeout(t)
+					};
+					$('#node_message').html('{$Think.lang.Successfullydeleted}');
+					$('#org_modal').css('display', 'none');
+					node_message.style.display = 'block';
+					var t = setTimeout("node_message.style.display='none'", 2000);
+					location.reload();
+					//				console.log(data)
+				}
+			})
+		} else {
+			return false;
+		}
+	}
+</script>
